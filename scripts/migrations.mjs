@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MIGRATION STATEMENTS — nguồn duy nhất (single source of truth)
  * Cập nhật lúc: 11/06/2026 23:00
  *
@@ -3483,7 +3483,8 @@ export const MIGRATION_STATEMENTS = [
     ALTER TABLE "site_settings" ADD CONSTRAINT "site_settings_popup_services_mascot_id_media_id_fk" FOREIGN KEY ("popup_services_mascot_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   EXCEPTION
     WHEN duplicate_object THEN null;
-  END $$;`,
+  END $$;`
+,
 
   // ====================================================
   // BATCH: vaccineSection block for settings homeSections
@@ -3529,4 +3530,9 @@ export const MIGRATION_STATEMENTS = [
   // BATCH: Add scheduleDoses to vaccines (phác đồ chuẩn)
   // ====================================================
   `DO $$ BEGIN ALTER TABLE "vaccines" ADD COLUMN "schedule_doses" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`
+
+  // ==================================================
+  // BATCH: Add warning_section_is_enabled column
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "warning_section_is_enabled" boolean DEFAULT true; EXCEPTION WHEN duplicate_column THEN null; END $$`
 ];
