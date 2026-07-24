@@ -57,7 +57,7 @@ export function MultiBannerSection({ title, columns = 4, bannerHeight, banners }
             </div>
           )}
 
-          <div className={`grid gap-2 md:gap-4 ${gridColsClass}`}>
+          <div className={`grid gap-1 ${gridColsClass}`}>
           {banners.map((item, index) => {
             const imageUrl = item.image?.url;
             if (!imageUrl) return null;

@@ -69,6 +69,7 @@
     "linkedom": "^0.18.12",
     "postcss": "^8.5.15",
     "tailwindcss": "^4",
+    "ts-prune": "^0.10.3",
     "tsx": "^4.22.4",
     "typescript": "^5"
   },

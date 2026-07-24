@@ -54,7 +54,7 @@ export const WarningVideosClient = ({ videos }: Props) => {
             {videos.map((video, index) => (
               <div 
                 key={video.id || index} 
-                className="relative flex-shrink-0 w-[30%] sm:w-[25%] md:w-[20%] lg:w-auto lg:h-full"
+                className="relative flex-shrink-0 w-20 sm:w-24 md:w-28 lg:w-auto lg:h-full"
                 style={{ paddingLeft: '4px' }}
               >
                 <div 
