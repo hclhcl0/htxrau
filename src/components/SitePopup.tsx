@@ -81,6 +81,7 @@ export function SitePopup({ popupConfig }: SitePopupProps) {
       transparentBackground={transparentBackground}
       displayVideoUrl={popupConfig.videoUrl}
       mascotImage={popupConfig.servicesMascot || null}
+      headerColor={popupConfig.servicesHeaderColor || '#00a99d'}
     />
   );
 }
