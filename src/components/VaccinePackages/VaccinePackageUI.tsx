@@ -61,7 +61,8 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
     if (!selected) return 0;
     let total = selected.discountPrice;
     selected.items?.forEach((item, idx) => {
-      const originalQty = item.doses || 1;
+      const maxDoses = item.vaccine?.scheduleDoses ?? undefined;
+      const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
       const currentQty = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
       const alt = selectedAlternatives[idx];
       total -= originalQty * (item.unitPrice || 0);
@@ -178,7 +179,8 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
                 <div key={idx} className="py-2.5">
                   <div className="text-[14px] font-medium text-[#00a4ff] mb-1.5 flex items-center gap-2">
                     {(() => {
-                      const originalQty = item.doses || 1;
+                      const maxDoses = item.vaccine?.scheduleDoses ?? undefined;
+                      const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
                       const currentQty = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
                       const isChecked = currentQty > 0;
                       
@@ -248,26 +250,27 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
                     </div>
                     {/* Protocol */}
                     <p className="text-[13px] text-gray-600 hidden md:block text-center">
-                      {item.protocol || `${item.doses} Liều`}
+                      {item.protocol || `${item.vaccine?.scheduleDoses != null ? Math.min(item.doses || 1, item.vaccine.scheduleDoses) : (item.doses || 1)} Liều`}
                     </p>
                     {/* Quantity */}
                     <div className="hidden md:flex justify-center">
                       {(() => {
                         const maxDoses = item.vaccine?.scheduleDoses ?? undefined;
-                        const currentQty2 = customDoses[idx] !== undefined ? customDoses[idx] : (item.doses || 1);
+                        const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
+                        const currentQty2 = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
                         const atMax = maxDoses != null && currentQty2 >= maxDoses;
                         return (
                           <div className="flex flex-col items-center gap-0.5">
                             <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
                               <button
-                                onClick={() => handleDoseChange(idx, -1, item.doses || 1, maxDoses)}
+                                onClick={() => handleDoseChange(idx, -1, originalQty, maxDoses)}
                                 className="px-2.5 py-1 text-gray-400 hover:bg-gray-50 transition-colors"
                               >—</button>
                               <span className="px-3 text-[13px] font-medium text-gray-700 border-x border-gray-100">
                                 {currentQty2}
                               </span>
                               <button
-                                onClick={() => handleDoseChange(idx, 1, item.doses || 1, maxDoses)}
+                                onClick={() => handleDoseChange(idx, 1, originalQty, maxDoses)}
                                 disabled={atMax}
                                 title={atMax ? `Tối đa ${maxDoses} liều theo phác đồ` : undefined}
                                 className={`px-2.5 py-1 transition-colors ${
