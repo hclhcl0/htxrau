@@ -28,50 +28,27 @@ export function SitePopupClient({
   displayVideoUrl?: string | null | undefined;
 }) {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-
-    if (showOnce) {
-      const closed = localStorage.getItem('cdc_popup_closed');
-      if (closed === 'true') return;
-    }
-
+    if (showOnce && localStorage.getItem('cdc_popup_closed') === 'true') return;
     const delay = (delaySeconds || 0) * 1000;
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, delay);
-
+    const timer = setTimeout(() => setIsVisible(true), delay);
     return () => clearTimeout(timer);
   }, [delaySeconds, showOnce]);
 
   const handleClose = () => {
     setIsVisible(false);
-    if (showOnce) {
-      localStorage.setItem('cdc_popup_closed', 'true');
-    }
+    if (showOnce) localStorage.setItem('cdc_popup_closed', 'true');
   };
 
-  // Only skip render on server to avoid hydration mismatch
-  if (!isMounted) return null;
+  if (!isVisible) return null;
 
   return (
-    <div
-      aria-hidden={!isVisible}
-      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 ease-in-out ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      }`}
-    >
-      <div
-        className="absolute inset-0 bg-black/60 cursor-pointer"
-        onClick={handleClose}
-      />
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
+      <div className="absolute inset-0 bg-black/60 cursor-pointer" onClick={handleClose} />
 
       <div
-        className={`relative w-full max-w-xl mx-4 transform transition-all duration-300 ease-out ${
-          isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
-        }`}
+        className="relative w-full max-w-xl mx-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="popup-title"
@@ -79,19 +56,15 @@ export function SitePopupClient({
         {/* Nút đóng lồi ra ngoài góc trên bên phải */}
         <button
           onClick={handleClose}
-          className="absolute -top-3 -right-3 z-50 w-8 h-8 flex items-center justify-center bg-gray-300 hover:bg-gray-400 text-white rounded-full shadow-md transition-colors focus:outline-none"
+          className="absolute -top-3 -right-3 z-50 w-8 h-8 flex items-center justify-center bg-gray-300 hover:bg-gray-400 text-white rounded-full shadow-md focus:outline-none"
           aria-label="Đóng thông báo"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <div
-          className={`flex flex-col overflow-hidden ${
-            transparentBackground ? 'bg-transparent' : 'bg-white rounded-xl shadow-2xl'
-          }`}
-        >
+        <div className={`flex flex-col overflow-hidden ${transparentBackground ? 'bg-transparent' : 'bg-white rounded-xl shadow-2xl'}`}>
           {displayVideoUrl ? (
             <div className="relative w-full aspect-video bg-black flex-shrink-0">
               <iframe
@@ -144,7 +117,7 @@ export function SitePopupClient({
               <div className="mt-6 flex justify-center">
                 <Link
                   href={displayLinkUrl}
-                  className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow transition-all text-center w-full sm:w-auto"
+                  className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow text-center w-full sm:w-auto"
                   onClick={handleClose}
                 >
                   Đọc tiếp
