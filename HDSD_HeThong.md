@@ -131,14 +131,31 @@ Khi soạn thảo nội dung (RichText Editor) cho bài viết tin tức, hoặc
 7. **File Downloads (Tải tài liệu):** Tạo ra một danh sách các tài liệu đính kèm với biểu tượng đẹp mắt để người dân tải về.
 8. **Related Articles (Bài viết liên quan):** Nhúng trực tiếp các bài viết, tin tức nổi bật khác vào giữa nội dung bài viết hiện tại.
 9. **Faq Block:** Tạo danh sách các câu hỏi thường gặp dạng đóng/mở (Accordion).
-10. **Zalo/Livestream Widget:** Nhúng khung chat Zalo hoặc khung theo dõi Livestream trực tiếp.
+10. **Zalo Widget (Nhúng Zalo OA):** Tích hợp Zalo Official Account trực tiếp vào trang web. Hỗ trợ 3 kiểu hiển thị: Nút Chat nhanh (góc màn hình), Bảng tin Zalo, hoặc Mã QR Quan tâm. Bạn chỉ cần nhập `Zalo OA ID` (Mã ID của tài khoản OA).
 
 ---
 
-## 9. Phân quyền & Vai trò Người dùng
+## 9. Tích hợp Zalo (Zalo OA & Zalo Mini App)
+Hệ thống được thiết kế mở để liên kết mạnh mẽ với hệ sinh thái Zalo.
+
+### 9.1. Tích hợp Zalo Official Account (Zalo OA)
+Để nhúng Zalo OA vào bất kỳ bài viết hay trang nào:
+- Mở trình soạn thảo, chọn thêm **Block Zalo Widget** (Mã nhúng Zalo OA).
+- Lấy mã **Zalo OA ID** (Gồm một dãy số, lấy từ trang quản trị oa.zalo.me).
+- Chọn loại hiển thị mong muốn (Chat / Bảng tin / Theo dõi).
+
+### 9.2. Tích hợp Zalo Mini App
+Hệ thống website này không chỉ là một trang web độc lập mà còn đóng vai trò làm **Máy chủ dữ liệu (Headless CMS backend)** cho Zalo Mini App của bạn.
+- Các dữ liệu như *Bài viết, Gói tiêm chủng, Lịch làm việc* đều có sẵn hệ thống API mở (ví dụ: `/api/miniapp/articles`) đã cấu hình sẵn quyền truy cập CORS chuẩn cho hệ thống Zalo.
+- Zalo Mini App của cơ quan có thể gọi trực tiếp các API này để đồng bộ và hiển thị tin tức, bảng giá vắc-xin y hệt như trên website mà không cần phải nhập liệu hai lần.
+- **Nếu muốn quảng bá Mini App trên web:** Bạn có thể dùng **Button Block** (Khối Nút bấm) trong bài viết, chèn đường link dạng `zalo://...` (hoặc link chia sẻ của Zalo Mini App) để người dùng click vào sẽ tự động mở Mini App trên điện thoại.
+
+---
+
+## 10. Phân quyền & Vai trò Người dùng
 Hệ thống được thiết kế với cơ chế phân quyền (Role-based Access Control) chặt chẽ, nhằm đảm bảo an toàn thông tin và quy trình kiểm duyệt bài viết rõ ràng.
 
-### 9.1. Các nhóm quyền (Roles)
+### 10.1. Các nhóm quyền (Roles)
 Hệ thống hiện tại phân chia người dùng thành các cấp độ sau:
 
 1. **Quản trị viên (Admin):**
@@ -163,7 +180,7 @@ Hệ thống hiện tại phân chia người dùng thành các cấp độ sau:
 5. **Người dùng bình thường (User):**
    - Chỉ được xem thông tin cá nhân. Không có quyền truy cập vào các chức năng quản trị nội dung.
 
-### 9.2. Phân công theo Chuyên mục (Phòng ban)
+### 10.2. Phân công theo Chuyên mục (Phòng ban)
 Đối với các tài khoản cấp **Editor, Moderator, Author**, Quản trị viên có thể thiết lập giới hạn quyền truy cập theo **Chuyên mục (Departments)**. 
 - *Ví dụ:* Một Author được gán vào chuyên mục "Tiêm chủng" sẽ chỉ thấy và viết bài thuộc chuyên mục này, không thể can thiệp vào các bài viết của phòng "Truyền nhiễm". Nếu để trống mục chuyên mục, tài khoản đó sẽ được viết bài ở tất cả chuyên mục.
 
