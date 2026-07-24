@@ -106,37 +106,44 @@ export const HeroCarousel = async () => {
       <div className="container mx-auto px-4">
         {/* Khung tổng bao quanh cả banner và cảnh báo */}
         <div className="p-1 bg-white/70 border border-gray-200/50 rounded-2xl backdrop-blur-sm shadow-sm">
-          <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 lg:gap-3">
-            {/* Cột trái: Slider Banner chính */}
-            <div className={`aspect-[2/1] md:aspect-[2.5/1] h-auto w-full rounded-xl overflow-hidden ${
-              showWarning ? 'lg:col-span-7 xl:col-span-7' : 'lg:col-span-10 xl:col-span-10'
-            }`}>
-              <HeroCarouselClient 
-                banners={banners} 
-                globalSize={settings.size} 
-                globalCustomHeight={settings.customHeight} 
-                globalEffect={settings.effect} 
-                globalAutoplay={settings.autoplay} 
-                globalAutoplayDelay={settings.autoplayDelay} 
-              />
-            </div>
-
-            {/* Cột phải: Cảnh báo quan trọng — có nút bật/tắt (admin + user) */}
-            {showWarning && (
-              <WarningToggleWrapper
-                title={settings.warningTitle}
-                icon={
-                  settings.warningIcon.startsWith('http') || settings.warningIcon.startsWith('/') ? (
-                    <img src={settings.warningIcon} alt="Warning Icon" className="w-5 h-5 object-contain" />
-                  ) : (
-                    settings.warningIcon
-                  )
-                }
-              >
+          {showWarning ? (
+            <WarningToggleWrapper
+              title={settings.warningTitle}
+              icon={
+                settings.warningIcon.startsWith('http') || settings.warningIcon.startsWith('/') ? (
+                  <img src={settings.warningIcon} alt="Warning Icon" className="w-5 h-5 object-contain" />
+                ) : (
+                  settings.warningIcon
+                )
+              }
+              bannerContent={
+                <HeroCarouselClient 
+                  banners={banners} 
+                  globalSize={settings.size} 
+                  globalCustomHeight={settings.customHeight} 
+                  globalEffect={settings.effect} 
+                  globalAutoplay={settings.autoplay} 
+                  globalAutoplayDelay={settings.autoplayDelay} 
+                />
+              }
+              warningContent={
                 <WarningVideosClient videos={warningVideos} />
-              </WarningToggleWrapper>
-            )}
-          </div>
+              }
+            />
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 lg:gap-3">
+              <div className="lg:col-span-10 xl:col-span-10 aspect-[2/1] md:aspect-[2.5/1] h-auto w-full rounded-xl overflow-hidden">
+                <HeroCarouselClient 
+                  banners={banners} 
+                  globalSize={settings.size} 
+                  globalCustomHeight={settings.customHeight} 
+                  globalEffect={settings.effect} 
+                  globalAutoplay={settings.autoplay} 
+                  globalAutoplayDelay={settings.autoplayDelay} 
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

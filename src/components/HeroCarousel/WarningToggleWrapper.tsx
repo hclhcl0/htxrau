@@ -8,10 +8,11 @@ const STORAGE_KEY = 'warning_section_visible';
 interface Props {
   title: string;
   icon: React.ReactNode;
-  children: React.ReactNode;
+  bannerContent: React.ReactNode;
+  warningContent: React.ReactNode;
 }
 
-export const WarningToggleWrapper = ({ title, icon, children }: Props) => {
+export const WarningToggleWrapper = ({ title, icon, bannerContent, warningContent }: Props) => {
   // Mặc định hiện, lấy từ localStorage nếu có
   const [isVisible, setIsVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -33,45 +34,53 @@ export const WarningToggleWrapper = ({ title, icon, children }: Props) => {
   // Tránh hydration mismatch: render như mặc định (visible) trước khi mounted
   if (!mounted) {
     return (
-      <div className="lg:col-span-3 xl:col-span-3 flex flex-col bg-transparent overflow-hidden h-auto">
-        <ColumnContent title={title} icon={icon} isVisible={true} onToggle={() => {}} />
-        {children}
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 lg:gap-3">
+        <div className="aspect-[2/1] md:aspect-[2.5/1] h-auto w-full rounded-xl overflow-hidden lg:col-span-7 xl:col-span-7">
+          {bannerContent}
+        </div>
+        <div className="lg:col-span-3 xl:col-span-3 flex flex-col bg-transparent overflow-hidden h-auto">
+          <ColumnContent title={title} icon={icon} isVisible={true} onToggle={() => {}} />
+          <div className="p-0 flex-1 h-auto lg:h-full w-full flex flex-col min-h-0">
+             {warningContent}
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <>
+    <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 lg:gap-3 relative">
+      {/* Cột trái: Slider Banner chính - sẽ phóng to nếu cảnh báo bị ẩn */}
+      <div className={`aspect-[2/1] md:aspect-[2.5/1] h-auto w-full rounded-xl overflow-hidden transition-all duration-300 ${isVisible ? 'lg:col-span-7 xl:col-span-7' : 'lg:col-span-10 xl:col-span-10'}`}>
+        {bannerContent}
+      </div>
+
       {/* Cột phải: hiện khi isVisible */}
       {isVisible && (
         <div className="lg:col-span-3 xl:col-span-3 flex flex-col bg-transparent overflow-hidden h-auto">
           <ColumnContent title={title} icon={icon} isVisible={isVisible} onToggle={toggle} />
           <div className="p-0 flex-1 h-auto lg:h-full w-full flex flex-col min-h-0">
-            {children}
+            {warningContent}
           </div>
         </div>
       )}
 
-      {/* Nút mở lại khi đã ẩn — tab nhỏ bên phải slider */}
+      {/* Nút mở lại khi đã ẩn — đặt nổi ở góc phải trên của banner */}
       {!isVisible && (
-        <div className="lg:col-span-3 xl:col-span-3 flex items-start justify-start">
+        <div className="absolute top-4 right-4 z-50">
           <button
             onClick={toggle}
             title="Hiện cảnh báo quan trọng"
-            className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 text-orange-600 transition-all group shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border-none bg-white/80 backdrop-blur hover:bg-white text-orange-600 transition-all shadow-md hover:scale-105"
           >
-            <Bell size={16} className="group-hover:animate-bounce" />
-            <span
-              className="text-[10px] font-bold uppercase tracking-wider"
-              style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-            >
+            <Bell size={16} className="animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-wider hidden sm:inline">
               Cảnh báo
             </span>
-            <ChevronRight size={14} />
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
