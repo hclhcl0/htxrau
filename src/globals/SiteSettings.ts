@@ -1,4 +1,4 @@
-import type { GlobalConfig } from 'payload';
+﻿import type { GlobalConfig } from 'payload';
 import { Settings } from './Settings.ts';
 import { CategoryNewsBlock } from '../blocks/CategoryNews.ts';
 import { lexicalEditor, BlocksFeature } from '@payloadcms/richtext-lexical';
@@ -1134,6 +1134,15 @@ export const SiteSettings: GlobalConfig = {
           label: 'Phân cảnh báo quan trọng',
           name: 'warningSection',
           fields: [
+            {
+              name: 'isEnabled',
+              type: 'checkbox',
+              label: 'Hi\u1ec3n th\u1ecb c\u1ea3nh b\u00e1o quan tr\u1ecdng',
+              defaultValue: true,
+              admin: {
+                description: 'B\u1eadt/t\u1eaft to\u00e0n b\u1ed9 c\u1ed9t C\u1ea3nh b\u00e1o quan tr\u1ecdng b\u00ean ph\u1ea3i slider trang ch\u1ee7.',
+              },
+            },
             {
               type: 'row',
               fields: [

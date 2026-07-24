@@ -49,12 +49,17 @@ async function getSliderSettings() {
     const payload = await getPayload({ config: configPromise });
     const settings = await payload.findGlobal({ slug: 'site-settings' });
     const bannerConfig = (settings as any)?.banner || {};
+    const warningSection = (settings as any)?.warningSection || {};
     return {
       size: bannerConfig.heroSliderSize || 'medium',
       customHeight: bannerConfig.heroSliderCustomHeight || 500,
       effect: bannerConfig.heroSliderEffect || 'slide',
-      autoplay: bannerConfig.heroSliderAutoplay !== false, // default true
-      autoplayDelay: bannerConfig.heroSliderAutoplayDelay || 5000
+      autoplay: bannerConfig.heroSliderAutoplay !== false,
+      autoplayDelay: bannerConfig.heroSliderAutoplayDelay || 5000,
+      warningEnabled: warningSection.isEnabled !== false, // default true
+      warningTitle: warningSection.title || 'Cảnh báo quan trọng',
+      warningIcon: warningSection.icon || '🔥',
+      warningVideos: warningSection.videos || [],
     };
   } catch (error) {
     return {
@@ -62,7 +67,11 @@ async function getSliderSettings() {
       customHeight: 500,
       effect: 'slide',
       autoplay: true,
-      autoplayDelay: 5000
+      autoplayDelay: 5000,
+      warningEnabled: true,
+      warningTitle: 'Cảnh báo quan trọng',
+      warningIcon: '🔥',
+      warningVideos: [],
     };
   }
 }
@@ -70,10 +79,13 @@ async function getSliderSettings() {
 export const HeroCarousel = async () => {
   const banners = await getBanners();
   const settings = await getSliderSettings();
-  let warningVideos = (settings as any)?.warningSection?.videos;
+
+  // Lấy danh sách video: ưu tiên từ CMS settings, fallback auto-fetch
+  let warningVideos = settings.warningVideos;
   if (!warningVideos || warningVideos.length === 0) {
     warningVideos = await getWarningVideos();
   }
+  const showWarning = settings.warningEnabled && warningVideos && warningVideos.length > 0;
 
   if (!banners || banners.length === 0) {
     return (
@@ -107,19 +119,15 @@ export const HeroCarousel = async () => {
               />
             </div>
 
-            {/* Cột phải: Cảnh báo quan trọng — có nút bật/tắt */}
-            {warningVideos && warningVideos.length > 0 && (
+            {/* Cột phải: Cảnh báo quan trọng — có nút bật/tắt (admin + user) */}
+            {showWarning && (
               <WarningToggleWrapper
-                title={(settings as any)?.warningSection?.title || 'Cảnh báo quan trọng'}
+                title={settings.warningTitle}
                 icon={
-                  (settings as any)?.warningSection?.icon ? (
-                    (settings as any).warningSection.icon.startsWith('http') || (settings as any).warningSection.icon.startsWith('/') ? (
-                      <img src={(settings as any).warningSection.icon} alt="Warning Icon" className="w-5 h-5 object-contain" />
-                    ) : (
-                      (settings as any).warningSection.icon
-                    )
+                  settings.warningIcon.startsWith('http') || settings.warningIcon.startsWith('/') ? (
+                    <img src={settings.warningIcon} alt="Warning Icon" className="w-5 h-5 object-contain" />
                   ) : (
-                    '🔥'
+                    settings.warningIcon
                   )
                 }
               >
