@@ -654,93 +654,22 @@
   display: none;
 }
 
-/* ══════════════════════════════════════════════════
-   POPUP - Animated glowing border effect
-   ══════════════════════════════════════════════════ */
-@keyframes popup-border-spin {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* ── Mascot peek animation ───────────────────────── */
+@keyframes mascot-peek {
+  0%   { transform: translateY(-120%) rotate(-8deg); opacity: 0; }
+  60%  { transform: translateY(10%) rotate(4deg);   opacity: 1; }
+  80%  { transform: translateY(-6%) rotate(-2deg);  opacity: 1; }
+  100% { transform: translateY(0%)  rotate(0deg);   opacity: 1; }
 }
 
-.popup-glow-border {
-  position: relative;
-  border-radius: 24px;
+.mascot-peek {
+  animation: mascot-peek 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: 0.15s;
+  will-change: transform, opacity;
+  /* Tắt filter để không trigger GPU repaint riêng */
+  filter: none;
+  /* Isolate trên composite layer — tránh ảnh hưởng layout */
   isolation: isolate;
-}
-
-.popup-glow-border::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 26px;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 50deg,
-    #ffffff 70deg,
-    #99f6e4 90deg,
-    #00a99d 110deg,
-    #ffffff 130deg,
-    transparent 150deg,
-    transparent 360deg
-  );
-  animation: popup-border-spin 3s linear infinite;
-  z-index: -1;
-}
-
-.popup-glow-border::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border-radius: 22px;
-  background: white;
-  z-index: -1;
-}
-
-/* ── Ribbon header ───────────────────────────────── */
-.popup-ribbon-wrap {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  /* Cho ribbon vượt ra ngoài card 10px mỗi bên */
-  margin-left: -10px;
-  margin-right: -10px;
-  margin-bottom: 4px;
-}
-
-.popup-ribbon {
-  position: relative;
-  display: inline-block;
-  min-width: calc(100% + 20px);
-  text-align: center;
-  padding: 10px 32px;
-  border-radius: 4px 4px 0 0;
-}
-
-/* Tai gập trái */
-.popup-ribbon::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -8px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 10px 8px 0;
-  border-color: transparent var(--popup-ribbon-shadow, #007068) transparent transparent;
-}
-
-/* Tai gập phải */
-.popup-ribbon::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: -8px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 0 8px 10px;
-  border-color: transparent transparent transparent var(--popup-ribbon-shadow, #007068);
 }
 
 

@@ -53,84 +53,166 @@ export function ServicesPopupClient({
   const bgColor = headerColor || '#00a99d';
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center px-4">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/60 cursor-pointer"
-        onClick={handleClose}
-      />
+      <div className="absolute inset-0 bg-black/60 cursor-pointer" onClick={handleClose} />
 
-      {/* Popup wrapper */}
-      <div
-        className="relative z-10 w-full max-w-sm mx-4 mb-8 sm:mb-0"
-        style={{ paddingTop: mascotImage?.url ? '64px' : '0' }}
-      >
-        {/* Mascot */}
-        {mascotImage?.url && (
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-32 pointer-events-none z-30">
-            <div className="absolute left-1/2 -translate-x-1/2 top-0 z-20 drop-shadow-2xl" style={{ width: 96, height: 96 }}>
+      {/* Popup wrapper — wider: max-w-md */}
+      <div className="relative z-10 w-full max-w-md mb-8 sm:mb-0">
+
+        {/* ── CAPSULE BADGE nổi phía trên ─────────────────────
+            Mascot (nếu có) + Capsule title badge
+        ─────────────────────────────────────────────────── */}
+        <div className="flex flex-col items-center" style={{ marginBottom: '-28px', position: 'relative', zIndex: 20 }}>
+
+          {/* Mascot — thò ra từ trên xuống */}
+          {mascotImage?.url && (
+            <div
+              className="mascot-peek"
+              style={{
+                width: 96,
+                height: 96,
+                position: 'relative',
+                marginBottom: '8px',
+                opacity: 0,           /* chống FOUC: ẩn ngay từ đầu, animation sẽ override */
+                willChange: 'transform, opacity', /* pre-promote GPU layer */
+              }}
+            >
               <Image src={mascotImage.url} alt={mascotImage.alt || 'Mascot'} fill className="object-contain" sizes="96px" priority />
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Card */}
-        <div className="popup-glow-border rounded-3xl overflow-hidden shadow-2xl bg-white">
-          {/* Ribbon header */}
+          {/* Capsule title */}
           <div
-            className="popup-ribbon-wrap overflow-hidden"
-            style={{ paddingTop: mascotImage?.url ? '56px' : '0' }}
+            style={{
+              background: `linear-gradient(135deg, ${bgColor} 0%, #00c9b8 100%)`,
+              borderRadius: '999px',
+              padding: '10px 32px',
+              boxShadow: `0 4px 20px rgba(0,169,157,0.5), 0 2px 6px rgba(0,0,0,0.15)`,
+              border: '2.5px solid rgba(255,255,255,0.6)',
+              minWidth: '220px',
+              textAlign: 'center',
+            }}
           >
-            <div
-              className="popup-ribbon"
-              style={{
-                background: bgColor,
-                // Màu bóng tai gập = tối hơn bgColor 20%
-                '--popup-ribbon-shadow': 'color-mix(in srgb, ' + bgColor + ' 70%, black)',
-              } as React.CSSProperties}
-            >
-              <h2 className="text-white font-bold text-base leading-tight tracking-wide drop-shadow-sm">
-                {title}
-              </h2>
-              {subtitle && <p className="text-white/85 text-xs mt-1">{subtitle}</p>}
-            </div>
+            <h2 style={{
+              color: '#fff',
+              fontWeight: 800,
+              fontSize: '15px',
+              letterSpacing: '0.04em',
+              textShadow: '0 1px 3px rgba(0,0,0,0.2)',
+              margin: 0,
+              lineHeight: 1.3,
+            }}>
+              {title}
+            </h2>
+            {subtitle && (
+              <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: '11px', marginTop: '2px', marginBottom: 0 }}>
+                {subtitle}
+              </p>
+            )}
           </div>
+        </div>
 
-          {/* Items */}
-          <div className="px-4 pb-5 pt-3 flex flex-col gap-2.5 max-h-[55vh] overflow-y-auto">
-            {items.map((item, idx) => {
-              const rowContent = (
-                <div className="flex items-center gap-3 bg-gray-50 hover:bg-teal-50 rounded-2xl px-4 py-3 shadow-sm border border-gray-100 transition-colors group">
-                  <div className="w-11 h-11 flex-shrink-0 rounded-xl overflow-hidden flex items-center justify-center bg-white shadow-sm text-2xl">
-                    {item.iconImage?.url ? (
-                      <Image src={item.iconImage.url} alt={item.iconImage.alt || item.title} width={40} height={40} className="object-contain w-full h-full" />
-                    ) : (
-                      <span>{item.icon || '🏥'}</span>
+        {/* ── CARD — nền xanh nhẹ ─────────────────────────── */}
+        <div
+          style={{
+            background: 'linear-gradient(160deg, #e8f8f7 0%, #f0fbfa 60%, #ffffff 100%)',
+            borderRadius: '20px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+            overflow: 'hidden',
+            border: `1.5px solid rgba(0,169,157,0.15)`,
+          }}
+        >
+          {/* Padding top để nhường chỗ cho capsule nổi xuống */}
+          <div className="px-5 pb-5" style={{ paddingTop: '32px' }}>
+            <div className="flex flex-col gap-3 max-h-[55vh] overflow-y-auto">
+              {items.length === 0 && (
+                <p className="text-gray-400 text-sm text-center py-6">Chưa có dịch vụ nào.</p>
+              )}
+              {items.map((item, idx) => {
+                const rowContent = (
+                  <div
+                    className="flex items-center gap-3 group"
+                    style={{
+                      background: 'rgba(255,255,255,0.85)',
+                      borderRadius: '14px',
+                      padding: '10px 14px',
+                      boxShadow: '0 1px 4px rgba(0,169,157,0.08)',
+                      border: '1px solid rgba(0,169,157,0.12)',
+                      transition: 'background 0.15s',
+                    }}
+                  >
+                    {/* Icon */}
+                    <div
+                      style={{
+                        width: 44,
+                        height: 44,
+                        flexShrink: 0,
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: `linear-gradient(135deg, rgba(0,169,157,0.12) 0%, rgba(0,201,184,0.08) 100%)`,
+                        fontSize: '22px',
+                      }}
+                    >
+                      {item.iconImage?.url ? (
+                        <Image src={item.iconImage.url} alt={item.iconImage.alt || item.title} width={36} height={36} className="object-contain" />
+                      ) : (
+                        <span>{item.icon || '🏥'}</span>
+                      )}
+                    </div>
+
+                    {/* Text */}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm leading-snug line-clamp-1">{item.title}</p>
+                      {item.description && (
+                        <p className="text-gray-500 text-xs mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>
+                      )}
+                    </div>
+
+                    {/* Arrow */}
+                    {item.linkUrl && (
+                      <div
+                        style={{
+                          width: 28, height: 28,
+                          borderRadius: '50%',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          background: bgColor,
+                          flexShrink: 0,
+                        }}
+                      >
+                        <ChevronRight size={14} className="text-white" />
+                      </div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-800 text-sm leading-snug line-clamp-1">{item.title}</p>
-                    {item.description && <p className="text-gray-500 text-xs mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>}
-                  </div>
-                  {item.linkUrl && (
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: bgColor }}>
-                      <ChevronRight size={14} className="text-white" />
-                    </div>
-                  )}
-                </div>
-              );
-              return item.linkUrl ? (
-                <Link key={item.id || idx} href={item.linkUrl} onClick={handleClose}>{rowContent}</Link>
-              ) : (
-                <div key={item.id || idx}>{rowContent}</div>
-              );
-            })}
+                );
+
+                return item.linkUrl ? (
+                  <Link key={item.id || idx} href={item.linkUrl} onClick={handleClose}>{rowContent}</Link>
+                ) : (
+                  <div key={item.id || idx}>{rowContent}</div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* Close button */}
         <div className="flex justify-center mt-5">
-          <button onClick={handleClose} aria-label="Đóng popup" className="w-11 h-11 rounded-full bg-white/95 shadow-xl flex items-center justify-center hover:bg-white">
+          <button
+            onClick={handleClose}
+            aria-label="Đóng popup"
+            style={{
+              width: 44, height: 44,
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.95)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: 'none', cursor: 'pointer',
+            }}
+          >
             <X size={20} className="text-gray-500" />
           </button>
         </div>
