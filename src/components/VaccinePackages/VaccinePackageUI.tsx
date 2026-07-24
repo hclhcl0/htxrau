@@ -61,7 +61,7 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
     if (!selected) return 0;
     let total = selected.discountPrice;
     selected.items?.forEach((item, idx) => {
-      const maxDoses = item.vaccine?.scheduleDoses ?? undefined;
+      const maxDoses = item.vaccine?.scheduleDoses ?? item.doses;
       const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
       const currentQty = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
       const alt = selectedAlternatives[idx];
@@ -179,7 +179,7 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
                 <div key={idx} className="py-2.5">
                   <div className="text-[14px] font-medium text-[#00a4ff] mb-1.5 flex items-center gap-2">
                     {(() => {
-                      const maxDoses = item.vaccine?.scheduleDoses ?? undefined;
+                      const maxDoses = item.vaccine?.scheduleDoses ?? item.doses;
                       const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
                       const currentQty = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
                       const isChecked = currentQty > 0;
@@ -255,7 +255,7 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
                     {/* Quantity */}
                     <div className="hidden md:flex justify-center">
                       {(() => {
-                        const maxDoses = item.vaccine?.scheduleDoses ?? undefined;
+                        const maxDoses = item.vaccine?.scheduleDoses ?? item.doses;
                         const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
                         const currentQty2 = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
                         const atMax = maxDoses != null && currentQty2 >= maxDoses;
