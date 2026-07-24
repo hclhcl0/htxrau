@@ -169,7 +169,7 @@ function PaginationBar({
             download
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-sm font-semibold shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-transparent border border-emerald-600 !text-emerald-600 hover:bg-emerald-50 hover:!text-emerald-700 active:scale-95 !no-underline text-sm font-semibold transition-all"
           >
             <Download size={15} />
             Tải về file {fileName?.split('.').pop()?.toUpperCase() ?? 'Excel'}
