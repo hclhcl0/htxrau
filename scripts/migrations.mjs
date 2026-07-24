@@ -3529,7 +3529,7 @@ export const MIGRATION_STATEMENTS = [
   // ====================================================
   // BATCH: Add scheduleDoses to vaccines (phác đồ chuẩn)
   // ====================================================
-  `DO $$ BEGIN ALTER TABLE "vaccines" ADD COLUMN "schedule_doses" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "vaccines" ADD COLUMN "schedule_doses" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
 
   // ==================================================
   // BATCH: Add warning_section_is_enabled column
