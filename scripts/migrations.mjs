@@ -1,4 +1,4 @@
-﻿/**
+/**
  * MIGRATION STATEMENTS — nguồn duy nhất (single source of truth)
  * Cập nhật lúc: 11/06/2026 23:00
  *
@@ -3534,5 +3534,11 @@ export const MIGRATION_STATEMENTS = [
   // ==================================================
   // BATCH: Add warning_section_is_enabled column
   // ==================================================
-  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "warning_section_is_enabled" boolean DEFAULT true; EXCEPTION WHEN duplicate_column THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "warning_section_is_enabled" boolean DEFAULT true; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: Add orientation column to PDFBlock
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "pages_blocks_pdf_block" ADD COLUMN IF NOT EXISTS "orientation" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "_pages_v_blocks_pdf_block" ADD COLUMN IF NOT EXISTS "orientation" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`
 ];
