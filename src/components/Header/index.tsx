@@ -28,7 +28,7 @@ export const Header = async () => {
     mobileHeight: 52, mobileShowSiteName: false, hoverEffect: 'scale-tilt',
   };
   let searchConfig = { position: 'hotline', style: 'inline', width: 250 };
-  let fb: any, tw: any, yt: any, ig: any;
+  let fb: any, tw: any, yt: any, ig: any, zalo: any, miniapp: any;
   let phone = '0909 408 895';
   let actionLink = '#';
   let hotlinePosition = 'below-nav';
@@ -63,8 +63,8 @@ export const Header = async () => {
     tw = headerData.socialLinks?.twitter;
     yt = headerData.socialLinks?.youtube;
     ig = headerData.socialLinks?.instagram;
-    const zalo = headerData.socialLinks?.zalo;
-    const miniapp = headerData.socialLinks?.miniapp;
+    zalo = headerData.socialLinks?.zalo;
+    miniapp = headerData.socialLinks?.miniapp;
     phone = headerData.hotline?.phone || '0909 408 895';
     actionLink = headerData.hotline?.actionLink || '#';
     hotlinePosition = headerData.hotline?.position || 'below-nav';
