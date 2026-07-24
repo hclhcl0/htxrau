@@ -239,10 +239,12 @@ export function PageBlockRenderer({ blocks }: Props) {
             const embedUrl = isGDrive
               ? pdfUrl.replace('/view', '/preview').replace('/edit', '/preview')
               : pdfUrl;
+            const isHorizontal = block.orientation === 'horizontal';
             return (
               <div key={key} className="my-6">
-                <div className="aspect-[1/1.4] w-full rounded-xl overflow-hidden border border-gray-200">
-                  <iframe src={embedUrl} width="100%" height="100%" style={{ border: 'none' }} allow="autoplay" />
+                <div className={`${isHorizontal ? 'aspect-video' : 'aspect-[1/1.4]'} w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50/50 relative group`}>
+                  <iframe src={embedUrl} width="100%" height="100%" style={{ border: 'none' }} allow="autoplay" className="absolute inset-0 z-10" />
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium">Đang tải tài liệu...</div>
                 </div>
                 {isGDrive && (
                   <div className="mt-2 text-sm text-gray-500 flex gap-2 items-center flex-wrap">

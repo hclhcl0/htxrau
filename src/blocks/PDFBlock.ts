@@ -53,6 +53,20 @@ export const PDFBlock: Block = {
       name: 'caption',
       type: 'text',
       label: 'Chú thích / Tên tệp hiển thị (không bắt buộc)',
+    },
+    {
+      name: 'orientation',
+      type: 'radio',
+      options: [
+        { label: 'Dọc (Khổ A4)', value: 'vertical' },
+        { label: 'Ngang (Slide 16:9)', value: 'horizontal' },
+      ],
+      defaultValue: 'vertical',
+      layout: 'horizontal',
+      label: 'Tỷ lệ khung hình (Chỉ áp dụng khi Hiển thị trực tiếp)',
+      admin: {
+        condition: (_, siblingData) => siblingData?.displayMode !== 'download',
+      },
     }
   ],
 };
