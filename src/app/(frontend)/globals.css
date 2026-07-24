@@ -669,4 +669,35 @@
   isolation: isolate;
 }
 
+/* ── Hào quang chuyển động quanh bác sĩ ─────────────── */
+@keyframes mascot-glow {
+  0%   {
+    filter:
+      drop-shadow(0 0 4px  rgba(0, 169, 157, 0.55))
+      drop-shadow(0 0 10px rgba(0, 201, 184, 0.20));
+  }
+  40%  {
+    filter:
+      drop-shadow(0 0 10px rgba(0, 169, 157, 0.95))
+      drop-shadow(0 0 22px rgba(0, 201, 184, 0.55))
+      drop-shadow(0 0 36px rgba(100, 230, 220, 0.25));
+  }
+  70%  {
+    filter:
+      drop-shadow(0 0 7px  rgba(0, 169, 157, 0.75))
+      drop-shadow(0 0 18px rgba(0, 201, 184, 0.40));
+  }
+  100% {
+    filter:
+      drop-shadow(0 0 4px  rgba(0, 169, 157, 0.55))
+      drop-shadow(0 0 10px rgba(0, 201, 184, 0.20));
+  }
+}
+
+.mascot-glow {
+  animation: mascot-glow 2.4s ease-in-out infinite;
+  /* Delay nhỏ để glow bắt đầu sau khi peek animation xong */
+  animation-delay: 0.9s;
+}
+
 

@@ -80,6 +80,7 @@ export function SitePopup({ popupConfig }: SitePopupProps) {
       showOnce={popupConfig.showOnce}
       transparentBackground={transparentBackground}
       displayVideoUrl={popupConfig.videoUrl}
+      mascotImage={popupConfig.servicesMascot || null}
     />
   );
 }

@@ -4,6 +4,13 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || '';
+function resolveMediaUrl(url: string): string {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  return `${SERVER_URL}${url}`;
+}
+
 export function SitePopupClient({
   displayTitle,
   displayImage,
@@ -14,7 +21,8 @@ export function SitePopupClient({
   delaySeconds,
   showOnce,
   transparentBackground,
-  displayVideoUrl
+  displayVideoUrl,
+  mascotImage,
 }: {
   displayTitle: string | null | undefined;
   displayImage: any;
@@ -26,6 +34,7 @@ export function SitePopupClient({
   showOnce: boolean | null | undefined;
   transparentBackground?: boolean | null | undefined;
   displayVideoUrl?: string | null | undefined;
+  mascotImage?: { url: string; alt?: string } | null;
 }) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -52,8 +61,33 @@ export function SitePopupClient({
         role="dialog"
         aria-modal="true"
         aria-labelledby="popup-title"
+        style={{ marginTop: mascotImage?.url ? '48px' : '0' }}
       >
-        {/* Nút đóng lồi ra ngoài góc trên bên phải */}
+        {/* Mascot — góc trái trên, trượt lên từ phía sau */}
+        {mascotImage?.url && (
+          <div
+            className="mascot-peek"
+            style={{
+              position: 'absolute',
+              left: '12px',
+              top: '-72px',
+              zIndex: 20,
+              width: 80,
+              height: 90,
+              opacity: 0,
+              willChange: 'transform, opacity',
+            }}
+          >
+            <img
+              src={resolveMediaUrl(mascotImage.url)}
+              alt={mascotImage.alt || 'Bác sĩ'}
+              className="mascot-glow"
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          </div>
+        )}
+
+        {/* Nút đóng */}
         <button
           onClick={handleClose}
           className="absolute -top-3 -right-3 z-50 w-8 h-8 flex items-center justify-center bg-gray-300 hover:bg-gray-400 text-white rounded-full shadow-md focus:outline-none"
