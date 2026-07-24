@@ -5,6 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRight, X } from 'lucide-react';
 
+// Resolve URL ảnh từ Payload CMS (có thể là relative path)
+function resolveMediaUrl(url: string): string {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  // Relative path — ghép với NEXT_PUBLIC_SERVER_URL hoặc origin
+  const base = process.env.NEXT_PUBLIC_SERVER_URL || '';
+  return `${base}${url}`;
+}
+
 export interface ServiceItem {
   id?: string;
   icon?: string;
@@ -60,141 +69,120 @@ export function ServicesPopupClient({
       {/* Popup wrapper — wider: max-w-md */}
       <div className="relative z-10 w-full max-w-md mb-8 sm:mb-0">
 
-        {/* ── CAPSULE BADGE nổi phía trên ─────────────────────
-            Mascot (nếu có) + Capsule title badge
+        {/* ── CARD + MASCOT ──────────────────────────────────
+            Card có overflow visible ở trên để mascot nhô lên
+            Mascot tuyệt đối ở góc trái-trên, trượt từ dưới lên
         ─────────────────────────────────────────────────── */}
-        <div className="flex flex-col items-center" style={{ marginBottom: '-28px', position: 'relative', zIndex: 20 }}>
+        <div style={{ position: 'relative' }}>
 
-          {/* Mascot — thò ra từ trên xuống */}
+          {/* Mascot — góc trái trên, trượt lên từ phía sau */}
           {mascotImage?.url && (
             <div
               className="mascot-peek"
               style={{
-                width: 96,
-                height: 96,
-                position: 'relative',
-                marginBottom: '8px',
-                opacity: 0,           /* chống FOUC: ẩn ngay từ đầu, animation sẽ override */
-                willChange: 'transform, opacity', /* pre-promote GPU layer */
+                position: 'absolute',
+                left: '12px',
+                top: '-72px',
+                zIndex: 20,
+                width: 80,
+                height: 90,
+                opacity: 0,
+                willChange: 'transform, opacity',
               }}
             >
-              <Image src={mascotImage.url} alt={mascotImage.alt || 'Mascot'} fill className="object-contain" sizes="96px" priority />
+              <img
+                src={resolveMediaUrl(mascotImage.url)}
+                alt={mascotImage.alt || 'Bác sĩ'}
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+              />
             </div>
           )}
 
-          {/* Capsule title */}
-          <div
-            style={{
+          {/* Capsule badge — vẫn căn giữa phía trên card */}
+          <div style={{
+            position: 'absolute',
+            top: '-22px',
+            left: 0, right: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            zIndex: 15,
+          }}>
+            <div style={{
               background: `linear-gradient(135deg, ${bgColor} 0%, #00c9b8 100%)`,
               borderRadius: '999px',
-              padding: '10px 32px',
-              boxShadow: `0 4px 20px rgba(0,169,157,0.5), 0 2px 6px rgba(0,0,0,0.15)`,
+              padding: '9px 28px 9px 56px', /* padding-left lớn hơn nhường chỗ mascot */
+              boxShadow: `0 4px 20px rgba(0,169,157,0.45), 0 2px 6px rgba(0,0,0,0.12)`,
               border: '2.5px solid rgba(255,255,255,0.6)',
-              minWidth: '220px',
+              minWidth: '200px',
               textAlign: 'center',
-            }}
-          >
-            <h2 style={{
-              color: '#fff',
-              fontWeight: 800,
-              fontSize: '15px',
-              letterSpacing: '0.04em',
-              textShadow: '0 1px 3px rgba(0,0,0,0.2)',
-              margin: 0,
-              lineHeight: 1.3,
             }}>
-              {title}
-            </h2>
-            {subtitle && (
-              <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: '11px', marginTop: '2px', marginBottom: 0 }}>
-                {subtitle}
-              </p>
-            )}
+              <h2 style={{
+                color: '#fff', fontWeight: 800, fontSize: '14px',
+                letterSpacing: '0.04em', textShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                margin: 0, lineHeight: 1.3,
+              }}>
+                {title}
+              </h2>
+              {subtitle && (
+                <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: '11px', marginTop: '2px', marginBottom: 0 }}>
+                  {subtitle}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* ── CARD — nền xanh nhẹ ─────────────────────────── */}
-        <div
-          style={{
+          {/* ── CARD TRẮNG ─────────────────────────────────────── */}
+          <div style={{
             background: 'linear-gradient(160deg, #e8f8f7 0%, #f0fbfa 60%, #ffffff 100%)',
             borderRadius: '20px',
             boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
             overflow: 'hidden',
-            border: `1.5px solid rgba(0,169,157,0.15)`,
-          }}
-        >
-          {/* Padding top để nhường chỗ cho capsule nổi xuống */}
-          <div className="px-5 pb-5" style={{ paddingTop: '32px' }}>
-            <div className="flex flex-col gap-3 max-h-[55vh] overflow-y-auto">
-              {items.length === 0 && (
-                <p className="text-gray-400 text-sm text-center py-6">Chưa có dịch vụ nào.</p>
-              )}
-              {items.map((item, idx) => {
-                const rowContent = (
-                  <div
-                    className="flex items-center gap-3 group"
-                    style={{
+            border: '1.5px solid rgba(0,169,157,0.15)',
+          }}>
+            <div className="px-5 pb-5" style={{ paddingTop: '32px' }}>
+              <div className="flex flex-col gap-3 max-h-[55vh] overflow-y-auto">
+                {items.length === 0 && (
+                  <p className="text-gray-400 text-sm text-center py-6">Chưa có dịch vụ nào.</p>
+                )}
+                {items.map((item, idx) => {
+                  const rowContent = (
+                    <div className="flex items-center gap-3 group" style={{
                       background: 'rgba(255,255,255,0.85)',
-                      borderRadius: '14px',
-                      padding: '10px 14px',
+                      borderRadius: '14px', padding: '10px 14px',
                       boxShadow: '0 1px 4px rgba(0,169,157,0.08)',
                       border: '1px solid rgba(0,169,157,0.12)',
-                      transition: 'background 0.15s',
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: 44,
-                        height: 44,
-                        flexShrink: 0,
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: `linear-gradient(135deg, rgba(0,169,157,0.12) 0%, rgba(0,201,184,0.08) 100%)`,
+                    }}>
+                      <div style={{
+                        width: 44, height: 44, flexShrink: 0,
+                        borderRadius: '12px', overflow: 'hidden',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'linear-gradient(135deg, rgba(0,169,157,0.12) 0%, rgba(0,201,184,0.08) 100%)',
                         fontSize: '22px',
-                      }}
-                    >
-                      {item.iconImage?.url ? (
-                        <Image src={item.iconImage.url} alt={item.iconImage.alt || item.title} width={36} height={36} className="object-contain" />
-                      ) : (
-                        <span>{item.icon || '🏥'}</span>
-                      )}
-                    </div>
-
-                    {/* Text */}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-800 text-sm leading-snug line-clamp-1">{item.title}</p>
-                      {item.description && (
-                        <p className="text-gray-500 text-xs mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>
-                      )}
-                    </div>
-
-                    {/* Arrow */}
-                    {item.linkUrl && (
-                      <div
-                        style={{
-                          width: 28, height: 28,
-                          borderRadius: '50%',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          background: bgColor,
-                          flexShrink: 0,
-                        }}
-                      >
-                        <ChevronRight size={14} className="text-white" />
+                      }}>
+                        {item.iconImage?.url ? (
+                          <Image src={item.iconImage.url} alt={item.iconImage.alt || item.title} width={36} height={36} className="object-contain" />
+                        ) : (
+                          <span>{item.icon || '🏥'}</span>
+                        )}
                       </div>
-                    )}
-                  </div>
-                );
-
-                return item.linkUrl ? (
-                  <Link key={item.id || idx} href={item.linkUrl} onClick={handleClose}>{rowContent}</Link>
-                ) : (
-                  <div key={item.id || idx}>{rowContent}</div>
-                );
-              })}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-800 text-sm leading-snug line-clamp-1">{item.title}</p>
+                        {item.description && <p className="text-gray-500 text-xs mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>}
+                      </div>
+                      {item.linkUrl && (
+                        <div style={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: bgColor, flexShrink: 0 }}>
+                          <ChevronRight size={14} className="text-white" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                  return item.linkUrl ? (
+                    <Link key={item.id || idx} href={item.linkUrl} onClick={handleClose}>{rowContent}</Link>
+                  ) : (
+                    <div key={item.id || idx}>{rowContent}</div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

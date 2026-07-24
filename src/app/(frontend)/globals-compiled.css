@@ -150,10 +150,7 @@
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --drop-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.15);
     --drop-shadow-md: 0 3px 3px rgb(0 0 0 / 0.12);
-    --drop-shadow-xl: 0 9px 7px rgb(0 0 0 / 0.1);
-    --drop-shadow-2xl: 0 25px 25px rgb(0 0 0 / 0.15);
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -3360,19 +3357,9 @@
     --tw-drop-shadow: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow( 0 1px 1px rgb(0 0 0 / 0.06));
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
   }
-  .drop-shadow-2xl {
-    --tw-drop-shadow-size: drop-shadow(0 25px 25px var(--tw-drop-shadow-color, rgb(0 0 0 / 0.15)));
-    --tw-drop-shadow: drop-shadow(var(--drop-shadow-2xl));
-    filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
-  }
   .drop-shadow-md {
     --tw-drop-shadow-size: drop-shadow(0 3px 3px var(--tw-drop-shadow-color, rgb(0 0 0 / 0.12)));
     --tw-drop-shadow: drop-shadow(var(--drop-shadow-md));
-    filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
-  }
-  .drop-shadow-xl {
-    --tw-drop-shadow-size: drop-shadow(0 9px 7px var(--tw-drop-shadow-color, rgb(0 0 0 / 0.1)));
-    --tw-drop-shadow: drop-shadow(var(--drop-shadow-xl));
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
   }
   .filter {
@@ -6141,93 +6128,27 @@
 }
 @keyframes mascot-peek {
   0% {
-    transform: translateY(-120%) rotate(-8deg);
+    transform: translateY(70px);
     opacity: 0;
   }
-  60% {
-    transform: translateY(10%) rotate(4deg);
+  65% {
+    transform: translateY(-8px);
     opacity: 1;
   }
-  80% {
-    transform: translateY(-6%) rotate(-2deg);
+  85% {
+    transform: translateY(4px);
     opacity: 1;
   }
   100% {
-    transform: translateY(0%) rotate(0deg);
+    transform: translateY(0px);
     opacity: 1;
   }
 }
 .mascot-peek {
-  animation: mascot-peek 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: 0.15s;
-}
-@keyframes popup-border-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-.popup-glow-border {
-  position: relative;
-  border-radius: 24px;
+  animation: mascot-peek 0.65s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+  animation-delay: 0.2s;
+  will-change: transform, opacity;
   isolation: isolate;
-}
-.popup-glow-border::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 26px;
-  background: conic-gradient( from 0deg, transparent 0deg, transparent 50deg, #ffffff 70deg, #99f6e4 90deg, #00a99d 110deg, #ffffff 130deg, transparent 150deg, transparent 360deg );
-  animation: popup-border-spin 3s linear infinite;
-  z-index: -1;
-}
-.popup-glow-border::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border-radius: 22px;
-  background: white;
-  z-index: -1;
-}
-.popup-ribbon-wrap {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  margin-left: -10px;
-  margin-right: -10px;
-  margin-bottom: 4px;
-}
-.popup-ribbon {
-  position: relative;
-  display: inline-block;
-  min-width: calc(100% + 20px);
-  text-align: center;
-  padding: 10px 32px;
-  border-radius: 4px 4px 0 0;
-}
-.popup-ribbon::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -8px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 10px 8px 0;
-  border-color: transparent var(--popup-ribbon-shadow, #007068) transparent transparent;
-}
-.popup-ribbon::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: -8px;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 0 8px 10px;
-  border-color: transparent transparent transparent var(--popup-ribbon-shadow, #007068);
 }
 @property --tw-translate-x {
   syntax: "*";
