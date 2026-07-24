@@ -125,11 +125,7 @@ export function VideoCardPopup({
             {video.title}
           </h4>
           
-          {variant === 'vertical' ? (
-             <p className="text-white text-[10.5px] sm:text-[11.5px] line-clamp-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] leading-tight mt-0.5">
-               {video.description || new Date(video.publishedDate).toLocaleDateString('vi-VN')}
-             </p>
-          ) : (
+          {variant !== 'vertical' && (
              <>
                {video.description && (
                  <p className={`text-gray-600 line-clamp-2 ${isFeatured ? 'text-sm' : 'text-xs'}`}>
