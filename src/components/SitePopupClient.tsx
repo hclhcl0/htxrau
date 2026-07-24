@@ -27,48 +27,50 @@ export function SitePopupClient({
   transparentBackground?: boolean | null | undefined;
   displayVideoUrl?: string | null | undefined;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+
     if (showOnce) {
       const closed = localStorage.getItem('cdc_popup_closed');
-      if (closed === 'true') {
-        return;
-      }
+      if (closed === 'true') return;
     }
 
     const delay = (delaySeconds || 0) * 1000;
     const timer = setTimeout(() => {
-      setShouldRender(true);
-      setTimeout(() => setIsOpen(true), 10);
+      setIsVisible(true);
     }, delay);
 
     return () => clearTimeout(timer);
   }, [delaySeconds, showOnce]);
 
   const handleClose = () => {
-    setIsOpen(false);
+    setIsVisible(false);
     if (showOnce) {
       localStorage.setItem('cdc_popup_closed', 'true');
     }
-    setTimeout(() => {
-      setShouldRender(false);
-    }, 300);
   };
 
-  if (!shouldRender) return null;
+  // Only skip render on server to avoid hydration mismatch
+  if (!isMounted) return null;
 
   return (
-    <div className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer transition-opacity"
+    <div
+      aria-hidden={!isVisible}
+      className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+    >
+      <div
+        className="absolute inset-0 bg-black/60 cursor-pointer"
         onClick={handleClose}
       />
-      
-      <div 
-        className={`relative w-full max-w-xl mx-4 transform transition-transform duration-300 ease-out ${
-          isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
+
+      <div
+        className={`relative w-full max-w-xl mx-4 transform transition-all duration-300 ease-out ${
+          isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
         }`}
         role="dialog"
         aria-modal="true"
@@ -85,7 +87,7 @@ export function SitePopupClient({
           </svg>
         </button>
 
-        <div 
+        <div
           className={`flex flex-col overflow-hidden ${
             transparentBackground ? 'bg-transparent' : 'bg-white rounded-xl shadow-2xl'
           }`}
@@ -93,13 +95,13 @@ export function SitePopupClient({
           {displayVideoUrl ? (
             <div className="relative w-full aspect-video bg-black flex-shrink-0">
               <iframe
-                src={displayVideoUrl.includes('youtube.com') || displayVideoUrl.includes('youtu.be') 
+                src={displayVideoUrl.includes('youtube.com') || displayVideoUrl.includes('youtu.be')
                   ? `https://www.youtube.com/embed/${
-                      displayVideoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/) && 
+                      displayVideoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/) &&
                       displayVideoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/)?.[2]?.length === 11
                         ? displayVideoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/)?.[2]
                         : ''
-                    }?autoplay=1&mute=1` 
+                    }?autoplay=1&mute=1`
                   : displayVideoUrl}
                 className="w-full h-full border-0 absolute inset-0"
                 allow="autoplay; encrypted-media; fullscreen"
@@ -140,7 +142,7 @@ export function SitePopupClient({
 
             {displayLinkUrl && (
               <div className="mt-6 flex justify-center">
-                <Link 
+                <Link
                   href={displayLinkUrl}
                   className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow transition-all text-center w-full sm:w-auto"
                   onClick={handleClose}
