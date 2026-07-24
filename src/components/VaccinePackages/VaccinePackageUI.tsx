@@ -65,8 +65,8 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
       const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
       const currentQty = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
       const alt = selectedAlternatives[idx];
-      total -= originalQty * (item.unitPrice || 0);
-      const newPrice = alt ? alt.price : (item.unitPrice || 0);
+      total -= originalQty * (item.vaccine?.price || 0);
+      const newPrice = alt ? alt.price : (item.vaccine?.price || 0);
       total += currentQty * newPrice;
     });
     return Math.max(0, total);
@@ -291,7 +291,7 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
                     <div className="text-right">
                       {(() => {
                         const alt = selectedAlternatives[idx];
-                        const displayPrice = alt ? alt.price : item.unitPrice;
+                        const displayPrice = alt ? alt.price : item.vaccine?.price;
                         return displayPrice ? (
                           <p className="text-[14px] font-medium text-gray-800">{formatPrice(displayPrice)}</p>
                         ) : (
