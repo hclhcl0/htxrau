@@ -38,7 +38,7 @@ interface Props {
   siteName: string;
   phone: string;
   actionLink: string;
-  socials: { fb?: string; tw?: string; yt?: string; ig?: string; };
+  socials: { fb?: string; tw?: string; yt?: string; ig?: string; zalo?: string; miniapp?: string; };
 }
 
 export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logoUrl, logoConfig, searchConfig, hotlinePosition, siteName, phone, actionLink, socials }: Props) => {
@@ -190,6 +190,8 @@ export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logo
             {socials.tw && <Link href={socials.tw} target="_blank" aria-label="Twitter"><FaTwitter size={16} /></Link>}
             {socials.yt && <Link href={socials.yt} target="_blank" aria-label="Youtube"><FaYoutube size={16} /></Link>}
             {socials.ig && <Link href={socials.ig} target="_blank" aria-label="Instagram"><FaInstagram size={16} /></Link>}
+            {socials.zalo && <Link href={socials.zalo} target="_blank" aria-label="Zalo OA" style={{ fontSize: '11px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '3px' }}><span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '16px', height: '16px', backgroundColor: 'currentColor', color: 'white', borderRadius: '50%' }}>Z</span></Link>}
+            {socials.miniapp && <Link href={socials.miniapp} target="_blank" aria-label="Mini App" style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '3px' }}>Mini App</Link>}
           </div>
           <div className={styles.authLinks} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {searchConfig.position === 'topbar' && (

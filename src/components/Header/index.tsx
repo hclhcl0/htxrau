@@ -63,6 +63,8 @@ export const Header = async () => {
     tw = headerData.socialLinks?.twitter;
     yt = headerData.socialLinks?.youtube;
     ig = headerData.socialLinks?.instagram;
+    const zalo = headerData.socialLinks?.zalo;
+    const miniapp = headerData.socialLinks?.miniapp;
     phone = headerData.hotline?.phone || '0909 408 895';
     actionLink = headerData.hotline?.actionLink || '#';
     hotlinePosition = headerData.hotline?.position || 'below-nav';
@@ -84,7 +86,7 @@ export const Header = async () => {
       siteName={siteName}
       phone={phone}
       actionLink={actionLink}
-      socials={{ fb, tw, yt, ig }}
+      socials={{ fb, tw, yt, ig, zalo, miniapp }}
     />
   );
 };

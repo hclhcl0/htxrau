@@ -1,4 +1,4 @@
-﻿import type { GlobalConfig } from 'payload';
+import type { GlobalConfig } from 'payload';
 import { Settings } from './Settings.ts';
 import { CategoryNewsBlock } from '../blocks/CategoryNews.ts';
 import { lexicalEditor, BlocksFeature } from '@payloadcms/richtext-lexical';
@@ -403,6 +403,13 @@ export const SiteSettings: GlobalConfig = {
                   fields: [
                     { name: 'twitter', type: 'text', label: 'Twitter URL' },
                     { name: 'instagram', type: 'text', label: 'Instagram URL' },
+                  ]
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'zalo', type: 'text', label: 'Zalo OA URL' },
+                    { name: 'miniapp', type: 'text', label: 'Zalo Mini App URL' },
                   ]
                 },
               ],
