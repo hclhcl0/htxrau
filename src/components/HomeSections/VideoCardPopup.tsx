@@ -120,7 +120,7 @@ export function VideoCardPopup({
             </div>
           )}
         </div>
-        <div className={`relative z-20 ${variant === 'vertical' ? 'p-2 sm:p-3 mt-auto flex flex-col gap-0.5' : (isFeatured ? "p-4 flex flex-col gap-2" : "p-3 flex-1 flex flex-col gap-1")}`}>
+        <div className={variant === 'vertical' ? 'absolute inset-x-0 bottom-0 z-20 p-2 sm:p-3 flex flex-col gap-0.5' : `relative z-20 ${isFeatured ? "p-4 flex flex-col gap-2" : "p-3 flex-1 flex flex-col gap-1"}`}>
           <h4 className={`${variant === 'vertical' ? 'font-bold text-white text-[11px] sm:text-[13px] group-hover:text-blue-300 drop-shadow-md' : (isFeatured ? 'font-bold text-lg' : 'text-sm font-semibold')} line-clamp-2 transition-colors leading-tight ${variant !== 'vertical' && 'text-gray-800 group-hover:text-[var(--primary)]'}`}>
             {video.title}
           </h4>
