@@ -292,8 +292,13 @@ export function VaccinePackageUI({ packages, vaccines = [], phoneNumber, compact
                       {(() => {
                         const alt = selectedAlternatives[idx];
                         const displayPrice = alt ? alt.price : item.vaccine?.price;
+                        
+                        const maxDoses = item.vaccine?.scheduleDoses ?? item.doses;
+                        const originalQty = maxDoses != null ? Math.min(item.doses || 1, maxDoses) : (item.doses || 1);
+                        const currentQty = customDoses[idx] !== undefined ? customDoses[idx] : originalQty;
+
                         return displayPrice ? (
-                          <p className="text-[14px] font-medium text-gray-800">{formatPrice(displayPrice)}</p>
+                          <p className="text-[14px] font-medium text-gray-800">{formatPrice(displayPrice * currentQty)}</p>
                         ) : (
                           <p className="text-sm text-gray-400">—</p>
                         );
