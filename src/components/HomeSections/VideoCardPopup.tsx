@@ -120,19 +120,28 @@ export function VideoCardPopup({
             </div>
           )}
         </div>
-        <div className={`relative z-20 ${variant === 'vertical' ? 'p-2 sm:p-3 mt-auto flex flex-col gap-0.5' : (isFeatured ? "p-4" : "p-3 flex-1 flex flex-col")}`}>
-          <h4 className={`${variant === 'vertical' ? 'font-bold text-white text-[11px] sm:text-[13px] group-hover:text-blue-300 drop-shadow-md' : (isFeatured ? 'font-bold text-base' : 'text-sm font-semibold')} line-clamp-2 transition-colors leading-tight ${variant !== 'vertical' && 'text-gray-800 group-hover:text-[var(--primary)]'}`}>
+        <div className={`relative z-20 ${variant === 'vertical' ? 'p-2 sm:p-3 mt-auto flex flex-col gap-0.5' : (isFeatured ? "p-4 flex flex-col gap-2" : "p-3 flex-1 flex flex-col gap-1")}`}>
+          <h4 className={`${variant === 'vertical' ? 'font-bold text-white text-[11px] sm:text-[13px] group-hover:text-blue-300 drop-shadow-md' : (isFeatured ? 'font-bold text-lg' : 'text-sm font-semibold')} line-clamp-2 transition-colors leading-tight ${variant !== 'vertical' && 'text-gray-800 group-hover:text-[var(--primary)]'}`}>
             {video.title}
           </h4>
-          {variant === 'vertical' && (
-             <p className="text-white/75 text-[10px] sm:text-[11px] line-clamp-1 drop-shadow-md leading-tight">
-               {video.description || new Date(video.publishedDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+          
+          {variant === 'vertical' ? (
+             <p className="text-white text-[10.5px] sm:text-[11.5px] line-clamp-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] leading-tight mt-0.5">
+               {video.description || new Date(video.publishedDate).toLocaleDateString('vi-VN')}
              </p>
-          )}
-          {variant !== 'vertical' && !isFeatured && video.publishedDate && (
-            <p suppressHydrationWarning className="text-xs text-gray-400 mt-auto pt-2">
-              {new Date(video.publishedDate).toLocaleDateString('vi-VN')}
-            </p>
+          ) : (
+             <>
+               {video.description && (
+                 <p className={`text-gray-600 line-clamp-2 ${isFeatured ? 'text-sm' : 'text-xs'}`}>
+                   {video.description}
+                 </p>
+               )}
+               {video.publishedDate && (
+                 <p suppressHydrationWarning className="text-xs text-gray-400 mt-auto pt-1">
+                   {new Date(video.publishedDate).toLocaleDateString('vi-VN')}
+                 </p>
+               )}
+             </>
           )}
         </div>
       </div>
