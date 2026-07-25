@@ -66,8 +66,8 @@ export function ServicesPopupClient({
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 cursor-pointer" onClick={handleClose} />
 
-      {/* Popup wrapper — wider: max-w-md */}
-      <div className="relative z-10 w-full max-w-md mb-8 sm:mb-0">
+      {/* Popup wrapper — responsive width */}
+      <div className="relative z-10 w-full max-w-md md:max-w-lg lg:max-w-2xl mb-8 sm:mb-0">
 
         {/* ── CARD + MASCOT ──────────────────────────────────
             Card có overflow visible ở trên để mascot nhô lên
@@ -84,8 +84,8 @@ export function ServicesPopupClient({
                 left: '12px',
                 top: '-72px',
                 zIndex: 20,
-                width: 80,
-                height: 90,
+                width: 'clamp(70px, 8vw, 110px)',
+                height: 'clamp(80px, 9vw, 125px)',
                 opacity: 0,
                 willChange: 'transform, opacity',
               }}
@@ -111,14 +111,17 @@ export function ServicesPopupClient({
             <div style={{
               background: `linear-gradient(135deg, ${bgColor} 0%, #00c9b8 100%)`,
               borderRadius: '999px',
-              padding: '9px 28px 9px 56px', /* padding-left lớn hơn nhường chỗ mascot */
+              padding: '9px 28px 9px',
+              paddingLeft: mascotImage?.url ? '56px' : '28px',
               boxShadow: `0 4px 20px rgba(0,169,157,0.45), 0 2px 6px rgba(0,0,0,0.12)`,
               border: '2.5px solid rgba(255,255,255,0.6)',
               minWidth: '200px',
+              maxWidth: '90%',
               textAlign: 'center',
+              wordBreak: 'break-word',
             }}>
               <h2 style={{
-                color: '#fff', fontWeight: 800, fontSize: '14px',
+                color: '#fff', fontWeight: 800, fontSize: 'clamp(13px, 1.4vw, 17px)',
                 letterSpacing: '0.04em', textShadow: '0 1px 3px rgba(0,0,0,0.2)',
                 margin: 0, lineHeight: 1.3,
               }}>
@@ -140,8 +143,8 @@ export function ServicesPopupClient({
             overflow: 'hidden',
             border: '1.5px solid rgba(0,169,157,0.15)',
           }}>
-            <div className="px-5 pb-5" style={{ paddingTop: '32px' }}>
-              <div className="flex flex-col gap-3 max-h-[55vh] overflow-y-auto">
+          <div className="px-5 md:px-7 pb-5 md:pb-6" style={{ paddingTop: '32px' }}>
+            <div className="flex flex-col gap-3 md:gap-4 max-h-[55vh] overflow-y-auto">
                 {items.length === 0 && (
                   <p className="text-gray-400 text-sm text-center py-6">Chưa có dịch vụ nào.</p>
                 )}
@@ -154,7 +157,7 @@ export function ServicesPopupClient({
                       border: '1px solid rgba(0,169,157,0.12)',
                     }}>
                       <div style={{
-                        width: 44, height: 44, flexShrink: 0,
+                        width: 'clamp(40px, 5vw, 56px)', height: 'clamp(40px, 5vw, 56px)', flexShrink: 0,
                         borderRadius: '12px', overflow: 'hidden',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         background: 'linear-gradient(135deg, rgba(0,169,157,0.12) 0%, rgba(0,201,184,0.08) 100%)',
@@ -167,8 +170,8 @@ export function ServicesPopupClient({
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-800 text-sm leading-snug line-clamp-1">{item.title}</p>
-                        {item.description && <p className="text-gray-500 text-xs mt-0.5 line-clamp-2 leading-relaxed">{item.description}</p>}
+                        <p className="font-semibold text-gray-800 text-sm md:text-base leading-snug">{item.title}</p>
+                        {item.description && <p className="text-gray-500 text-xs md:text-sm mt-0.5 leading-relaxed">{item.description}</p>}
                       </div>
                       {item.linkUrl && (
                         <div style={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: bgColor, flexShrink: 0 }}>

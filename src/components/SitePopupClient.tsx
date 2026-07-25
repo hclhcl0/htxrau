@@ -62,7 +62,7 @@ export function SitePopupClient({
       <div className="absolute inset-0 bg-black/60 cursor-pointer" onClick={handleClose} />
 
       {/* Popup wrapper */}
-      <div className="relative z-10 w-full max-w-md mb-8 sm:mb-0">
+      <div className="relative z-10 w-full max-w-md md:max-w-lg lg:max-w-2xl mb-8 sm:mb-0">
 
         {/* ── CARD + MASCOT ── */}
         <div style={{ position: 'relative' }}>
@@ -76,8 +76,8 @@ export function SitePopupClient({
                 left: '12px',
                 top: '-72px',
                 zIndex: 20,
-                width: 80,
-                height: 90,
+                width: 'clamp(70px, 8vw, 110px)',
+                height: 'clamp(80px, 9vw, 125px)',
                 opacity: 0,
                 willChange: 'transform, opacity',
               }}
@@ -109,10 +109,12 @@ export function SitePopupClient({
                 boxShadow: `0 4px 20px rgba(0,169,157,0.45), 0 2px 6px rgba(0,0,0,0.12)`,
                 border: '2.5px solid rgba(255,255,255,0.6)',
                 minWidth: '200px',
+                maxWidth: '90%',
                 textAlign: 'center',
+                wordBreak: 'break-word',
               }}>
                 <h2 id="popup-title" style={{
-                  color: '#fff', fontWeight: 800, fontSize: '14px',
+                  color: '#fff', fontWeight: 800, fontSize: 'clamp(13px, 1.4vw, 17px)',
                   letterSpacing: '0.04em', textShadow: '0 1px 3px rgba(0,0,0,0.2)',
                   margin: 0, lineHeight: 1.3, textTransform: 'uppercase',
                 }}>
@@ -187,9 +189,9 @@ export function SitePopupClient({
               )}
 
               {/* Nội dung */}
-              <div className="px-5 pb-5 pt-3 max-h-[45vh] overflow-y-auto custom-scrollbar">
+              <div className="px-5 md:px-7 pb-5 md:pb-6 pt-3 max-h-[45vh] overflow-y-auto custom-scrollbar">
                 {isArticle ? (
-                  <p className="text-gray-600 text-sm text-center leading-relaxed">
+                  <p className="text-gray-600 text-sm md:text-base text-center leading-relaxed">
                     {articleDescription || 'Vui lòng nhấn Đọc tiếp để xem chi tiết.'}
                   </p>
                 ) : (
