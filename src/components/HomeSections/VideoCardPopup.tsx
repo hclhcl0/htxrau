@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Play, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
 function getYoutubeId(url: string) {
@@ -106,16 +106,29 @@ export function VideoCardPopup({
           {/* Play button overlay */}
           {variant === 'vertical' ? (
             <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-20 pointer-events-none drop-shadow-md">
-              <svg viewBox="0 0 24 24" fill="white" className="w-5 h-5 sm:w-6 sm:h-6">
-                <path fillRule="evenodd" clipRule="evenodd" d="M12.7 6.3L15.3 3.7C15.7 3.3 16.3 3.3 16.7 3.7C17.1 4.1 17.1 4.7 16.7 5.1L14.8 7H18C20.2 7 22 8.8 22 11V17C22 19.2 20.2 21 18 21H6C3.8 21 2 19.2 2 17V11C2 8.8 3.8 7 6 7H9.2L7.3 5.1C6.9 4.7 6.9 4.1 7.3 3.7C7.7 3.3 8.3 3.3 8.7 3.7L11.3 6.3C11.5 6.5 11.7 6.6 12 6.6C12.3 6.6 12.5 6.5 12.7 6.3ZM10.5 11.5L14.5 14L10.5 16.5V11.5Z" />
-              </svg>
+              {video.isAIGenerated ? (
+                 <div className="flex items-center justify-center gap-1 bg-blue-600/90 text-white rounded-full px-2 py-0.5 text-[10px] sm:text-xs font-bold border border-white/30 shadow-lg backdrop-blur-sm">
+                   <Sparkles className="w-3 h-3" /> AI
+                 </div>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="white" className="w-5 h-5 sm:w-6 sm:h-6">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12.7 6.3L15.3 3.7C15.7 3.3 16.3 3.3 16.7 3.7C17.1 4.1 17.1 4.7 16.7 5.1L14.8 7H18C20.2 7 22 8.8 22 11V17C22 19.2 20.2 21 18 21H6C3.8 21 2 19.2 2 17V11C2 8.8 3.8 7 6 7H9.2L7.3 5.1C6.9 4.7 6.9 4.1 7.3 3.7C7.7 3.3 8.3 3.3 8.7 3.7L11.3 6.3C11.5 6.5 11.7 6.6 12 6.6C12.3 6.6 12.5 6.5 12.7 6.3ZM10.5 11.5L14.5 14L10.5 16.5V11.5Z" />
+                </svg>
+              )}
             </div>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-transparent group-hover:bg-slate-900/50 transition-all duration-300 z-20">
-              <div className={`rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 border border-white/30 ${isFeatured ? 'w-20 h-20' : 'w-14 h-14'}`}>
-                <svg viewBox="0 0 24 24" fill="white" className={`${isFeatured ? 'w-8 h-8 ml-1.5' : 'w-6 h-6 ml-1'} drop-shadow-md`}>
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
+              <div className={`rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 border border-white/30 ${isFeatured ? 'w-20 h-20' : 'w-14 h-14'} ${video.isAIGenerated ? 'bg-blue-600/80 backdrop-blur-md' : 'bg-white/20 backdrop-blur-md'}`}>
+                {video.isAIGenerated ? (
+                   <div className="flex flex-col items-center justify-center text-white font-black drop-shadow-md">
+                     <Sparkles className={isFeatured ? 'w-6 h-6' : 'w-5 h-5'} />
+                     <span className={isFeatured ? 'text-xs' : 'text-[10px] leading-tight'}>AI</span>
+                   </div>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="white" className={`${isFeatured ? 'w-8 h-8 ml-1.5' : 'w-6 h-6 ml-1'} drop-shadow-md`}>
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                )}
               </div>
             </div>
           )}

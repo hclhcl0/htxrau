@@ -102,6 +102,12 @@ export const Videos: CollectionConfig = {
           label: 'Video nổi bật',
           defaultValue: false,
         },
+        {
+          name: 'isAIGenerated',
+          type: 'checkbox',
+          label: 'Video có sử dụng AI',
+          defaultValue: false,
+        },
       ],
     },
   ],
