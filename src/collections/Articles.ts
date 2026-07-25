@@ -249,7 +249,15 @@ export const Articles: CollectionConfig = {
       }
     ],
     beforeChange: [
-      ({ req: { user }, data }) => {
+      ({ req: { user }, data, operation }) => {
+        // Tự động điền publishedAt cho các bài viết mới nếu chưa có
+        if (operation === 'create' && !data.publishedAt) {
+          data.publishedAt = new Date().toISOString();
+        }
+        if (operation === 'update' && data._status === 'published' && !data.publishedAt) {
+          data.publishedAt = new Date().toISOString();
+        }
+
         // Author không được tự xuất bản (publish)
         if (user && user.role === 'author') {
           if (data._status === 'published') {
