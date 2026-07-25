@@ -3546,5 +3546,10 @@ export const MIGRATION_STATEMENTS = [
   // BATCH: Add Zalo & MiniApp columns to header social links
   // ==================================================
   `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "header_social_links_zalo" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
-  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "header_social_links_miniapp" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "header_social_links_miniapp" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: Add is_a_i_generated to videos
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN IF NOT EXISTS "is_a_i_generated" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`
 ];
