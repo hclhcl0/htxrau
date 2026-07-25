@@ -155,9 +155,8 @@ export function SitePopupClient({
             {/* Padding top nhường chỗ capsule badge */}
             <div style={{ paddingTop: displayTitle && !transparentBackground ? '32px' : '16px' }}>
 
-              {/* Video */}
               {displayVideoUrl && (
-                <div className="relative w-full aspect-video bg-black flex-shrink-0">
+                <div className="relative w-full aspect-[4/3] sm:aspect-video bg-black flex-shrink-0 rounded-t-[18px] overflow-hidden">
                   <iframe
                     src={displayVideoUrl.includes('youtube.com') || displayVideoUrl.includes('youtu.be')
                       ? `https://www.youtube.com/embed/${
