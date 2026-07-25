@@ -3551,5 +3551,10 @@ export const MIGRATION_STATEMENTS = [
   // ==================================================
   // BATCH: Add is_a_i_generated to videos
   // ==================================================
-  `DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN IF NOT EXISTS "is_a_i_generated" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN IF NOT EXISTS "is_a_i_generated" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: Add is_warning to videos
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN IF NOT EXISTS "is_warning" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`
 ];

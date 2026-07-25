@@ -33,6 +33,11 @@ async function getWarningVideos() {
     const payload = await getPayload({ config: configPromise });
     const { docs } = await payload.find({
       collection: 'videos',
+      where: {
+        isWarning: {
+          equals: true
+        }
+      },
       sort: '-publishedDate',
       limit: 6,
       depth: 1,

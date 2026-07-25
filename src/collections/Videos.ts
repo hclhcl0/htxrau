@@ -108,6 +108,12 @@ export const Videos: CollectionConfig = {
           label: 'Video có sử dụng AI',
           defaultValue: false,
         },
+        {
+          name: 'isWarning',
+          type: 'checkbox',
+          label: 'Video cảnh báo',
+          defaultValue: false,
+        },
       ],
     },
   ],
