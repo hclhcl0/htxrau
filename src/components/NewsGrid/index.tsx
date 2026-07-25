@@ -16,6 +16,7 @@ interface NewsGridProps {
   layoutOverride?: string;
   excludeId?: string | number;
   disableContainer?: boolean;
+  preloadedArticles?: any[]; // P4: pass pre-fetched related articles
 }
 
 async function getLatestArticles(limit: number, categoryId?: string | number, excludeId?: string | number) {
@@ -78,10 +79,11 @@ function isInternalUrl(url: string) {
   return url.startsWith('/') || url.startsWith('./') || url.includes('ecdc.vnos.org');
 }
 
-export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOverride, layoutOverride, excludeId, disableContainer }: NewsGridProps) => {
+export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOverride, layoutOverride, excludeId, disableContainer, preloadedArticles }: NewsGridProps) => {
   const { limit: defaultRows, desktopCols, mobileCols, homeNewsLayout } = await getNewsSettings();
   const actualLimit = limitOverride || defaultRows || 8;
-  const articles = await getLatestArticles(actualLimit, categoryId, excludeId);
+  // Dùng preloadedArticles nếu có (P4 smart fetch), ngược lại fetch theo category
+  const articles = preloadedArticles ?? await getLatestArticles(actualLimit, categoryId, excludeId);
   
   const title = categoryName ? categoryName.toUpperCase() : 'THÔNG TIN MỚI NHẤT';
 

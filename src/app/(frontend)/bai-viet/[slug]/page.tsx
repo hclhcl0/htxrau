@@ -96,6 +96,7 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
     }
   });
 
+
   // Xác định ID của chuyên mục cha để lấy các chuyên mục cùng nhóm
   let targetParentId = null;
 
@@ -146,7 +147,61 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
     categories = docs;
   }
 
-  // Fetch sidebar configurations from settings
+  // ── P4: Smart hybrid related articles ────────────────────────────────
+  const RELATED_LIMIT = 6;
+  const excludeArticleId = article.id;
+  const articleCategoryId = typeof article.category === 'object' && article.category
+    ? (article.category as any).id
+    : article.category;
+  const articleTags: string[] = ((article as any).tags || [])
+    .map((t: any) => (typeof t === 'object' ? t.id : t))
+    .filter(Boolean);
+  let relatedArticles: any[] = [];
+
+  // Step 1: Cùng chuyên mục + cùng tag
+  if (articleCategoryId && articleTags.length > 0) {
+    const { docs } = await payload.find({
+      collection: 'articles', limit: RELATED_LIMIT, depth: 1, sort: '-publishedAt',
+      where: { and: [
+        { id: { not_equals: excludeArticleId } },
+        { category: { equals: articleCategoryId } },
+        { tags: { in: articleTags } },
+      ]},
+    });
+    relatedArticles = docs;
+  }
+  // Step 2: Cùng chuyên mục
+  if (relatedArticles.length < RELATED_LIMIT && articleCategoryId) {
+    const ids = [excludeArticleId, ...relatedArticles.map(d => d.id)];
+    const { docs } = await payload.find({
+      collection: 'articles', limit: RELATED_LIMIT - relatedArticles.length, depth: 1, sort: '-publishedAt',
+      where: { and: [{ id: { not_in: ids } }, { category: { equals: articleCategoryId } }] },
+    });
+    relatedArticles = [...relatedArticles, ...docs];
+  }
+  // Step 3: Cùng chuyên mục cha
+  if (relatedArticles.length < RELATED_LIMIT && targetParentId && targetParentId !== articleCategoryId) {
+    const ids = [excludeArticleId, ...relatedArticles.map(d => d.id)];
+    const { docs } = await payload.find({
+      collection: 'articles', limit: RELATED_LIMIT - relatedArticles.length, depth: 1, sort: '-publishedAt',
+      where: { and: [
+        { id: { not_in: ids } },
+        { or: [{ category: { equals: targetParentId } }, { additionalCategories: { equals: targetParentId } }] },
+      ]},
+    });
+    relatedArticles = [...relatedArticles, ...docs];
+  }
+  // Step 4: Bài mới nhất toàn site
+  if (relatedArticles.length < RELATED_LIMIT) {
+    const ids = [excludeArticleId, ...relatedArticles.map(d => d.id)];
+    const { docs } = await payload.find({
+      collection: 'articles', limit: RELATED_LIMIT - relatedArticles.length, depth: 1, sort: '-publishedAt',
+      where: { id: { not_in: ids } },
+    });
+    relatedArticles = [...relatedArticles, ...docs];
+  }
+  // ─────────────────────────────────────────────────────────────────────
+
   let sidebarWidgets: any[] = [];
   let readerToolsConfig: ReaderToolsConfig = {};
   try {
@@ -236,13 +291,12 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
           </article>
           
           <div className="mt-8">
-            <NewsGrid 
-              categoryId={targetParentId} 
-              categoryName="Bài viết liên quan" 
-              limitOverride={6} 
-              layoutOverride="list-small" 
-              excludeId={article.id}
+            <NewsGrid
+              categoryName="Bài viết liên quan"
+              limitOverride={RELATED_LIMIT}
+              layoutOverride="list-small"
               disableContainer={true}
+              preloadedArticles={relatedArticles}
             />
           </div>
         </div>
