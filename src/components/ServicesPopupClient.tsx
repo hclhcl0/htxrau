@@ -191,23 +191,7 @@ export function ServicesPopupClient({
           </div>
         </div>
 
-        {/* Close button */}
-        <div className="flex justify-center mt-5">
-          <button
-            onClick={handleClose}
-            aria-label="Đóng popup"
-            style={{
-              width: 44, height: 44,
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.95)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: 'none', cursor: 'pointer',
-            }}
-          >
-            <X size={20} className="text-gray-500" />
-          </button>
-        </div>
+
       </div>
     </div>
   );

@@ -228,24 +228,7 @@ export function SitePopupClient({
           </div>
         </div>
 
-        {/* Close button dưới card */}
-        <div className="flex justify-center mt-5">
-          <button
-            onClick={handleClose}
-            aria-label="Đóng popup"
-            style={{
-              width: 44, height: 44, borderRadius: '50%',
-              background: 'rgba(255,255,255,0.95)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: 'none', cursor: 'pointer',
-            }}
-          >
-            <svg width="18" height="18" fill="none" stroke="#666" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+
       </div>
     </div>
   );
