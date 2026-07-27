@@ -183,7 +183,24 @@ async function fetchDaoTaoPage(pageUrl: string): Promise<ArticleItem[]> {
   return articles;
 }
 
-async function crawlDaoTaoArticle(link: string, title: string) {
+async function fetchSitemapDates(): Promise<Map<string, string>> {
+  const dateMap = new Map<string, string>();
+  try {
+    const res = await fetch('https://ksbtdanang.vn/sitemap-vi.dao-tao.xml', { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    if (res.ok) {
+      const xml = await res.text();
+      const matches = [...xml.matchAll(/<loc>(.*?)<\/loc><lastmod>(.*?)<\/lastmod>/g)];
+      for (const m of matches) {
+        dateMap.set(m[1].trim(), m[2].trim());
+      }
+    }
+  } catch (err) {
+    console.error('[Seed Đào Tạo] Lỗi lấy sitemap:', err);
+  }
+  return dateMap;
+}
+
+async function crawlDaoTaoArticle(link: string, title: string, sitemapDate?: string) {
   try {
     const res = await fetch(link, { headers: { 'User-Agent': 'Mozilla/5.0' } });
     if (!res.ok) return { imageUrl: null, rawHtml: '', description: title, pubDate: null };
@@ -214,10 +231,10 @@ async function crawlDaoTaoArticle(link: string, title: string) {
     const metaDesc = $('meta[name="description"]').attr('content') || $('meta[property="og:description"]').attr('content') || '';
     const description = sapoText || metaDesc.trim() || title;
 
-    // Lấy ngày tháng từ .date-time hoặc meta
+    // Lấy ngày tháng từ sitemap nếu có, nếu không lấy từ .date-time hoặc meta
     const dateText = $('.date-time, .post-date, .article-date, time').first().text().trim();
-    let pubDate: string | null = null;
-    if (dateText) {
+    let pubDate: string | null = sitemapDate ? new Date(sitemapDate).toISOString() : null;
+    if (!pubDate && dateText) {
       // Tìm ngày: (\d{1,2})\/(\d{1,2})\/(\d{4})
       const dateMatch = dateText.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
       // Tìm giờ: (\d{1,2}):(\d{1,2})
@@ -232,7 +249,7 @@ async function crawlDaoTaoArticle(link: string, title: string) {
 
     return { imageUrl, rawHtml, description, pubDate };
   } catch {
-    return { imageUrl: null, rawHtml: '', description: title, pubDate: null };
+    return { imageUrl: null, rawHtml: '', description: title, pubDate: sitemapDate ? new Date(sitemapDate).toISOString() : null };
   }
 }
 
@@ -242,6 +259,8 @@ async function runDaoTaoSync(payload: any, categoryId: string | number, forceUpd
 
   try {
     console.log('[Seed Đào Tạo] Bắt đầu crawl từ ksbtdanang.vn/dao-tao/...');
+    const dateMap = await fetchSitemapDates();
+    console.log(`[Seed Đào Tạo] Lấy được ${dateMap.size} ngày xuất bản từ sitemap.`);
 
     // Crawl tất cả các trang (trang 1..5, kiểm tra xem có thêm không)
     const pageUrls = [
@@ -260,6 +279,7 @@ async function runDaoTaoSync(payload: any, categoryId: string | number, forceUpd
       for (const art of articles) {
         if (!art.slug || !art.title) continue;
 
+        // Kiểm tra xem bài này đã tồn tại chưa
         const existing = await payload.find({
           collection: 'articles',
           where: { slug: { equals: art.slug } },
@@ -276,7 +296,8 @@ async function runDaoTaoSync(payload: any, categoryId: string | number, forceUpd
           }
         }
 
-        const { imageUrl, rawHtml, description, pubDate } = await crawlDaoTaoArticle(art.link, art.title);
+        const sitemapDate = dateMap.get(art.link);
+        const { imageUrl, rawHtml, description, pubDate } = await crawlDaoTaoArticle(art.link, art.title, sitemapDate);
 
         let mediaId = null;
         if (imageUrl) mediaId = await downloadMedia(payload, imageUrl, art.title);
