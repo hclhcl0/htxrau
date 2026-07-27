@@ -333,7 +333,7 @@ export async function GET(request: Request) {
     let categoryId: any = null;
     if (catRes.totalDocs > 0) {
       categoryId = catRes.docs[0].id;
-      console.log(`[Seed Đào Tạo] Dùng category: "${catRes.docs[0].title}" (id=${categoryId})`);
+      console.log(`[Seed Đào Tạo] Dùng category: "${(catRes.docs[0] as any).name}" (id=${categoryId})`);
     } else {
       return NextResponse.json({
         error: `Không tìm thấy category với slug "${categorySlug}". Hãy tạo chuyên mục trước hoặc truyền ?category=<slug> đúng.`,
