@@ -33,11 +33,14 @@ function stripHtml(html: string) {
 }
 
 async function parseHtmlToLexical(html: string, payload: any, articleTitle: string) {
-  const parts = html.split(/(<img[^>]+>)/gi);
+  // Tách theo cả <img> và <iframe>
+  const parts = html.split(/(<img[^>]+>|<iframe[^>]*>.*?<\/iframe>)/gi);
   const children: any[] = [];
 
   for (const part of parts) {
-    if (part.toLowerCase().startsWith('<img')) {
+    const lp = part.toLowerCase().trim();
+
+    if (lp.startsWith('<img')) {
       const srcMatch = part.match(/src="([^"]+)"/i);
       if (srcMatch) {
         let src = srcMatch[1];
@@ -47,6 +50,50 @@ async function parseHtmlToLexical(html: string, payload: any, articleTitle: stri
           children.push({
             type: "upload", relationTo: "media", value: mediaId, version: 1,
             format: "", id: String(Date.now() + Math.floor(Math.random() * 10000)), fields: {}
+          });
+        }
+      }
+    } else if (lp.startsWith('<iframe')) {
+      // Xử lý iframe nhúng (Google Drive, YouTube, v.v)
+      const srcMatch = part.match(/src="([^"]+)"/i);
+      if (srcMatch) {
+        let iframeSrc = srcMatch[1];
+        // Chuyển Google Drive preview → link xem trực tiếp
+        const gdMatch = iframeSrc.match(/\/file\/d\/([^/]+)\/preview/);
+        if (gdMatch) {
+          const fileId = gdMatch[1];
+          const viewUrl = `https://drive.google.com/file/d/${fileId}/view`;
+          const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+          // Thêm đoạn văn bản giải thích kèm link
+          children.push({
+            type: "paragraph", format: "", indent: 0, version: 1, direction: "ltr",
+            children: [
+              { mode: "normal", text: "📄 Tài liệu đính kèm: ", type: "text", style: "", detail: 0, format: 1, version: 1 },
+              {
+                type: "link", version: 1, rel: "noreferrer", target: "_blank",
+                url: viewUrl,
+                fields: { url: viewUrl, newTab: true, linkType: "custom" },
+                children: [{ mode: "normal", text: "Xem tài liệu trên Google Drive", type: "text", style: "", detail: 0, format: 0, version: 1 }]
+              },
+              { mode: "normal", text: " | ", type: "text", style: "", detail: 0, format: 0, version: 1 },
+              {
+                type: "link", version: 1, rel: "noreferrer", target: "_blank",
+                url: downloadUrl,
+                fields: { url: downloadUrl, newTab: true, linkType: "custom" },
+                children: [{ mode: "normal", text: "Tải xuống", type: "text", style: "", detail: 0, format: 0, version: 1 }]
+              },
+            ]
+          });
+        } else {
+          // Iframe khác: lưu URL dưới dạng link
+          children.push({
+            type: "paragraph", format: "", indent: 0, version: 1, direction: "ltr",
+            children: [{
+              type: "link", version: 1, rel: "noreferrer", target: "_blank",
+              url: iframeSrc,
+              fields: { url: iframeSrc, newTab: true, linkType: "custom" },
+              children: [{ mode: "normal", text: iframeSrc, type: "text", style: "", detail: 0, format: 0, version: 1 }]
+            }]
           });
         }
       }
@@ -146,12 +193,12 @@ async function crawlDaoTaoArticle(link: string, title: string) {
     const ogImage = $('meta[property="og:image"]').attr('content');
     let imageUrl: string | null = ogImage ? ogImage.replace(/&amp;/g, '&') : null;
 
-    // Thử nhiều selector khác nhau để lấy nội dung bài
-    const bodySelectors = ['#news-bodyhtml', '.news-bodyhtml', '.article-content', '.content-detail', '.post-content', '.entry-content', '.panel-body .content', 'article .body', '.news_content'];
+    // Thử nhiều selector khác nhau để lấy nội dung bài (ưu tiên page-bodyhtml cho trang đào tạo)
+    const bodySelectors = ['#page-bodyhtml', '#news-bodyhtml', '.bodytext', '.news-bodyhtml', '.article-content', '.content-detail', '.post-content', '.entry-content', '.panel-body .content', 'article .body', '.news_content'];
     let rawHtml = '';
     for (const sel of bodySelectors) {
       const found = $(sel).html();
-      if (found && found.trim().length > 50) {
+      if (found && found.trim().length > 20) {
         rawHtml = found;
         break;
       }
