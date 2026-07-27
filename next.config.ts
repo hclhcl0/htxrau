@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   compress: true, // Ép Next.js luôn nén nội dung (Gzip/Brotli)
   outputFileTracingRoot: path.resolve(__dirname),
+  // Giữ sharp là external package để native bindings hoạt động đúng (không rơi vào WASM)
+  serverExternalPackages: ['sharp'],
   typescript: {
     ignoreBuildErrors: true,
   },

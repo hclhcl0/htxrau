@@ -48,6 +48,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/migrate.mjs ./
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+# Copy sharp native bindings for image processing in standalone mode
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/sharp ./node_modules/sharp
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@img ./node_modules/@img
 
 # Media volume directory if Payload stores media locally
 RUN mkdir -p /app/media
