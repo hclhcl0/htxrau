@@ -265,8 +265,15 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
                  </Link>
               </div>
 
+              {/* Mô tả ngắn / Sapo */}
+              {(article as any).description && (
+                <p className="px-4 md:px-0 md:pr-6 lg:pr-8 text-gray-600 text-base md:text-lg font-medium leading-relaxed border-l-4 border-gov-primary pl-4 mb-4 italic bg-blue-50/50 py-3 rounded-r-lg">
+                  {(article as any).description}
+                </p>
+              )}
+
               {/* Mobile Reader Tools */}
-              <div className="md:hidden mb-4 -mt-1">
+              <div className="md:hidden mb-4 -mt-1 px-4 md:px-0">
                 <ArticleReaderTools mode="tools" toolsConfig={readerToolsConfig} />
               </div>
             </div>
