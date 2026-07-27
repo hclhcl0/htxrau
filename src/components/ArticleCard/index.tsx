@@ -89,10 +89,13 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
           <span className="text-xs font-bold text-[var(--primary)] mb-2 block">{catName}</span>
         )}
         <Link href={`/bai-viet/${article.slug || article.id}`}>
-          <h3 className="font-bold text-gray-900 leading-snug group-hover:text-[var(--primary)] transition-colors line-clamp-3 text-[15px] mb-3 flex-grow">
+          <h3 className="font-bold text-gray-900 leading-snug group-hover:text-[var(--primary)] transition-colors line-clamp-3 text-[15px] mb-2 flex-grow">
             {article.title}
           </h3>
         </Link>
+        {article.description && (
+          <p className="text-gray-400 text-xs line-clamp-2 mb-2">{article.description}</p>
+        )}
         <div className="flex items-center gap-4 text-xs text-gray-400 font-medium mt-auto pt-2">
           <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" />{date}</span>
           <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" />{article.views || 0}</span>

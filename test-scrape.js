@@ -1,24 +1,22 @@
-const cheerio = require('cheerio');
-fetch('https://ksbtdanang.vn/news/binh-dan-hoc-vu-so/binh-dan-hoc-vu-so-chatgpt-tro-ly-tri-tue-nhan-tao-ho-tro-hoc-tap-cong-viec-va-truyen-thong-y-te-2227.html')
-  .then(r => r.text())
-  .then(t => {
-    const $ = cheerio.load(t);
-    console.log('=== hometext.m-bottom ===');
-    console.log($('.hometext.m-bottom').text().trim() || 'EMPTY');
-    console.log('=== hometext (bất kỳ) ===');
-    $('.hometext').each((i, el) => {
-      console.log(`[${i}] class="${$(el).attr('class')}" => "${$(el).text().trim().substring(0, 200)}"`);
-    });
-    console.log('=== meta description ===');
-    console.log($('meta[name="description"]').attr('content') || 'none');
-    console.log('=== og:description ===');
-    console.log($('meta[property="og:description"]').attr('content') || 'none');
-    // Tìm thêm các đoạn chứa "BBT"
-    $('p, div, span').each((i, el) => {
-      const text = $(el).children().length === 0 ? $(el).text().trim() : '';
-      if (text.includes('BBT:') && text.length < 600) {
-        console.log(`\n=== BBT found in <${el.tagName}> class="${$(el).attr('class')}" ===`);
-        console.log(text);
-      }
-    });
+const { Client } = require('pg');
+const c = new Client({ connectionString: 'postgres://postgres:123456@127.0.0.1:5432/webcq' });
+c.connect().then(() =>
+  c.query(`SELECT slug, LEFT(description, 100) as desc_preview, LENGTH(description) as desc_len 
+           FROM articles ORDER BY created_at DESC LIMIT 30`)
+).then(r => {
+  const missing = r.rows.filter(row => !row.desc_len || row.desc_len < 50);
+  const short = r.rows.filter(row => row.desc_len >= 50 && row.desc_len < 150);
+  const ok = r.rows.filter(row => row.desc_len >= 150);
+  console.log(`\nKết quả (30 bài mới nhất):`);
+  console.log(`  ✅ Đủ (>=150 ký tự): ${ok.length}`);
+  console.log(`  ⚠️  Ngắn (50-149 ký tự): ${short.length}`);
+  console.log(`  ❌ Thiếu (<50 hoặc NULL): ${missing.length}`);
+  
+  console.log('\n--- Bài thiếu/ngắn ---');
+  [...missing, ...short].forEach(row => {
+    console.log(`[${row.desc_len || 0}] ${row.slug?.substring(0,50)}`);
+    console.log(`     => ${row.desc_preview || 'NULL'}`);
   });
+  
+  c.end();
+}).catch(console.error);
