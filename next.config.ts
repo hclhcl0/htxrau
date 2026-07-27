@@ -77,26 +77,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  async rewrites() {
-    return [
-      {
-        // Chứng năng proxy ảnh: pad về hình vuông cho Mini App
-        // Không dùng User-Agent vì Zalo WebView gửi UA chuẩn Android (không có chữ "Zalo")
-        source: '/api/media/file/:path*',
-        destination: '/api/miniapp-image?path=/api/media/file/:path*',
-      },
-    ];
-  },
-  async headers() {
-    return [
-      {
-        source: '/api/miniapp-image',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=3600' },
-        ],
-      },
-    ];
-  },
 };
 
 export default withSerwist(withPayload(nextConfig));
