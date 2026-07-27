@@ -118,19 +118,21 @@ export function SidebarRenderer({ widgets, latestArticles, categories }: Sidebar
           case 'bannerWidget':
             if (!widget.image?.url) return null;
             return (
-              <div key={key} className="bg-slate-50 rounded-2xl shadow-lg border border-slate-200 p-5 overflow-hidden">
-                <WidgetTitle title={widget.title} />
+              <div key={key} className="bg-slate-50 rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                {widget.title && (
+                   <h3 className="bg-gov-primary text-white text-[0.9rem] font-bold uppercase tracking-wide px-5 py-2">
+                     {widget.title}
+                   </h3>
+                )}
                 <Link 
                   href={widget.linkUrl || '#'} 
                   target={widget.openInNewTab ? '_blank' : '_self'}
-                  className="block hover:opacity-95 transition-opacity"
+                  className="block hover:opacity-95 transition-opacity p-[5px]"
                 >
                   <img 
                     src={widget.image?.url} 
                     alt={widget.title || "Banner"} 
-                    className="rounded-lg max-w-full h-auto mx-auto shadow-sm"
-                    width={320}
-                    height={200}
+                    className="w-full h-auto block rounded-xl"
                     loading="lazy"
                     decoding="async"
                   />
