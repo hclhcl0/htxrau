@@ -246,7 +246,7 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
               <div className="flex items-center text-sm text-gray-500 mb-2 md:mb-3 overflow-x-auto whitespace-nowrap pb-1">
                  <Link href="/" className="hover:text-gov-primary transition-colors">Trang chủ</Link>
                  <span className="mx-2 flex-shrink-0">/</span>
-                 <Link href={`/chuyen-muc/${catSlug}`} className="hover:text-gov-primary transition-colors">{catName}</Link>
+                 <Link href={`/${catSlug}`} className="hover:text-gov-primary transition-colors">{catName}</Link>
               </div>
               
               <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-3 md:mb-5 leading-tight break-words">
@@ -260,7 +260,7 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
                  </span>
                  <span className="flex items-center gap-1.5"><Eye size={14} className="md:w-4 md:h-4"/> {(article as any).views || 0} lượt xem</span>
                  {(article as any).author_name && <span className="flex items-center gap-1.5">Tác giả: <span className="font-medium text-gray-700">{(article as any).author_name}</span></span>}
-                 <Link href={`/chuyen-muc/${catSlug}`} className="bg-gov-secondary/10 text-gov-secondary hover:bg-gov-secondary hover:text-white transition-colors px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-medium">
+                 <Link href={`/${catSlug}`} className="bg-gov-secondary/10 text-gov-secondary hover:bg-gov-secondary hover:text-white transition-colors px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-medium">
                    {catName}
                  </Link>
               </div>

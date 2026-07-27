@@ -37,7 +37,7 @@ export function SidebarRenderer({ widgets, latestArticles, categories }: Sidebar
                 <ul className="flex flex-col list-none p-0 m-0">
                   {categories.slice(0, limitCat).map((cat: any) => (
                     <li key={cat.id} className="border-b border-slate-200/60 last:border-0">
-                      <Link href={`/chuyen-muc/${cat.slug || cat.id}`} className="flex items-center justify-between py-2 text-slate-700 hover:text-gov-primary transition-colors group">
+                      <Link href={`/${cat.slug || cat.id}`} className="flex items-center justify-between py-2 text-slate-700 hover:text-gov-primary transition-colors group">
                         <div className="flex items-center gap-2">
                            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-gov-primary group-hover:scale-125 transition-all shrink-0"></span>
                            <span className="font-medium text-[13.5px] leading-snug">{cat.name}</span>

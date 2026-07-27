@@ -115,7 +115,7 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
             {title}
           </h2>
           {categorySlug && (
-            <Link href={`/chuyen-muc/${categorySlug}`} className={styles.viewMore}>
+            <Link href={`/${categorySlug}`} className={styles.viewMore}>
               Xem thêm &raquo;
             </Link>
           )}
