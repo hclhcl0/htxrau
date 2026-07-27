@@ -77,7 +77,7 @@ export const NewsSidebarLayout = async ({
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>{title}</h2>
               {categorySlug && (
-                <Link href={`/${categorySlug}`} className={styles.viewMore}>
+                <Link href={`/${categorySlug}`} className={styles.viewMore} prefetch={true}>
                   Xem thêm »
                 </Link>
               )}

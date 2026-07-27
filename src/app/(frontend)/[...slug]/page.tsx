@@ -15,6 +15,36 @@ import { OrgChartPageTemplate } from '@/components/OrgChartPageTemplate';
 import { CategoryTemplate } from '@/components/CategoryTemplate';
 
 // ─────────────────────────────────────────────
+// Pre-build tất cả trang chuyên mục và pages lúc deploy
+// → phục vụ từ CDN, không cần SSR mỗi request
+// ─────────────────────────────────────────────
+export async function generateStaticParams() {
+  try {
+    const payload = await getPayload({ config: configPromise });
+
+    const [categoriesRes, pagesRes] = await Promise.all([
+      payload.find({ collection: 'categories', limit: 200, depth: 0 }),
+      payload.find({ collection: 'pages', limit: 200, depth: 0 }),
+    ]);
+
+    const slugs: { slug: string[] }[] = [];
+
+    for (const cat of categoriesRes.docs) {
+      if (cat.slug) slugs.push({ slug: [cat.slug] });
+    }
+
+    for (const page of pagesRes.docs) {
+      const s = (page as any).slug as string | undefined;
+      if (s) slugs.push({ slug: s.split('/').filter(Boolean) });
+    }
+
+    return slugs;
+  } catch {
+    return [];
+  }
+}
+
+// ─────────────────────────────────────────────
 // Data fetcher
 // ─────────────────────────────────────────────
 async function getCategoryBySlug(slug: string) {
