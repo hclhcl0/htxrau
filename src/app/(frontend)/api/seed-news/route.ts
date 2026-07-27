@@ -205,8 +205,10 @@ async function runBackgroundSync(payload: any, categoryId: string | number, forc
         let existingArticle = null;
         if (existing.totalDocs > 0) {
           existingArticle = existing.docs[0];
-          // Bỏ qua nếu không cờ forceUpdate VÀ đã có ảnh VÀ đã có description
-          if (!forceUpdate && existingArticle.image && existingArticle.description) {
+          // description < 150 ký tự = bị cắt ngắn từ crawl cũ → cào lại
+          const descOk = existingArticle.description && existingArticle.description.length >= 150;
+          // Bỏ qua nếu không cờ forceUpdate VÀ đã có ảnh VÀ description đầy đủ
+          if (!forceUpdate && existingArticle.image && descOk) {
             totalSkipped++;
             continue;
           }
