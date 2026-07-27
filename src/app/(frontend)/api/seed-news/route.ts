@@ -205,8 +205,8 @@ async function runBackgroundSync(payload: any, categoryId: string | number, forc
         let existingArticle = null;
         if (existing.totalDocs > 0) {
           existingArticle = existing.docs[0];
-          // Nếu không bật cờ ép buộc cập nhật, bỏ qua bài viết đã có ảnh
-          if (!forceUpdate && existingArticle.image) {
+          // Bỏ qua nếu không cờ forceUpdate VÀ đã có ảnh VÀ đã có description
+          if (!forceUpdate && existingArticle.image && existingArticle.description) {
             totalSkipped++;
             continue;
           }
@@ -269,7 +269,7 @@ async function runBackgroundSync(payload: any, categoryId: string | number, forc
         publishedAt: art.pubDate,
         slug: art.slug,
         category: categoryId,
-        description: art.description.substring(0, 500).replace(/\n/g, ' '),
+        description: art.description.replace(/\n/g, ' ').trim(),
         author_name: 'CDC Đà Nẵng',
         views: 0,
         _status: 'published',
