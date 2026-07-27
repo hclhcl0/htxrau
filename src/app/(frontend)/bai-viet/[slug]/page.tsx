@@ -268,7 +268,7 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
               {/* Mô tả ngắn / Sapo */}
               {(article as any).description && (
                 <div className="px-4 md:px-0 md:pr-6 lg:pr-8 mb-5">
-                  <p className="text-gray-700 text-[15px] md:text-base leading-relaxed font-medium border-t border-gray-200 pt-4">
+                  <p className="text-gray-700 text-[15px] md:text-base leading-relaxed font-medium border-t border-gray-200 pt-4 text-justify">
                     {(article as any).description}
                   </p>
                 </div>
