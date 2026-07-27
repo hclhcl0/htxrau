@@ -265,17 +265,8 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
                  </Link>
               </div>
 
-              {/* Mô tả ngắn / Sapo */}
-              {(article as any).description && (
-                <div className="px-4 md:px-0 md:pr-6 lg:pr-8 mb-5">
-                  <p className="text-gray-700 text-[15px] md:text-base leading-relaxed font-medium border-t border-gray-200 pt-4 text-justify">
-                    {(article as any).description}
-                  </p>
-                </div>
-              )}
-
-              {/* Mobile Reader Tools */}
-              <div className="md:hidden mb-4 -mt-1 px-4 md:px-0">
+              {/* Mobile Reader Tools (ABOVE Sapo) */}
+              <div className="md:hidden mt-2 mb-4 px-4 md:px-0 border-t border-gray-100 pt-4">
                 <ArticleReaderTools mode="tools" toolsConfig={readerToolsConfig} />
               </div>
             </div>
@@ -290,6 +281,13 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
               </div>
 
               <div className="prose prose-base md:prose-lg max-w-none break-words prose-p:!my-1.5 md:prose-p:!my-2 prose-headings:!my-3 md:prose-headings:!my-4 prose-ul:!my-1 prose-li:!my-0.5 prose-img:!my-3 prose-headings:text-gov-primary prose-a:text-gov-secondary hover:prose-a:text-gov-primary prose-img:rounded-xl w-full min-w-0 overflow-hidden">
+                 {/* Mô tả ngắn / Sapo */}
+                 {(article as any).description && (
+                   <p className="text-gray-800 text-[15px] md:text-[17px] leading-relaxed font-bold pb-4 mb-4 border-b border-gray-100 text-justify">
+                     {(article as any).description}
+                   </p>
+                 )}
+
                  {article.content ? (
                     <RichText data={article.content} converters={getJsxConverters(`Hình ảnh minh họa cho bài viết: ${article.title}`)} />
                  ) : (
