@@ -256,7 +256,7 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-gray-500 border-b border-gray-100 pb-2 mb-2 md:pb-3 md:mb-4">
                  <span className="flex items-center gap-1.5">
                      <Calendar size={14} className="md:w-4 md:h-4"/>
-                     {new Date((article as any).publishedAt || article.createdAt).toLocaleDateString('vi-VN')}
+                     {new Date((article as any).publishedAt || article.createdAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }).replace(',', '')}
                  </span>
                  <span className="flex items-center gap-1.5"><Eye size={14} className="md:w-4 md:h-4"/> {(article as any).views || 0} lượt xem</span>
                  {(article as any).author_name && <span className="flex items-center gap-1.5">Tác giả: <span className="font-medium text-gray-700">{(article as any).author_name}</span></span>}

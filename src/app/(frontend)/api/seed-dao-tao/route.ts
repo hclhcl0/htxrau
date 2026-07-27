@@ -218,9 +218,15 @@ async function crawlDaoTaoArticle(link: string, title: string) {
     const dateText = $('.date-time, .post-date, .article-date, time').first().text().trim();
     let pubDate: string | null = null;
     if (dateText) {
-      const match = dateText.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-      if (match) {
-        pubDate = new Date(`${match[3]}-${match[2].padStart(2,'0')}-${match[1].padStart(2,'0')}`).toISOString();
+      // Tìm ngày: (\d{1,2})\/(\d{1,2})\/(\d{4})
+      const dateMatch = dateText.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      // Tìm giờ: (\d{1,2}):(\d{1,2})
+      const timeMatch = dateText.match(/(\d{1,2}):(\d{1,2})/);
+      
+      if (dateMatch) {
+        const h = timeMatch ? timeMatch[1].padStart(2, '0') : '00';
+        const m = timeMatch ? timeMatch[2].padStart(2, '0') : '00';
+        pubDate = new Date(`${dateMatch[3]}-${dateMatch[2].padStart(2,'0')}-${dateMatch[1].padStart(2,'0')}T${h}:${m}:00+07:00`).toISOString();
       }
     }
 
