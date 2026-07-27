@@ -6,6 +6,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ChevronRight, Phone, Mail, MapPin, Clock } from 'lucide-react';
 
+export const revalidate = 60; // ISR: cache trang 60 giây, tránh SSR mỗi request
+
 import { PageBlockRenderer } from '@/components/PageBlocks/PageBlockRenderer';
 import { SidebarRenderer } from '@/components/SidebarRenderer';
 import { ContactForm } from '@/components/ContactForm';
