@@ -239,6 +239,15 @@ async function runBackgroundSync(payload: any, categoryId: string | number, forc
           if (rawHtmlContent) {
             rawHtml = rawHtmlContent;
           }
+          
+          const sapoText = $('.hometext.m-bottom').text().trim();
+          const metaDesc = $('meta[name="description"]').attr('content') || $('meta[property="og:description"]').attr('content');
+          
+          if (sapoText) {
+            art.description = sapoText;
+          } else if (metaDesc && metaDesc.trim() !== '') {
+            art.description = metaDesc.trim();
+          }
         } catch (err) {
         console.error("Lỗi crawl chi tiết:", art.link);
       }
