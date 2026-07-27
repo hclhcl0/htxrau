@@ -63,7 +63,7 @@ export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logo
       activeColor: 'var(--primary)',
     },
     primary: {
-      background: 'var(--primary)',
+      background: 'linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 100%)',
       borderBottom: 'none',
       linkColor: '#ffffff',
       linkHoverBg: 'rgba(255,255,255,0.15)',
@@ -232,7 +232,7 @@ export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logo
       <div 
         className={styles.mainNav}
         style={{
-          backgroundImage: `linear-gradient(135deg, var(--primary-dark) 0%, rgba(var(--primary-rgb), 0.85) 100%), url('${logoConfig.bannerImageUrl || '/bg-building.svg'}')`,
+          backgroundImage: `url('${logoConfig.bannerImageUrl || '/bg-building.svg'}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
