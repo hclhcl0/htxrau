@@ -161,6 +161,24 @@ export default async function RootLayout({
             }
           `}
         </Script>
+        {/* Auto-reload khi Server Action ID lỗi do deploy mới */}
+        <Script id="server-action-reload" strategy="afterInteractive">
+          {`
+            window.addEventListener('error', function(e) {
+              if (e.message && e.message.includes('Failed to find Server Action')) {
+                console.warn('[Deploy] Server Action cũ — tự động reload trang...');
+                window.location.reload();
+              }
+            });
+            window.addEventListener('unhandledrejection', function(e) {
+              if (e.reason && e.reason.message && e.reason.message.includes('Failed to find Server Action')) {
+                console.warn('[Deploy] Server Action cũ — tự động reload trang...');
+                e.preventDefault();
+                window.location.reload();
+              }
+            });
+          `}
+        </Script>
       </head>
       <body className="bg-gray-100/80 antialiased selection:bg-teal-600 selection:text-white">
         <ScrollToTopHelper />
