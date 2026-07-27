@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import sharp from 'sharp';
 
+// Bắt buộc dùng Node.js runtime vì sharp không chạy được trong Edge runtime
+export const runtime = 'nodejs';
+
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
@@ -27,8 +30,9 @@ export async function GET(req: Request) {
       return new NextResponse(`Failed to fetch image: ${response.statusText}`, { status: response.status });
     }
 
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // Dùng Uint8Array thay vì Buffer để tránh SharedArrayBuffer issue
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    const buffer = Buffer.from(bytes);
 
     const metadata = await sharp(buffer).metadata();
     
