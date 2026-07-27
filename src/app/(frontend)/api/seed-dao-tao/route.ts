@@ -139,27 +139,38 @@ async function fetchDaoTaoPage(pageUrl: string): Promise<ArticleItem[]> {
 async function crawlDaoTaoArticle(link: string, title: string) {
   try {
     const res = await fetch(link, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-    if (!res.ok) return { imageUrl: null, rawHtml: '', description: '', pubDate: null };
+    if (!res.ok) return { imageUrl: null, rawHtml: '', description: title, pubDate: null };
     const html = await res.text();
     const $ = cheerio.load(html);
 
     const ogImage = $('meta[property="og:image"]').attr('content');
     let imageUrl: string | null = ogImage ? ogImage.replace(/&amp;/g, '&') : null;
-    if (!imageUrl) {
-      const firstImg = $('#news-bodyhtml img').first().attr('src');
+
+    // Thử nhiều selector khác nhau để lấy nội dung bài
+    const bodySelectors = ['#news-bodyhtml', '.news-bodyhtml', '.article-content', '.content-detail', '.post-content', '.entry-content', '.panel-body .content', 'article .body', '.news_content'];
+    let rawHtml = '';
+    for (const sel of bodySelectors) {
+      const found = $(sel).html();
+      if (found && found.trim().length > 50) {
+        rawHtml = found;
+        break;
+      }
+    }
+
+    // Lấy ảnh từ nội dung nếu chưa có
+    if (!imageUrl && rawHtml) {
+      const firstImg = cheerio.load(rawHtml)('img').first().attr('src');
       if (firstImg) imageUrl = firstImg.startsWith('/') ? BASE_URL + firstImg : firstImg;
     }
 
-    const rawHtml = $('#news-bodyhtml').html() || '';
     const sapoText = $('.hometext.m-bottom').text().trim();
     const metaDesc = $('meta[name="description"]').attr('content') || $('meta[property="og:description"]').attr('content') || '';
-    const description = sapoText || metaDesc.trim();
+    const description = sapoText || metaDesc.trim() || title;
 
     // Lấy ngày tháng từ .date-time hoặc meta
-    const dateText = $('.date-time').first().text().trim();
+    const dateText = $('.date-time, .post-date, .article-date, time').first().text().trim();
     let pubDate: string | null = null;
     if (dateText) {
-      // định dạng thường là "DD/MM/YYYY HH:MM"
       const match = dateText.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
       if (match) {
         pubDate = new Date(`${match[3]}-${match[2].padStart(2,'0')}-${match[1].padStart(2,'0')}`).toISOString();
@@ -168,7 +179,7 @@ async function crawlDaoTaoArticle(link: string, title: string) {
 
     return { imageUrl, rawHtml, description, pubDate };
   } catch {
-    return { imageUrl: null, rawHtml: '', description: '', pubDate: null };
+    return { imageUrl: null, rawHtml: '', description: title, pubDate: null };
   }
 }
 
@@ -217,10 +228,9 @@ async function runDaoTaoSync(payload: any, categoryId: string | number, forceUpd
         let mediaId = null;
         if (imageUrl) mediaId = await downloadMedia(payload, imageUrl, art.title);
 
-        let finalContent = null;
-        if (rawHtml) {
-          finalContent = await parseHtmlToLexical(rawHtml, payload, art.title);
-        }
+        // Luôn có content (bắt buộc): ưu tiên rawHtml, fallback về description
+        const sourceHtml = rawHtml || `<p>${description}</p>`;
+        const finalContent = await parseHtmlToLexical(sourceHtml, payload, art.title);
 
         const articleData: any = {
           title: art.title,
@@ -232,7 +242,7 @@ async function runDaoTaoSync(payload: any, categoryId: string | number, forceUpd
           _status: 'published',
         };
         if (pubDate) articleData.publishedAt = pubDate;
-        if (finalContent) articleData.content = finalContent;
+        articleData.content = finalContent; // required field - luôn gán
         if (mediaId) articleData.image = mediaId;
 
         if (existingArticle) {
