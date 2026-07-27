@@ -145,7 +145,12 @@ async function fetchRssFeed(start: number): Promise<ArticleItem[]> {
 
 async function downloadMedia(payload: any, url: string, altText: string) {
   try {
-    const fileName = (url.split('/').pop() || 'image.jpg').replace(/[^a-zA-Z0-9.\-]/g, '_');
+    // Lấy tên file từ URL, bỏ query string
+    const rawName = (url.split('/').pop() || 'image.jpg').split('?')[0];
+    // Chỉ giữ ký tự a-z, A-Z, 0-9, dấu chấm và gạch ngang
+    const sanitized = rawName.replace(/[^a-zA-Z0-9.\-]/g, '_');
+    // Đảm bảo không bắt đầu bằng dấu _ hoặc -
+    const fileName = sanitized.replace(/^[_\-]+/, '') || 'image.jpg';
     
     // Kiểm tra ảnh đã tồn tại chưa để tránh trùng lặp
     const existingMedia = await payload.find({
@@ -158,11 +163,18 @@ async function downloadMedia(payload: any, url: string, altText: string) {
       return existingMedia.docs[0].id;
     }
 
-    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+      redirect: 'follow',
+    });
     if (!res.ok) return null;
     
     const contentType = res.headers.get('content-type') || 'image/jpeg';
+    // Bỏ qua nếu không phải ảnh
+    if (!contentType.startsWith('image/')) return null;
+
     const buffer = Buffer.from(await res.arrayBuffer());
+    if (buffer.byteLength === 0) return null;
 
     const mediaDoc = await payload.create({
       collection: 'media',
@@ -181,6 +193,7 @@ async function downloadMedia(payload: any, url: string, altText: string) {
     return null;
   }
 }
+
 
 async function runBackgroundSync(payload: any, categoryId: string | number, forceUpdate: boolean = false) {
   let totalImported = 0;
