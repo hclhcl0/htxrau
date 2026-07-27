@@ -75,6 +75,21 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/media/file/:path*',
+        has: [
+          {
+            type: 'header',
+            key: 'user-agent',
+            value: '(?i).*zalo.*',
+          },
+        ],
+        destination: '/api/miniapp-image?path=/api/media/file/:path*',
+      },
+    ];
+  },
   async headers() {
     return [
       {
