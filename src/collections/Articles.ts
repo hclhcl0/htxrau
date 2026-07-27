@@ -402,7 +402,7 @@ export const Articles: CollectionConfig = {
     },
     {
       name: 'publishedAt', type: 'date', index: true,
-      label: 'Ngày đăng (từ NukeViet)',
+      label: 'Ngày xuất bản',
       admin: {
         position: 'sidebar',
       },
