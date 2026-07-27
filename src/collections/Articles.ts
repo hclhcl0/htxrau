@@ -237,17 +237,7 @@ export const Articles: CollectionConfig = {
     drafts: true,
   },
   hooks: {
-    beforeOperation: [
-      ({ args, operation }) => {
-        // Fix cho Zalo Mini App (Mini App đang hardcode sort=-publishedAt)
-        // Nếu bài viết không có publishedAt thì sẽ không hiện lên đầu.
-        // Ta ghi đè sort thành -createdAt để trả về bài mới nhất
-        if (operation === 'read' && args.sort === '-publishedAt') {
-          args.sort = '-createdAt';
-        }
-        return args;
-      }
-    ],
+
     beforeChange: [
       ({ req: { user }, data, operation }) => {
         // Tự động điền publishedAt cho các bài viết mới nếu chưa có
