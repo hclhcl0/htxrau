@@ -232,7 +232,7 @@ export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logo
       <div 
         className={styles.mainNav}
         style={{
-          backgroundImage: `url('${logoConfig.bannerImageUrl || '/bg-building.svg'}')`,
+          backgroundImage: `linear-gradient(135deg, var(--primary-dark) 0%, rgba(var(--primary-rgb), 0.85) 100%), url('${logoConfig.bannerImageUrl || '/bg-building.svg'}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
