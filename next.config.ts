@@ -83,7 +83,7 @@ const nextConfig: NextConfig = {
           {
             type: 'header',
             key: 'user-agent',
-            value: '(?i).*zalo.*',
+            value: '.*(zalo|Zalo|MiniApp|mini-app).*',
           },
         ],
         destination: '/api/miniapp-image?path=/api/media/file/:path*',
