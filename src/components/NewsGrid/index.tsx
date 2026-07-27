@@ -24,11 +24,13 @@ async function getLatestArticles(limit: number, categoryId?: string | number, ex
     const payload = await getPayload({ config: configPromise });
     const query: any = {
       collection: 'articles',
-      sort: '-createdAt',
+      sort: '-publishedAt',
       limit: limit,
       depth: 1,
       where: {
-        and: []
+        and: [
+          { _status: { equals: 'published' } }
+        ]
       }
     };
     
@@ -44,11 +46,7 @@ async function getLatestArticles(limit: number, categoryId?: string | number, ex
     if (excludeId) {
         query.where.and.push({ id: { not_equals: excludeId } });
     }
-    
-    // Nếu mảng rỗng thì xoá điều kiện where đi
-    if (query.where.and.length === 0) {
-        delete query.where;
-    }
+
     
     const { docs } = await payload.find(query);
     return docs;

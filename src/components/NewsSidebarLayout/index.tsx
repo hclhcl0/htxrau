@@ -22,13 +22,18 @@ async function getArticles(limit: number, categoryId?: string | number) {
       sort: '-publishedAt',
       limit,
       depth: 1,
+      where: {
+        and: [
+          { _status: { equals: 'published' } }
+        ]
+      }
     };
-    if (categoryId) query.where = { 
+    if (categoryId) query.where.and.push({ 
       or: [
         { category: { equals: categoryId } },
         { additionalCategories: { equals: categoryId } }
       ]
-    };
+    });
     const { docs } = await payload.find(query);
     return docs;
   } catch {
