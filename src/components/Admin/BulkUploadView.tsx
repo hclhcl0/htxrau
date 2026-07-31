@@ -57,7 +57,7 @@ export default function BulkUploadView() {
       const formData = new FormData();
       formData.append('file', file);
       if (selectedFolder) {
-        formData.append('folder', selectedFolder);
+        formData.append('_payload', JSON.stringify({ folder: parseInt(selectedFolder, 10) }));
       }
 
       try {
