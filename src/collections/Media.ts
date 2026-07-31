@@ -64,6 +64,16 @@ export const Media: CollectionConfig = {
   },
   fields: [
     {
+      name: 'folder',
+      type: 'relationship',
+      relationTo: 'media-folders',
+      label: 'Thư mục',
+      admin: {
+        position: 'sidebar',
+        description: 'Chọn thư mục để lưu trữ phương tiện này.',
+      },
+    },
+    {
       name: 'alt',
       type: 'text',
       required: false,

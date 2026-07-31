@@ -19,6 +19,7 @@ import { Departments } from './collections/Departments.ts';
 import { Media } from './collections/Media.ts';
 import { Categories } from './collections/Categories.ts';
 import { Tags } from './collections/Tags.ts';
+import { MediaFolders } from './collections/MediaFolders.ts';
 import { Articles } from './collections/Articles.ts';
 import { Pages } from './collections/Pages.ts';
 import { Banners } from './collections/Banners.ts';
@@ -117,10 +118,15 @@ export default buildConfig({
         UserGuide: {
           Component: '@/components/Admin/UserGuideView.tsx',
           path: '/huong-dan',
-        }
+        },
+        BulkUpload: {
+          Component: '@/components/Admin/BulkUploadView.tsx',
+          path: '/bulk-upload',
+        },
       },
       afterNavLinks: [
-        '@/components/Admin/GuideNavLink.tsx'
+        '@/components/Admin/GuideNavLink.tsx',
+        '@/components/Admin/BulkUploadLink.tsx',
       ],
       beforeDashboard: [
         '@/app/(payload)/admin/components/AuthorWelcome.tsx#AuthorWelcome',
@@ -134,6 +140,7 @@ export default buildConfig({
   collections: withRBAC([
     Departments,
     Users,
+    MediaFolders,
     Media,
     Categories,
     Tags,
