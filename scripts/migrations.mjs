@@ -3600,7 +3600,13 @@ export const MIGRATION_STATEMENTS = [
   // ==================================================
   `DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN IF NOT EXISTS "media_folders_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_media_folders_fk" FOREIGN KEY ("media_folders_id") REFERENCES "public"."media_folders"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
-  `CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_media_folders_id_idx" ON "payload_locked_documents_rels" USING btree ("media_folders_id")`
+  `CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_media_folders_id_idx" ON "payload_locked_documents_rels" USING btree ("media_folders_id")`,
+
+  // ==================================================
+  // BATCH: Add caption to gallery block tables
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "pages_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`
 ];
 
 
