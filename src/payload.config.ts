@@ -26,6 +26,7 @@ import { Documents } from './collections/Documents.ts';
 import { DocumentSigners } from './collections/DocumentSigners.ts';
 import { SiteSettings } from './globals/SiteSettings.ts';
 import { Settings } from './globals/Settings.ts';
+import { SiteStats } from './globals/SiteStats.ts';
 import { WorkSchedules } from './collections/WorkSchedules.ts';
 import { Videos } from './collections/Videos.ts';
 import { VideoChannels } from './collections/VideoChannels.ts';
@@ -154,6 +155,7 @@ export default buildConfig({
   ]),
   globals: globalsWithRBAC([
     SiteSettings,
+    SiteStats,
   ]),
   plugins: [
     ...(process.env.BLOB_READ_WRITE_TOKEN

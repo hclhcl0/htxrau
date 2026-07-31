@@ -5,6 +5,7 @@ import { FaFacebook, FaYoutube, FaTiktok } from 'react-icons/fa';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import styles from './Footer.module.css';
+import { VisitorCounter } from '@/components/VisitorCounter';
 
 export const Footer = async () => {
   let aboutText = 'Trung tâm Kiểm soát Bệnh tật Thành phố Đà Nẵng';
@@ -121,7 +122,10 @@ export const Footer = async () => {
       {/* Copyright bar */}
       <div className={styles.copyright}>
         <div className={`container ${styles.copyrightInner}`}>
-          <span>{copyrightText}</span>
+          <div>
+            <span>{copyrightText}</span>
+            <VisitorCounter />
+          </div>
           <span>{designerCredit}</span>
         </div>
       </div>

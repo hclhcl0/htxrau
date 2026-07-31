@@ -14,6 +14,7 @@ import { ArticleReaderTools } from '@/components/ArticleReaderTools';
 import type { ReaderToolsConfig } from '@/components/ArticleReaderTools';
 import { SidebarRenderer } from '@/components/SidebarRenderer';
 import { NewsGrid } from '@/components/NewsGrid';
+import { ArticleViewTracker } from '@/components/ArticleViewTracker';
 
 interface PageParams {
   params: Promise<{
@@ -241,6 +242,7 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
         {/* Main Content Wrapper - relative for sidebar positioning */}
         <div className="relative">
           <article className="relative bg-white rounded-xl shadow-sm border border-gray-100 pt-3 pb-4 md:pt-5 md:pb-8 md:pl-16 overflow-visible min-w-0">
+            <ArticleViewTracker slug={article.slug} />
             
             <div className="px-4 md:px-0 md:pr-6 lg:pr-8">
               <div className="flex items-center text-sm text-gray-500 mb-2 md:mb-3 overflow-x-auto whitespace-nowrap pb-1">

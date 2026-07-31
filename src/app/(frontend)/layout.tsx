@@ -8,6 +8,7 @@ import { SitePopup } from "@/components/SitePopup";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import Script from "next/script";
 import { ScrollToTopHelper } from "@/components/ScrollToTopHelper";
+import { VisitTracker } from "@/components/VisitTracker";
 
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
@@ -208,6 +209,7 @@ export default async function RootLayout({
         <ChatWidget />
         {!isDraftMode && <SitePopup popupConfig={popupConfig} />}
         <PWAInstallPrompt />
+        <VisitTracker />
       </body>
     </html>
   );
