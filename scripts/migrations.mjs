@@ -3608,7 +3608,17 @@ export const MIGRATION_STATEMENTS = [
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "pages_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "_pages_v_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; WHEN undefined_table THEN null; END $$`,
-  `DO $$ BEGIN ALTER TABLE "_articles_v_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; WHEN undefined_table THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "_articles_v_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; WHEN undefined_table THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: Add media_id to pages_rels and _pages_v_rels (for GalleryBlock uploads)
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "pages_rels" ADD COLUMN IF NOT EXISTS "media_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "pages_rels" ADD CONSTRAINT "pages_rels_media_id_media_id_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `CREATE INDEX IF NOT EXISTS "pages_rels_media_id_idx" ON "pages_rels" USING btree ("media_id")`,
+  `DO $$ BEGIN ALTER TABLE "_pages_v_rels" ADD COLUMN IF NOT EXISTS "media_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "_pages_v_rels" ADD CONSTRAINT "_pages_v_rels_media_id_media_id_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `CREATE INDEX IF NOT EXISTS "_pages_v_rels_media_id_idx" ON "_pages_v_rels" USING btree ("media_id")`
 ];
 
 
