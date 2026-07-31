@@ -18,17 +18,19 @@ export const GalleryBlock: Block = {
       label: 'Kiểu hiển thị',
     },
     {
-      // hasMany: true → Admin hiện multi-select picker, chọn nhiều ảnh cùng lúc
       name: 'images',
       type: 'relationship',
       relationTo: 'media',
       hasMany: true,
-      label: 'Hình ảnh (giữ Ctrl/Cmd để chọn nhiều cùng lúc)',
+      label: 'Hình ảnh (chọn nhiều cùng lúc)',
       filterOptions: {
         mimeType: { contains: 'image' },
       },
       admin: {
         description: 'Tìm kiếm và chọn nhiều ảnh cùng lúc từ thư viện.',
+        components: {
+          afterInput: ['@/components/Admin/GalleryImagePreview#GalleryImagePreview'],
+        },
       },
     },
     {

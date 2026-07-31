@@ -8,6 +8,11 @@ export const Media: CollectionConfig = {
   },
   admin: {
     group: 'Nội dung',
+    components: {
+      beforeListTable: [
+        '@/components/Admin/MediaFolderFilter#MediaFolderFilter',
+      ],
+    },
   },
   access: {
     read: () => true,

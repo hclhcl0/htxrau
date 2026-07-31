@@ -36,6 +36,8 @@ import { default as default_1aa2999a49364743565bf91f3348acdc } from '@/component
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { default as default_bulkUploadLink } from '@/components/Admin/BulkUploadLink.tsx'
 import { default as default_bulkUploadView } from '@/components/Admin/BulkUploadView.tsx'
+import { GalleryImagePreview as GalleryImagePreview_component } from '@/components/Admin/GalleryImagePreview.tsx'
+import { MediaFolderFilter as MediaFolderFilter_component } from '@/components/Admin/MediaFolderFilter.tsx'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -76,5 +78,7 @@ export const importMap = {
   "@/components/Admin/UserGuideView.tsx#default": default_1aa2999a49364743565bf91f3348acdc,
   "@/components/Admin/BulkUploadLink.tsx#default": default_bulkUploadLink,
   "@/components/Admin/BulkUploadView.tsx#default": default_bulkUploadView,
+  "@/components/Admin/GalleryImagePreview#GalleryImagePreview": GalleryImagePreview_component,
+  "@/components/Admin/MediaFolderFilter#MediaFolderFilter": MediaFolderFilter_component,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
