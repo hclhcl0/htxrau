@@ -18,27 +18,23 @@ export const GalleryBlock: Block = {
       label: 'Kiểu hiển thị',
     },
     {
+      // hasMany: true → Admin hiện multi-select picker, chọn nhiều ảnh cùng lúc
       name: 'images',
-      type: 'array',
-      label: 'Danh sách hình ảnh',
-      minRows: 1,
-      fields: [
-        {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
-          label: 'Chọn ảnh',
-          filterOptions: {
-            mimeType: { contains: 'image' },
-          },
-        },
-        {
-          name: 'caption',
-          type: 'text',
-          label: 'Chú thích ảnh (không bắt buộc)',
-        }
-      ],
+      type: 'relationship',
+      relationTo: 'media',
+      hasMany: true,
+      label: 'Hình ảnh (giữ Ctrl/Cmd để chọn nhiều cùng lúc)',
+      filterOptions: {
+        mimeType: { contains: 'image' },
+      },
+      admin: {
+        description: 'Tìm kiếm và chọn nhiều ảnh cùng lúc từ thư viện.',
+      },
+    },
+    {
+      name: 'caption',
+      type: 'text',
+      label: 'Chú thích bộ ảnh (không bắt buộc)',
     },
   ],
 };

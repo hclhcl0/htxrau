@@ -113,33 +113,53 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
       );
     },
     galleryBlock: ({ node }: any) => {
-      const { images } = node.fields;
+      const { images, caption, style } = node.fields;
       if (!images?.length) return null;
 
-      // Tự động chọn số cột theo số lượng ảnh
       const count = images.length;
       let gridClass = 'grid-cols-1';
       if (count === 2) gridClass = 'grid-cols-1 md:grid-cols-2';
       else if (count >= 3) gridClass = 'grid-cols-2 md:grid-cols-3';
 
+      // Hỗ trợ cả format mới (hasMany relationship: img là media object)
+      // và format cũ (array: img là { image: {...}, caption: '...' })
+      const normalizeImage = (img: any) => {
+        if (img?.url) {
+          // Format mới: img là media object trực tiếp
+          return { url: img.url, alt: img.alt || '', caption: null };
+        }
+        // Format cũ: img là { image: {...}, caption: '...' }
+        return { url: img?.image?.url, alt: img?.caption || '', caption: img?.caption || null };
+      };
+
       return (
-        <div className={`grid ${gridClass} gap-3 my-3`}>
-          {images.map((img: any, i: number) => (
-            <div key={i} className="overflow-hidden rounded-xl border border-gray-100">
-              <img
-                src={img.image?.url}
-                alt={img.caption || ''}
-                className="w-full h-auto object-cover"
-                style={{ aspectRatio: count === 1 ? 'auto' : '4/3' }}
-              />
-              {img.caption && (
-                <p className="text-xs text-center text-gray-500 py-1.5 px-2 bg-gray-50">{img.caption}</p>
-              )}
-            </div>
-          ))}
+        <div className="my-4">
+          <div className={`grid ${gridClass} gap-3`}>
+            {images.map((img: any, i: number) => {
+              const { url, alt, caption: imgCaption } = normalizeImage(img);
+              if (!url) return null;
+              return (
+                <div key={i} className="overflow-hidden rounded-xl border border-gray-100">
+                  <img
+                    src={url}
+                    alt={alt}
+                    className="w-full h-auto object-cover"
+                    style={{ aspectRatio: count === 1 ? 'auto' : '4/3' }}
+                  />
+                  {imgCaption && (
+                    <p className="text-xs text-center text-gray-500 py-1.5 px-2 bg-gray-50">{imgCaption}</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {caption && (
+            <p className="text-sm text-center text-gray-500 mt-2 italic">{caption}</p>
+          )}
         </div>
       );
     },
+
     calloutBlock: ({ node }: any) => {
       const { type, title, content } = node.fields;
       let bg = 'bg-blue-50 border-blue-200 text-blue-900';
