@@ -9,23 +9,28 @@ export async function POST() {
     // Dùng global 'site-stats' để lưu tổng lượt truy cập
     const stats = await payload.findGlobal({ slug: 'site-stats' }) as any;
 
-    const todayKey = new Date().toISOString().slice(0, 10); // "2026-07-31"
+    const todayKey = new Date().toISOString().slice(0, 10);   // "2026-07-31"
+    const monthKey = new Date().toISOString().slice(0, 7);    // "2026-07"
+
     const currentTotal = (stats?.totalVisits || 0) + 1;
     const currentToday = stats?.lastVisitDate === todayKey
-      ? (stats?.todayVisits || 0) + 1
-      : 1;
+      ? (stats?.todayVisits || 0) + 1 : 1;
+    const currentMonth = stats?.lastVisitMonth === monthKey
+      ? (stats?.monthVisits || 0) + 1 : 1;
 
     await payload.updateGlobal({
       slug: 'site-stats',
       data: {
         totalVisits: currentTotal,
         todayVisits: currentToday,
+        monthVisits: currentMonth,
         lastVisitDate: todayKey,
+        lastVisitMonth: monthKey,
       },
       overrideAccess: true,
     });
 
-    return NextResponse.json({ totalVisits: currentTotal, todayVisits: currentToday });
+    return NextResponse.json({ totalVisits: currentTotal, todayVisits: currentToday, monthVisits: currentMonth });
   } catch (err) {
     console.error('[track-visit]', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
@@ -37,12 +42,14 @@ export async function GET() {
     const payload = await getPayload({ config: configPromise });
     const stats = await payload.findGlobal({ slug: 'site-stats' }) as any;
     const todayKey = new Date().toISOString().slice(0, 10);
+    const monthKey = new Date().toISOString().slice(0, 7);
 
     return NextResponse.json({
       totalVisits: stats?.totalVisits || 0,
       todayVisits: stats?.lastVisitDate === todayKey ? (stats?.todayVisits || 0) : 0,
+      monthVisits: stats?.lastVisitMonth === monthKey ? (stats?.monthVisits || 0) : 0,
     });
   } catch {
-    return NextResponse.json({ totalVisits: 0, todayVisits: 0 });
+    return NextResponse.json({ totalVisits: 0, todayVisits: 0, monthVisits: 0 });
   }
 }

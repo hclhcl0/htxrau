@@ -66,6 +66,7 @@ export const Footer = async () => {
                 <span>{email}</span>
               </li>
             </ul>
+            <VisitorCounter />
           </div>
 
           {/* Column 2: Liên kết nhanh */}
@@ -122,10 +123,7 @@ export const Footer = async () => {
       {/* Copyright bar */}
       <div className={styles.copyright}>
         <div className={`container ${styles.copyrightInner}`}>
-          <div>
-            <span>{copyrightText}</span>
-            <VisitorCounter />
-          </div>
+          <span>{copyrightText}</span>
           <span>{designerCredit}</span>
         </div>
       </div>

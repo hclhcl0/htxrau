@@ -13,7 +13,9 @@ export async function GET(request: Request) {
   // Cho phép truyền giá trị qua query param, hoặc dùng mặc định từ ksbtdanang.vn
   const totalVisits = parseInt(url.searchParams.get('total') || '37708898');
   const todayVisits = parseInt(url.searchParams.get('today') || '4056');
+  const monthVisits = parseInt(url.searchParams.get('month') || '386763');
   const todayKey = new Date().toISOString().slice(0, 10);
+  const monthKey = new Date().toISOString().slice(0, 7);
 
   try {
     const payload = await getPayload({ config: configPromise });
@@ -23,7 +25,9 @@ export async function GET(request: Request) {
       data: {
         totalVisits,
         todayVisits,
+        monthVisits,
         lastVisitDate: todayKey,
+        lastVisitMonth: monthKey,
       },
       overrideAccess: true,
     });
@@ -31,7 +35,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       message: 'Đã khởi tạo số liệu thống kê thành công!',
-      data: { totalVisits, todayVisits, lastVisitDate: todayKey },
+      data: { totalVisits, todayVisits, monthVisits, lastVisitDate: todayKey, lastVisitMonth: monthKey },
     });
   } catch (err) {
     console.error('[init-stats]', err);

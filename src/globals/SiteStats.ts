@@ -27,18 +27,28 @@ export const SiteStats: GlobalConfig = {
       type: 'number',
       label: 'Lượt truy cập hôm nay',
       defaultValue: 0,
-      admin: {
-        readOnly: true,
-      },
+      admin: { readOnly: true },
+    },
+    {
+      name: 'monthVisits',
+      type: 'number',
+      label: 'Lượt truy cập tháng hiện tại',
+      defaultValue: 0,
+      admin: { readOnly: true },
     },
     {
       name: 'lastVisitDate',
       type: 'text',
       label: 'Ngày cập nhật gần nhất (YYYY-MM-DD)',
       defaultValue: '',
-      admin: {
-        readOnly: true,
-      },
+      admin: { readOnly: true },
+    },
+    {
+      name: 'lastVisitMonth',
+      type: 'text',
+      label: 'Tháng cập nhật gần nhất (YYYY-MM)',
+      defaultValue: '',
+      admin: { readOnly: true },
     },
   ],
 };
