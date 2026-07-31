@@ -1,22 +1,22 @@
 /**
- * MIGRATION STATEMENTS — nguồn duy nhất (single source of truth)
- * Cập nhật lúc: 11/06/2026 23:00
+ * MIGRATION STATEMENTS â€” nguá»“n duy nháº¥t (single source of truth)
+ * Cáº­p nháº­t lÃºc: 11/06/2026 23:00
  *
- * Được dùng bởi:
- *   - migrate.mjs  (chạy tự động khi build trên Vercel: `node migrate.mjs && next build`)
+ * ÄÆ°á»£c dÃ¹ng bá»Ÿi:
+ *   - migrate.mjs  (cháº¡y tá»± Ä‘á»™ng khi build trÃªn Vercel: `node migrate.mjs && next build`)
  *
- * QUY TẮC:
- *   1. Luôn dùng IF NOT EXISTS / ADD COLUMN IF NOT EXISTS → an toàn khi chạy lại
- *   2. Khi thêm Collection/Global/Field mới → thêm SQL vào cuối danh sách này
- *   3. KHÔNG xóa các statement cũ (chỉ thêm mới)
- *   4. Sau khi thêm SQL → commit & push → Vercel sẽ tự apply khi build
+ * QUY Táº®C:
+ *   1. LuÃ´n dÃ¹ng IF NOT EXISTS / ADD COLUMN IF NOT EXISTS â†’ an toÃ n khi cháº¡y láº¡i
+ *   2. Khi thÃªm Collection/Global/Field má»›i â†’ thÃªm SQL vÃ o cuá»‘i danh sÃ¡ch nÃ y
+ *   3. KHÃ”NG xÃ³a cÃ¡c statement cÅ© (chá»‰ thÃªm má»›i)
+ *   4. Sau khi thÃªm SQL â†’ commit & push â†’ Vercel sáº½ tá»± apply khi build
  *
- * QUY TẮC ĐẶT TÊN BẢNG PAYLOAD CMS (drizzle-orm):
- *   Collection slug "my-items"     → "my_items"
- *   Array field "myItems.members"  → "my_items_members"
- *   Relationship field             → "my_items_rels"
- *   Global slug "my-settings"      → "my_settings"
- *   Versions của collection        → "_my_items_v"
+ * QUY Táº®C Äáº¶T TÃŠN Báº¢NG PAYLOAD CMS (drizzle-orm):
+ *   Collection slug "my-items"     â†’ "my_items"
+ *   Array field "myItems.members"  â†’ "my_items_members"
+ *   Relationship field             â†’ "my_items_rels"
+ *   Global slug "my-settings"      â†’ "my_settings"
+ *   Versions cá»§a collection        â†’ "_my_items_v"
  */
 
 export const MIGRATION_STATEMENTS = [
@@ -347,7 +347,7 @@ export const MIGRATION_STATEMENTS = [
   `,
 
   // ====================================================
-  // BATCH 1 – Settings: sidebarWidgets blocks
+  // BATCH 1 â€“ Settings: sidebarWidgets blocks
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "settings_blocks_categories_widget" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -355,7 +355,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar NOT NULL DEFAULT 'Chuyên mục',
+    "title" varchar NOT NULL DEFAULT 'ChuyÃªn má»¥c',
     "limit" numeric DEFAULT 10,
     CONSTRAINT "settings_blocks_categories_widget_parent_fk"
       FOREIGN KEY ("_parent_id") REFERENCES "settings" ("id") ON DELETE cascade ON UPDATE no action
@@ -370,7 +370,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar NOT NULL DEFAULT 'Tin mới cập nhật',
+    "title" varchar NOT NULL DEFAULT 'Tin má»›i cáº­p nháº­t',
     "limit" numeric DEFAULT 5,
     CONSTRAINT "settings_blocks_recent_articles_widget_parent_fk"
       FOREIGN KEY ("_parent_id") REFERENCES "settings" ("id") ON DELETE cascade ON UPDATE no action
@@ -385,7 +385,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar DEFAULT 'Kênh TikTok CDC',
+    "title" varchar DEFAULT 'KÃªnh TikTok CDC',
     "channel_id" integer,
     CONSTRAINT "settings_blocks_tiktok_widget_parent_fk"
       FOREIGN KEY ("_parent_id") REFERENCES "settings" ("id") ON DELETE cascade ON UPDATE no action
@@ -443,7 +443,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "settings_blocks_custom_html_widget_path_idx" ON "settings_blocks_custom_html_widget" USING btree ("_path")`,
 
   // ====================================================
-  // BATCH 2 – main_menu global
+  // BATCH 2 â€“ main_menu global
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "main_menu" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -475,13 +475,13 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "main_menu_menu_items_sub_items_parent_idx" ON "main_menu_menu_items_sub_items" USING btree ("_parent_id")`,
 
   // ====================================================
-  // BATCH 2b – settings table: missing columns
+  // BATCH 2b â€“ settings table: missing columns
   // ====================================================
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "home_news_layout" varchar DEFAULT 'grid'`,
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "theme_config_font_family" varchar DEFAULT 'Inter'`,
 
   // ====================================================
-  // BATCH 3 – settings homeSections blocks
+  // BATCH 3 â€“ settings homeSections blocks
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "settings_blocks_news_category_section" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -552,7 +552,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar DEFAULT 'VIDEO NỔI BẬT',
+    "title" varchar DEFAULT 'VIDEO Ná»”I Báº¬T',
     "channel_id" integer,
     "limit" numeric DEFAULT 4,
     "layout" varchar DEFAULT 'grid',
@@ -612,7 +612,7 @@ export const MIGRATION_STATEMENTS = [
     "id" serial PRIMARY KEY NOT NULL,
     "_order" integer NOT NULL,
     "_parent_id" integer NOT NULL,
-    "icon" varchar DEFAULT '🏥',
+    "icon" varchar DEFAULT 'ðŸ¥',
     "value" varchar NOT NULL,
     "label" varchar NOT NULL,
     "suffix" varchar,
@@ -640,7 +640,7 @@ export const MIGRATION_STATEMENTS = [
     "id" serial PRIMARY KEY NOT NULL,
     "_order" integer NOT NULL,
     "_parent_id" integer NOT NULL,
-    "icon" varchar DEFAULT '🔗',
+    "icon" varchar DEFAULT 'ðŸ”—',
     "label" varchar NOT NULL,
     "url" varchar NOT NULL,
     "open_in_new_tab" boolean DEFAULT true,
@@ -666,7 +666,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "settings_blocks_rich_text_section_path_idx" ON "settings_blocks_rich_text_section" USING btree ("_path")`,
 
   // ====================================================
-  // BATCH 4 – form_submissions collection
+  // BATCH 4 â€“ form_submissions collection
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "form_submissions" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -684,7 +684,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "form_submissions_created_at_idx" ON "form_submissions" USING btree ("created_at")`,
 
   // ====================================================
-  // BATCH 5 – pages: new columns + Page Builder blocks
+  // BATCH 5 â€“ pages: new columns + Page Builder blocks
   // ====================================================
   `ALTER TABLE "pages" ADD COLUMN IF NOT EXISTS "page_type" varchar DEFAULT 'standard'`,
   `ALTER TABLE "pages" ADD COLUMN IF NOT EXISTS "layout" varchar DEFAULT 'withSidebar'`,
@@ -920,7 +920,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "pages_blocks_table_block_rows_cells_parent_idx" ON "pages_blocks_table_block_rows_cells" USING btree ("_parent_id")`,
 
   // ====================================================
-  // BATCH 6 – video_channels + videos
+  // BATCH 6 â€“ video_channels + videos
   // ====================================================
   `DO $$ BEGIN
     CREATE TYPE "enum_video_channels_platform" AS ENUM('youtube', 'facebook', 'tiktok');
@@ -960,7 +960,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_form_submissions_id_idx" ON "payload_locked_documents_rels" USING btree ("form_submissions_id")`,
 
   // ====================================================
-  // BATCH 7 – users: sessions + rels + new columns
+  // BATCH 7 â€“ users: sessions + rels + new columns
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "users_sessions" (
     "_order" integer NOT NULL,
@@ -986,7 +986,7 @@ export const MIGRATION_STATEMENTS = [
   `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "name" varchar`,
 
   // ====================================================
-  // BATCH 8 – articles: missing columns
+  // BATCH 8 â€“ articles: missing columns
   // ====================================================
   `ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "review_status" varchar DEFAULT 'draft'`,
   `ALTER TABLE "_articles_v" ADD COLUMN IF NOT EXISTS "version_review_status" varchar DEFAULT 'draft'`,
@@ -994,7 +994,7 @@ export const MIGRATION_STATEMENTS = [
   `ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "views" numeric DEFAULT 0`,
 
   // ====================================================
-  // BATCH 9 – org_units collection
+  // BATCH 9 â€“ org_units collection
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "org_units" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1040,7 +1040,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_org_units_id_idx" ON "payload_locked_documents_rels" USING btree ("org_units_id")`,
 
   // ====================================================
-  // BATCH 10 – theme_settings global
+  // BATCH 10 â€“ theme_settings global
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "theme_settings" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1052,9 +1052,9 @@ export const MIGRATION_STATEMENTS = [
   )`,
 
   // ====================================================
-  // BATCH 11 – theme_settings: thêm cột org_colors_*
-  // Payload CMS tạo tên cột theo pattern: {groupSlug}_{fieldName}
-  // group 'orgColors' + field 'ban_lanh_dao' → 'org_colors_ban_lanh_dao'
+  // BATCH 11 â€“ theme_settings: thÃªm cá»™t org_colors_*
+  // Payload CMS táº¡o tÃªn cá»™t theo pattern: {groupSlug}_{fieldName}
+  // group 'orgColors' + field 'ban_lanh_dao' â†’ 'org_colors_ban_lanh_dao'
   // ====================================================
   `ALTER TABLE "theme_settings" ADD COLUMN IF NOT EXISTS "org_colors_ban_lanh_dao" varchar DEFAULT '#0d47a1'`,
   `ALTER TABLE "theme_settings" ADD COLUMN IF NOT EXISTS "org_colors_phong" varchar DEFAULT '#2e7d32'`,
@@ -1062,35 +1062,35 @@ export const MIGRATION_STATEMENTS = [
   `ALTER TABLE "theme_settings" ADD COLUMN IF NOT EXISTS "org_colors_khac" varchar DEFAULT '#e65100'`,
 
   // ====================================================
-  // BATCH 12 – ai_settings global
+  // BATCH 12 â€“ ai_settings global
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "ai_settings" (
     "id" serial PRIMARY KEY NOT NULL,
     "chat_enabled" boolean DEFAULT true,
     "gemini_api_keys" text,
-    "chat_welcome_message" varchar DEFAULT 'Xin chào! Tôi là Trợ lý AI của CDC Đà Nẵng. Tôi có thể giúp gì cho bạn hôm nay?',
+    "chat_welcome_message" varchar DEFAULT 'Xin chÃ o! TÃ´i lÃ  Trá»£ lÃ½ AI cá»§a CDC ÄÃ  Náºµng. TÃ´i cÃ³ thá»ƒ giÃºp gÃ¬ cho báº¡n hÃ´m nay?',
     "chat_custom_prompt" text,
     "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
     "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   )`,
 
   // ====================================================
-  // BATCH 13 – Add aiChatSettings columns to settings table + department to users
+  // BATCH 13 â€“ Add aiChatSettings columns to settings table + department to users
   // ====================================================
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "ai_chat_settings_chat_enabled" boolean DEFAULT true`,
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "ai_chat_settings_gemini_api_keys" text`,
-  `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "ai_chat_settings_chat_welcome_message" varchar DEFAULT 'Xin chào! Tôi là Trợ lý AI của CDC Đà Nẵng. Tôi có thể giúp gì cho bạn hôm nay?'`,
+  `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "ai_chat_settings_chat_welcome_message" varchar DEFAULT 'Xin chÃ o! TÃ´i lÃ  Trá»£ lÃ½ AI cá»§a CDC ÄÃ  Náºµng. TÃ´i cÃ³ thá»ƒ giÃºp gÃ¬ cho báº¡n hÃ´m nay?'`,
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "ai_chat_settings_chat_custom_prompt" text`,
   `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "department" varchar`,
 
   // ====================================================
-  // BATCH 14 – Add auto_zalo_broadcast to articles table
+  // BATCH 14 â€“ Add auto_zalo_broadcast to articles table
   // ====================================================
   `ALTER TABLE "articles" ADD COLUMN IF NOT EXISTS "auto_zalo_broadcast" boolean DEFAULT false`,
   `ALTER TABLE "_articles_v" ADD COLUMN IF NOT EXISTS "version_auto_zalo_broadcast" boolean DEFAULT false`,
 
   // ====================================================
-  // BATCH 15 – Documents: thêm trường hiệu lực, lĩnh vực, người ký
+  // BATCH 15 â€“ Documents: thÃªm trÆ°á»ng hiá»‡u lá»±c, lÄ©nh vá»±c, ngÆ°á»i kÃ½
   // ====================================================
   `ALTER TABLE "documents" ADD COLUMN IF NOT EXISTS "effective_date" timestamp(3) with time zone`,
   `ALTER TABLE "documents" ADD COLUMN IF NOT EXISTS "expiry_date" timestamp(3) with time zone`,
@@ -1098,7 +1098,7 @@ export const MIGRATION_STATEMENTS = [
   `ALTER TABLE "documents" ADD COLUMN IF NOT EXISTS "signer" varchar`,
 
   // ====================================================
-  // BATCH 16 – Tạo bảng procurements (Thông tin mua sắm)
+  // BATCH 16 â€“ Táº¡o báº£ng procurements (ThÃ´ng tin mua sáº¯m)
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "procurements" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1119,13 +1119,13 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "procurements_created_at_idx" ON "procurements" USING btree ("created_at")`,
 
   // ====================================================
-  // BATCH 17 – Thêm cột drive_url (Google Drive link)
+  // BATCH 17 â€“ ThÃªm cá»™t drive_url (Google Drive link)
   // ====================================================
   `ALTER TABLE "procurements" ADD COLUMN IF NOT EXISTS "drive_url" varchar`,
   `ALTER TABLE "documents"    ADD COLUMN IF NOT EXISTS "drive_url" varchar`,
 
   // ====================================================
-  // BATCH 18 – Thêm cột thumbnail_id cho procurements (ảnh đại diện lưới)
+  // BATCH 18 â€“ ThÃªm cá»™t thumbnail_id cho procurements (áº£nh Ä‘áº¡i diá»‡n lÆ°á»›i)
   // ====================================================
   `ALTER TABLE "procurements" ADD COLUMN IF NOT EXISTS "thumbnail_id" integer`,
   `DO $$ BEGIN
@@ -1135,7 +1135,7 @@ export const MIGRATION_STATEMENTS = [
   END $$;`,
 
   // ====================================================
-  // BATCH 19 – Tạo bảng procedure_groups
+  // BATCH 19 â€“ Táº¡o báº£ng procedure_groups
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "procedure_groups" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1148,7 +1148,7 @@ export const MIGRATION_STATEMENTS = [
   )`,
 
   // ====================================================
-  // BATCH 20 – Tạo bảng procedures
+  // BATCH 20 â€“ Táº¡o báº£ng procedures
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "procedures" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1173,7 +1173,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "procedures_status_idx" ON "procedures" USING btree ("status")`,
 
   // ====================================================
-  // BATCH 21 – Tạo bảng service_categories
+  // BATCH 21 â€“ Táº¡o báº£ng service_categories
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "service_categories" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1187,7 +1187,7 @@ export const MIGRATION_STATEMENTS = [
   )`,
 
   // ====================================================
-  // BATCH 22 – Tạo bảng services
+  // BATCH 22 â€“ Táº¡o báº£ng services
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "services" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1209,7 +1209,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "services_status_idx" ON "services" USING btree ("status")`,
 
   // ====================================================
-  // BATCH 23 – Tạo bảng Global services_landing
+  // BATCH 23 â€“ Táº¡o báº£ng Global services_landing
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "services_landing" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1246,7 +1246,7 @@ export const MIGRATION_STATEMENTS = [
   )`,
 
   // ====================================================
-  // BATCH 24 – Cập nhật Payload system rels cho các bảng mới (procurements, procedure_groups, procedures, service_categories, services)
+  // BATCH 24 â€“ Cáº­p nháº­t Payload system rels cho cÃ¡c báº£ng má»›i (procurements, procedure_groups, procedures, service_categories, services)
   // ====================================================
   ...['procurements', 'procedure_groups', 'procedures', 'service_categories', 'services'].flatMap(table => [
     `ALTER TABLE "payload_locked_documents_rels" ADD COLUMN IF NOT EXISTS "${table}_id" integer`,
@@ -1261,14 +1261,14 @@ export const MIGRATION_STATEMENTS = [
   ]),
 
   // ====================================================
-  // BATCH 25 – Thêm trường icon, color, order_num vào categories
+  // BATCH 25 â€“ ThÃªm trÆ°á»ng icon, color, order_num vÃ o categories
   // ====================================================
   `ALTER TABLE "categories" ADD COLUMN IF NOT EXISTS "icon" varchar`,
   `ALTER TABLE "categories" ADD COLUMN IF NOT EXISTS "color" varchar`,
   `ALTER TABLE "categories" ADD COLUMN IF NOT EXISTS "order_num" numeric DEFAULT 0`,
 
   // ====================================================
-  // BATCH 26 – Thêm group articleReaderTools vào settings
+  // BATCH 26 â€“ ThÃªm group articleReaderTools vÃ o settings
   // ====================================================
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "article_reader_tools_show_font_size" boolean`,
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "article_reader_tools_show_t_t_s" boolean`,
@@ -1281,7 +1281,7 @@ export const MIGRATION_STATEMENTS = [
   `ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS "article_reader_tools_show_read_progress" boolean`,
 
   // ====================================================
-  // BATCH 27 – Thêm Collection departments + liên kết vào users
+  // BATCH 27 â€“ ThÃªm Collection departments + liÃªn káº¿t vÃ o users
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "departments" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1311,23 +1311,23 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "departments_rels_parent_idx" ON "departments_rels" USING btree ("parent_id")`,
   `CREATE INDEX IF NOT EXISTS "departments_rels_path_idx" ON "departments_rels" USING btree ("path")`,
 
-  // Thêm cột department_id vào bảng users (liên kết đến departments)
+  // ThÃªm cá»™t department_id vÃ o báº£ng users (liÃªn káº¿t Ä‘áº¿n departments)
   `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "department_id" integer`,
   `ALTER TABLE "users" ADD CONSTRAINT "users_department_id_fk"
     FOREIGN KEY ("department_id") REFERENCES "departments" ("id") ON DELETE set null ON UPDATE no action`,
   // ====================================================
-  // BATCH 22 – Site Settings
+  // BATCH 22 â€“ Site Settings
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "site_settings" (
     "id" serial PRIMARY KEY NOT NULL,
-    "header_site_name" varchar NOT NULL DEFAULT 'Trung tâm Kiểm soát Bệnh tật Thành phố Đà Nẵng',
+    "header_site_name" varchar NOT NULL DEFAULT 'Trung tÃ¢m Kiá»ƒm soÃ¡t Bá»‡nh táº­t ThÃ nh phá»‘ ÄÃ  Náºµng',
     "header_logo_id" integer,
     "header_logo_customization_logo_height" numeric DEFAULT 80,
     "header_logo_customization_logo_position" varchar DEFAULT 'left',
     "header_logo_customization_show_site_name" boolean DEFAULT true,
-    "header_logo_customization_site_name_line1" varchar DEFAULT 'TRUNG TÂM KIỂM SOÁT BỆNH TẬT',
-    "header_logo_customization_site_name_line2" varchar DEFAULT 'THÀNH PHỐ ĐÀ NẴNG',
-    "header_logo_customization_site_tagline" varchar DEFAULT 'Phòng bệnh chủ động-vươn rộng tương lai',
+    "header_logo_customization_site_name_line1" varchar DEFAULT 'TRUNG TÃ‚M KIá»‚M SOÃT Bá»†NH Táº¬T',
+    "header_logo_customization_site_name_line2" varchar DEFAULT 'THÃ€NH PHá» ÄÃ€ Náº´NG',
+    "header_logo_customization_site_tagline" varchar DEFAULT 'PhÃ²ng bá»‡nh chá»§ Ä‘á»™ng-vÆ°Æ¡n rá»™ng tÆ°Æ¡ng lai',
     "header_logo_customization_logo_banner_image_id" integer,
     "header_logo_customization_mobile_logo_id" integer,
     "header_logo_customization_mobile_logo_height" numeric DEFAULT 40,
@@ -1345,14 +1345,14 @@ export const MIGRATION_STATEMENTS = [
     "header_social_links_instagram" varchar,
     "menu_menu_position" varchar DEFAULT 'below',
     "sidebar_width_ratio" varchar DEFAULT 'Sidebar 33% - Main 67%',
-    "sidebar_gap_size" varchar DEFAULT 'Vừa',
+    "sidebar_gap_size" varchar DEFAULT 'Vá»«a',
     "footer_about_text" varchar,
     "footer_address_main" varchar,
     "footer_address_sub" varchar,
     "footer_phone" varchar,
     "footer_email" varchar,
-    "footer_copyright_text" varchar DEFAULT '© Bản quyền thuộc về TRUNG TÂM KIỂM SOÁT BỆNH TẬT THÀNH PHỐ ĐÀ NẴNG',
-    "footer_designer_credit" varchar DEFAULT 'thiết kế bởi CNTT CDC Đà Nẵng',
+    "footer_copyright_text" varchar DEFAULT 'Â© Báº£n quyá»n thuá»™c vá» TRUNG TÃ‚M KIá»‚M SOÃT Bá»†NH Táº¬T THÃ€NH PHá» ÄÃ€ Náº´NG',
+    "footer_designer_credit" varchar DEFAULT 'thiáº¿t káº¿ bá»Ÿi CNTT CDC ÄÃ  Náºµng',
     "theme_org_layout" varchar DEFAULT 'chart_accordion',
     "theme_org_colors_ban_lanh_dao" varchar DEFAULT '#0d47a1',
     "theme_org_colors_phong" varchar DEFAULT '#2e7d32',
@@ -1432,7 +1432,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "site_settings_footer_social_links_parent_idx" ON "site_settings_footer_social_links" USING btree ("_parent_id")`,
 
   // ====================================================
-  // BATCH X – Add DocumentSigners Collection and relationship in Documents
+  // BATCH X â€“ Add DocumentSigners Collection and relationship in Documents
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "document_signers" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -1818,7 +1818,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "pages_blocks_zalo_widget_block_path_idx" ON "pages_blocks_zalo_widget_block" USING btree ("_path")`,
 
   // ====================================================
-  // BATCH X – _pages_v versioned tables (required for versions: { drafts: true })
+  // BATCH X â€“ _pages_v versioned tables (required for versions: { drafts: true })
   // ====================================================
   `CREATE TABLE IF NOT EXISTS "_pages_v" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -2521,7 +2521,7 @@ export const MIGRATION_STATEMENTS = [
   ]),
 
   // ====================================================
-  // BATCH X+1 – Add _uuid column to all _pages_v_blocks_* tables
+  // BATCH X+1 â€“ Add _uuid column to all _pages_v_blocks_* tables
   // Payload CMS requires a _uuid column in every versioned block table
   // ====================================================
   ...[
@@ -2602,7 +2602,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar NOT NULL DEFAULT 'Chuyên mục',
+    "title" varchar NOT NULL DEFAULT 'ChuyÃªn má»¥c',
     "limit" numeric DEFAULT 10,
     CONSTRAINT "site_settings_blocks_categories_widget_parent_fk"
       FOREIGN KEY ("_parent_id") REFERENCES "site_settings" ("id") ON DELETE cascade ON UPDATE no action
@@ -2618,7 +2618,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar NOT NULL DEFAULT 'Tin mới cập nhật',
+    "title" varchar NOT NULL DEFAULT 'Tin má»›i cáº­p nháº­t',
     "limit" numeric DEFAULT 5,
     CONSTRAINT "site_settings_blocks_recent_articles_widget_parent_fk"
       FOREIGN KEY ("_parent_id") REFERENCES "site_settings" ("id") ON DELETE cascade ON UPDATE no action
@@ -2634,7 +2634,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar DEFAULT 'Kênh TikTok CDC',
+    "title" varchar DEFAULT 'KÃªnh TikTok CDC',
     "channel_id" integer,
     CONSTRAINT "site_settings_blocks_tiktok_widget_parent_fk"
       FOREIGN KEY ("_parent_id") REFERENCES "site_settings" ("id") ON DELETE cascade ON UPDATE no action
@@ -2766,7 +2766,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar DEFAULT 'VIDEO NỔI BẬT',
+    "title" varchar DEFAULT 'VIDEO Ná»”I Báº¬T',
     "channel_id" integer,
     "limit" numeric DEFAULT 4,
     "layout" varchar DEFAULT 'grid',
@@ -2876,7 +2876,7 @@ export const MIGRATION_STATEMENTS = [
     "id" serial PRIMARY KEY NOT NULL,
     "_order" integer NOT NULL,
     "_parent_id" integer NOT NULL,
-    "icon" varchar DEFAULT '🏥',
+    "icon" varchar DEFAULT 'ðŸ¥',
     "value" varchar NOT NULL,
     "label" varchar NOT NULL,
     "suffix" varchar,
@@ -2890,7 +2890,7 @@ export const MIGRATION_STATEMENTS = [
     "id" serial PRIMARY KEY NOT NULL,
     "_order" integer NOT NULL,
     "_parent_id" integer NOT NULL,
-    "icon" varchar DEFAULT '🔗',
+    "icon" varchar DEFAULT 'ðŸ”—',
     "label" varchar NOT NULL,
     "url" varchar NOT NULL,
     "open_in_new_tab" boolean DEFAULT true,
@@ -3130,7 +3130,7 @@ export const MIGRATION_STATEMENTS = [
 
   // ====================================================
   // BATCH: Drop Services, ServiceCategories, ServicesLanding
-  // Xóa hoàn toàn khỏi database vì đã chuyển sang dùng Articles + Categories
+  // XÃ³a hoÃ n toÃ n khá»i database vÃ¬ Ä‘Ã£ chuyá»ƒn sang dÃ¹ng Articles + Categories
   // ====================================================
   `DROP TABLE IF EXISTS "services_pricing_table" CASCADE`,
   `DROP TABLE IF EXISTS "services_rels" CASCADE`,
@@ -3197,7 +3197,7 @@ export const MIGRATION_STATEMENTS = [
 
   // ====================================================
   // FIX: Drop NOT NULL on optional fields in banner_widget block
-  // title và link_url là optional nhưng DB có ràng buộc NOT NULL → lỗi khi thêm widget
+  // title vÃ  link_url lÃ  optional nhÆ°ng DB cÃ³ rÃ ng buá»™c NOT NULL â†’ lá»—i khi thÃªm widget
   // ====================================================
   `ALTER TABLE "site_settings_blocks_banner_widget" ALTER COLUMN "title" DROP NOT NULL`,
   `ALTER TABLE "site_settings_blocks_banner_widget" ALTER COLUMN "link_url" DROP NOT NULL`,
@@ -3515,7 +3515,7 @@ export const MIGRATION_STATEMENTS = [
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
     "block_name" varchar,
-    "title" varchar DEFAULT 'Gói Vắc Xin Bảo Vệ Toàn Diện',
+    "title" varchar DEFAULT 'GÃ³i Váº¯c Xin Báº£o Vá»‡ ToÃ n Diá»‡n',
     "subtitle" varchar,
     "limit" numeric DEFAULT 20,
     "show_view_all" boolean DEFAULT true,
@@ -3527,7 +3527,7 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "site_settings_blocks_vaccine_section_path_idx" ON "site_settings_blocks_vaccine_section" USING btree ("_path")`,
 
   // ====================================================
-  // BATCH: Add scheduleDoses to vaccines (phác đồ chuẩn)
+  // BATCH: Add scheduleDoses to vaccines (phÃ¡c Ä‘á»“ chuáº©n)
   // ====================================================
   `DO $$ BEGIN ALTER TABLE "vaccines" ADD COLUMN "schedule_doses" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
 
@@ -3556,5 +3556,20 @@ export const MIGRATION_STATEMENTS = [
   // ==================================================
   // BATCH: Add is_warning to videos
   // ==================================================
-  `DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN IF NOT EXISTS "is_warning" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN IF NOT EXISTS "is_warning" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: Create site_stats global table for visitor tracking
+  // ==================================================
+  `CREATE TABLE IF NOT EXISTS "site_stats" (
+    "id" serial PRIMARY KEY,
+    "total_visits" integer DEFAULT 0,
+    "today_visits" integer DEFAULT 0,
+    "month_visits" integer DEFAULT 0,
+    "last_visit_date" varchar,
+    "last_visit_month" varchar,
+    "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+    "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  )`
 ];
+
