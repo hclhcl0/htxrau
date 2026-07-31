@@ -3606,7 +3606,9 @@ export const MIGRATION_STATEMENTS = [
   // BATCH: Add caption to gallery block tables
   // ==================================================
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
-  `DO $$ BEGIN ALTER TABLE "pages_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "pages_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "_pages_v_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; WHEN undefined_table THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "_articles_v_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; WHEN undefined_table THEN null; END $$`
 ];
 
 
