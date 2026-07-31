@@ -179,6 +179,22 @@ export default async function RootLayout({
             });
           `}
         </Script>
+        {/* Google Analytics 4 */}
+        <Script
+          id="ga4-script"
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-LPF1GV6VFQ"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-LPF1GV6VFQ', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
       </head>
       <body className="bg-gray-100/80 antialiased selection:bg-teal-600 selection:text-white">
         <ScrollToTopHelper />
