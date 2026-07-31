@@ -34,6 +34,8 @@ import { default as default_dba050a67c75dfc8bf48ee1410f2a2d2 } from '@/component
 import { AuthorWelcome as AuthorWelcome_59589bfc5409bc24cf137e45629d787e } from '@/app/(payload)/admin/components/AuthorWelcome.tsx'
 import { default as default_1aa2999a49364743565bf91f3348acdc } from '@/components/Admin/UserGuideView.tsx'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { default as default_bulkUploadLink } from '@/components/Admin/BulkUploadLink.tsx'
+import { default as default_bulkUploadView } from '@/components/Admin/BulkUploadView.tsx'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -72,5 +74,7 @@ export const importMap = {
   "@/components/Admin/GuideNavLink.tsx#default": default_dba050a67c75dfc8bf48ee1410f2a2d2,
   "@/app/(payload)/admin/components/AuthorWelcome.tsx#AuthorWelcome": AuthorWelcome_59589bfc5409bc24cf137e45629d787e,
   "@/components/Admin/UserGuideView.tsx#default": default_1aa2999a49364743565bf91f3348acdc,
+  "@/components/Admin/BulkUploadLink.tsx#default": default_bulkUploadLink,
+  "@/components/Admin/BulkUploadView.tsx#default": default_bulkUploadView,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

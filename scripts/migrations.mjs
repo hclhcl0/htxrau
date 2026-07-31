@@ -3593,7 +3593,14 @@ export const MIGRATION_STATEMENTS = [
   // ==================================================
   `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN IF NOT EXISTS "folder_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "media" ADD CONSTRAINT "media_folder_id_media_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."media_folders"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
-  `CREATE INDEX IF NOT EXISTS "media_folder_idx" ON "media" USING btree ("folder_id")`
+  `CREATE INDEX IF NOT EXISTS "media_folder_idx" ON "media" USING btree ("folder_id")`,
+
+  // ==================================================
+  // BATCH: Fix locked documents rels for media_folders
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN IF NOT EXISTS "media_folders_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_media_folders_fk" FOREIGN KEY ("media_folders_id") REFERENCES "public"."media_folders"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_media_folders_id_idx" ON "payload_locked_documents_rels" USING btree ("media_folders_id")`
 ];
 
 
