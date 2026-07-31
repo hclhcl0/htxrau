@@ -19,18 +19,12 @@ export const GalleryBlock: Block = {
     },
     {
       name: 'images',
-      type: 'relationship',
+      type: 'upload',
       relationTo: 'media',
       hasMany: true,
-      label: 'Hình ảnh (chọn nhiều cùng lúc)',
-      filterOptions: {
-        mimeType: { contains: 'image' },
-      },
+      label: 'Hình ảnh',
       admin: {
-        description: 'Tìm kiếm và chọn nhiều ảnh cùng lúc từ thư viện.',
-        components: {
-          afterInput: ['@/components/Admin/GalleryImagePreview#GalleryImagePreview'],
-        },
+        description: 'Nhấn "Add Media" để mở thư viện, giữ Ctrl/Shift để chọn nhiều ảnh cùng lúc.',
       },
     },
     {

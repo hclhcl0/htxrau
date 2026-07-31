@@ -3618,7 +3618,23 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "pages_rels_media_id_idx" ON "pages_rels" USING btree ("media_id")`,
   `DO $$ BEGIN ALTER TABLE "_pages_v_rels" ADD COLUMN IF NOT EXISTS "media_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "_pages_v_rels" ADD CONSTRAINT "_pages_v_rels_media_id_media_id_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
-  `CREATE INDEX IF NOT EXISTS "_pages_v_rels_media_id_idx" ON "_pages_v_rels" USING btree ("media_id")`
+  `CREATE INDEX IF NOT EXISTS "_pages_v_rels_media_id_idx" ON "_pages_v_rels" USING btree ("media_id")`,
+
+  // ==================================================
+  // BATCH: Create articles_blocks_gallery_block_images table (upload hasMany)
+  // ==================================================
+  `CREATE TABLE IF NOT EXISTS "articles_blocks_gallery_block_images" (
+    "_order" integer NOT NULL,
+    "_parent_id" varchar NOT NULL,
+    "id" varchar PRIMARY KEY NOT NULL,
+    "image_id" integer,
+    "caption" varchar,
+    "_uuid" varchar
+  )`,
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block_images" ADD CONSTRAINT "articles_blocks_gallery_block_images_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block_images" ADD CONSTRAINT "articles_blocks_gallery_block_images_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."articles_blocks_gallery_block"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_images_order_idx" ON "articles_blocks_gallery_block_images" USING btree ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_images_parent_id_idx" ON "articles_blocks_gallery_block_images" USING btree ("_parent_id")`
 ];
 
 
