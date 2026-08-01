@@ -3603,9 +3603,27 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_media_folders_id_idx" ON "payload_locked_documents_rels" USING btree ("media_folders_id")`,
 
   // ==================================================
-  // BATCH: Add caption to gallery block tables
+  // BATCH: Create articles_blocks_gallery_block table (must exist before ALTER)
   // ==================================================
-  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `CREATE TYPE IF NOT EXISTS "enum_articles_blocks_gallery_block_style" AS ENUM('grid', 'slider')`,
+  `CREATE SEQUENCE IF NOT EXISTS "articles_blocks_gallery_block_id_seq"`,
+  `CREATE TABLE IF NOT EXISTS "articles_blocks_gallery_block" (
+    "_order" integer NOT NULL,
+    "_parent_id" integer NOT NULL,
+    "_path" text NOT NULL,
+    "id" varchar DEFAULT nextval('articles_blocks_gallery_block_id_seq'::regclass) NOT NULL,
+    "style" "enum_articles_blocks_gallery_block_style" DEFAULT 'grid',
+    "caption" varchar,
+    "block_name" varchar,
+    "_uuid" varchar
+  )`,
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ADD CONSTRAINT "articles_blocks_gallery_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."articles"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_order_idx" ON "articles_blocks_gallery_block" USING btree ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_parent_id_idx" ON "articles_blocks_gallery_block" USING btree ("_parent_id")`,
+
+  // ==================================================
+  // BATCH: Add caption to gallery block tables (for existing tables)
+  // ==================================================
   `DO $$ BEGIN ALTER TABLE "pages_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "_pages_v_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; WHEN undefined_table THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "_articles_v_blocks_gallery_block" ADD COLUMN IF NOT EXISTS "caption" varchar; EXCEPTION WHEN duplicate_column THEN null; WHEN undefined_table THEN null; END $$`,
@@ -3633,6 +3651,8 @@ export const MIGRATION_STATEMENTS = [
   )`,
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block_images" ADD CONSTRAINT "articles_blocks_gallery_block_images_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block_images" ADD CONSTRAINT "articles_blocks_gallery_block_images_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."articles_blocks_gallery_block"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `CREATE SEQUENCE IF NOT EXISTS "articles_blocks_gallery_block_images_id_seq"`,
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block_images" ALTER COLUMN "id" SET DEFAULT nextval('public.articles_blocks_gallery_block_images_id_seq'::regclass); EXCEPTION WHEN others THEN null; END $$`,
   `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_images_order_idx" ON "articles_blocks_gallery_block_images" USING btree ("_order")`,
   `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_images_parent_id_idx" ON "articles_blocks_gallery_block_images" USING btree ("_parent_id")`,
 
@@ -3643,7 +3663,6 @@ export const MIGRATION_STATEMENTS = [
   `ALTER TABLE "_pages_v_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public._pages_v_blocks_gallery_block_id_seq'::regclass)`,
   `CREATE SEQUENCE IF NOT EXISTS "pages_blocks_gallery_block_id_seq"`,
   `ALTER TABLE "pages_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.pages_blocks_gallery_block_id_seq'::regclass)`,
-  `CREATE SEQUENCE IF NOT EXISTS "articles_blocks_gallery_block_id_seq"`,
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.articles_blocks_gallery_block_id_seq'::regclass); EXCEPTION WHEN others THEN null; END $$`
 ];
 
