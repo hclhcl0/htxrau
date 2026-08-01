@@ -3634,7 +3634,17 @@ export const MIGRATION_STATEMENTS = [
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block_images" ADD CONSTRAINT "articles_blocks_gallery_block_images_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block_images" ADD CONSTRAINT "articles_blocks_gallery_block_images_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."articles_blocks_gallery_block"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
   `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_images_order_idx" ON "articles_blocks_gallery_block_images" USING btree ("_order")`,
-  `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_images_parent_id_idx" ON "articles_blocks_gallery_block_images" USING btree ("_parent_id")`
+  `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_images_parent_id_idx" ON "articles_blocks_gallery_block_images" USING btree ("_parent_id")`,
+
+  // ==================================================
+  // BATCH: Fix gallery block id column - attach sequences so DEFAULT works
+  // ==================================================
+  `CREATE SEQUENCE IF NOT EXISTS "_pages_v_blocks_gallery_block_id_seq"`,
+  `ALTER TABLE "_pages_v_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public._pages_v_blocks_gallery_block_id_seq'::regclass)`,
+  `CREATE SEQUENCE IF NOT EXISTS "pages_blocks_gallery_block_id_seq"`,
+  `ALTER TABLE "pages_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.pages_blocks_gallery_block_id_seq'::regclass)`,
+  `CREATE SEQUENCE IF NOT EXISTS "articles_blocks_gallery_block_id_seq"`,
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.articles_blocks_gallery_block_id_seq'::regclass); EXCEPTION WHEN others THEN null; END $$`
 ];
 
 
