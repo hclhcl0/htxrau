@@ -3605,18 +3605,20 @@ export const MIGRATION_STATEMENTS = [
   // ==================================================
   // BATCH: Create articles_blocks_gallery_block table (must exist before ALTER)
   // ==================================================
-  `CREATE TYPE IF NOT EXISTS "enum_articles_blocks_gallery_block_style" AS ENUM('grid', 'slider')`,
+  `DO $$ BEGIN CREATE TYPE "enum_articles_blocks_gallery_block_style" AS ENUM('grid', 'slider'); EXCEPTION WHEN duplicate_object THEN null; END $$`,
   `CREATE SEQUENCE IF NOT EXISTS "articles_blocks_gallery_block_id_seq"`,
   `CREATE TABLE IF NOT EXISTS "articles_blocks_gallery_block" (
     "_order" integer NOT NULL,
     "_parent_id" integer NOT NULL,
     "_path" text NOT NULL,
-    "id" varchar DEFAULT nextval('articles_blocks_gallery_block_id_seq'::regclass) NOT NULL,
+    "id" varchar NOT NULL,
     "style" "enum_articles_blocks_gallery_block_style" DEFAULT 'grid',
     "caption" varchar,
     "block_name" varchar,
-    "_uuid" varchar
+    "_uuid" varchar,
+    CONSTRAINT "articles_blocks_gallery_block_pkey" PRIMARY KEY ("id")
   )`,
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.articles_blocks_gallery_block_id_seq'::regclass); EXCEPTION WHEN others THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ADD CONSTRAINT "articles_blocks_gallery_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."articles"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
   `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_order_idx" ON "articles_blocks_gallery_block" USING btree ("_order")`,
   `CREATE INDEX IF NOT EXISTS "articles_blocks_gallery_block_parent_id_idx" ON "articles_blocks_gallery_block" USING btree ("_parent_id")`,
