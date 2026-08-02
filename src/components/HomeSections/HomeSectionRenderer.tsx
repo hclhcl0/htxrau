@@ -29,7 +29,7 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
             const hasAd = ad?.enabled && ad?.slides?.length > 0;
             return (
               <div key={`${blockType}-${index}`} className="container">
-                <div className={hasAd ? 'flex gap-4 items-start' : ''}>
+                <div className={hasAd ? 'flex gap-4 items-stretch' : ''}>
                   {/* Cột tin tức */}
                   <div className={hasAd ? 'flex-1 min-w-0' : 'w-full'}>
                     <NewsGrid
@@ -45,6 +45,7 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
                         slides={ad.slides}
                         title={ad.title}
                         autoplayInterval={ad.autoplayInterval ?? 5}
+                        matchHeight={true}
                       />
                     </div>
                   )}

@@ -26,9 +26,10 @@ interface AdSliderProps {
   slides: AdSlide[];
   title?: string;
   autoplayInterval?: number; // giây, 0 = tắt
+  matchHeight?: boolean; // Nếu true, tự động dãn chiều cao bằng container cha thay vì dùng tỉ lệ
 }
 
-export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps) {
+export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = false }: AdSliderProps) {
   const validSlides = slides.filter((s) => getUrl(s.image));
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -78,11 +79,12 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
       style={{
         position: 'relative',
         width: '100%',
-        aspectRatio: `${imgW}/${imgH}`,
+        ...(matchHeight ? { height: '100%', minHeight: 200 } : { aspectRatio: `${imgW}/${imgH}` }),
         overflow: 'hidden',
         borderRadius: 6,
         background: '#111',
         cursor: slide.linkUrl ? 'pointer' : 'default',
+        flex: 1, // for column flex
       }}
     >
       <Image
@@ -153,6 +155,9 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
         overflow: 'hidden',
         background: '#fff',
         boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+        display: 'flex',
+        flexDirection: 'column',
+        ...(matchHeight ? { height: '100%' } : {}),
       }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -169,13 +174,13 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
       )}
 
       {/* Ảnh + link */}
-      <div style={{ padding: title ? '8px' : '0' }}>
+      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column' }}>
         {slide.linkUrl ? (
           <Link
             href={slide.linkUrl}
             target={slide.openInNewTab ? '_blank' : '_self'}
             rel={slide.openInNewTab ? 'noopener noreferrer' : undefined}
-            style={{ display: 'block', textDecoration: 'none' }}
+            style={{ display: 'flex', flexDirection: 'column', flex: 1, textDecoration: 'none' }}
           >
             {ImageContent}
           </Link>
