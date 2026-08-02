@@ -402,7 +402,7 @@
 .bigImageHolder {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 */
+  padding-top: 52%; /* Slightly wider than 16:9 to save height */
   border-radius: var(--radius-lg, 0.75rem);
   overflow: hidden;
 }
@@ -424,7 +424,7 @@
 
 
 .bigBody {
-  padding: 1.25rem 0;
+  padding: 0.75rem 0;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -433,8 +433,8 @@
 .bigTitle {
   font-size: var(--text-base);
   font-weight: 700;
-  margin-bottom: 0.75rem;
-  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
 }
 
 @media (min-width: 640px) {
@@ -455,10 +455,10 @@
 .bigExcerpt {
   font-size: var(--text-sm);
   color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -476,13 +476,13 @@
 .sideList {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .sideItem {
   display: flex;
-  gap: 0.875rem;
-  padding-bottom: 0.875rem;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--border-light);
   min-width: 0;
 }
@@ -493,10 +493,10 @@
 }
 
 .sideImage {
-  width: 90px;
-  height: 60px;
+  width: 80px;
+  height: 53px;
   flex-shrink: 0;
-  border-radius: var(--radius-lg, 0.75rem);
+  border-radius: var(--radius-md, 0.5rem);
   overflow: hidden;
   position: relative;
 }
