@@ -1,4 +1,4 @@
-﻿/**
+/**
  * MIGRATION STATEMENTS ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â nguÃƒÂ¡Ã‚Â»Ã¢â‚¬Å“n duy nhÃƒÂ¡Ã‚ÂºÃ‚Â¥t (single source of truth)
  * CÃƒÂ¡Ã‚ÂºÃ‚Â­p nhÃƒÂ¡Ã‚ÂºÃ‚Â­t lÃƒÆ’Ã‚Âºc: 11/06/2026 23:00
  *
@@ -3665,7 +3665,7 @@ export const MIGRATION_STATEMENTS = [
   `ALTER TABLE "_pages_v_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public._pages_v_blocks_gallery_block_id_seq'::regclass)`,
   `CREATE SEQUENCE IF NOT EXISTS "pages_blocks_gallery_block_id_seq"`,
   `ALTER TABLE "pages_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.pages_blocks_gallery_block_id_seq'::regclass)`,
-  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.articles_blocks_gallery_block_id_seq'::regclass); EXCEPTION WHEN others THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "articles_blocks_gallery_block" ALTER COLUMN "id" SET DEFAULT nextval('public.articles_blocks_gallery_block_id_seq'::regclass); EXCEPTION WHEN others THEN null; END $$`,
 
   // ==================================================
   // BATCH: adSlider fields + slides table for latestNewsSection
