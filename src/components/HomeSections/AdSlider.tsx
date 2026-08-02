@@ -97,24 +97,6 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
         priority={active === 0}
       />
 
-      {/* Số thứ tự + progress */}
-      {validSlides.length > 1 && (
-        <>
-          <div style={{
-            position: 'absolute', bottom: 6, right: 8,
-            background: 'rgba(0,0,0,0.5)', color: '#fff',
-            borderRadius: 12, padding: '1px 8px', fontSize: 11,
-          }}>
-            {active + 1}/{validSlides.length}
-          </div>
-          {intervalMs > 0 && (
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,0.2)' }}>
-              <div style={{ height: '100%', width: `${progress}%`, background: '#42a5f5', transition: 'width 0.05s linear' }} />
-            </div>
-          )}
-        </>
-      )}
-
       {/* Nút prev/next */}
       {validSlides.length > 1 && (
         <>
