@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useLocale } from '@payloadcms/ui';
+import { useListQuery } from '@payloadcms/ui';
 
 interface Folder {
   id: number;
@@ -12,12 +11,16 @@ interface Folder {
 
 export function MediaFolderFilter() {
   const [folders, setFolders] = useState<Folder[]>([]);
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { query, handleWhereChange, handlePageChange } = useListQuery();
 
-  // Đọc folder đang lọc từ URL
-  const currentFolderRaw = searchParams.get('where[folder][equals]') ?? searchParams.get('where[folder][in][0]');
-  const currentFolder = currentFolderRaw ? parseInt(currentFolderRaw, 10) : null;
+  // Đọc folder đang lọc từ query của Payload
+  let currentFolderRaw: any = null;
+  if (query?.where?.folder?.equals) {
+    currentFolderRaw = query.where.folder.equals;
+  } else if (query?.where?.folder?.in?.[0]) {
+    currentFolderRaw = query.where.folder.in[0];
+  }
+  const currentFolder = currentFolderRaw ? parseInt(String(currentFolderRaw), 10) : null;
 
   useEffect(() => {
     fetch('/api/media-folders?limit=200&depth=1')
@@ -27,21 +30,23 @@ export function MediaFolderFilter() {
   }, []);
 
   const goToFolder = (folderId: number | null) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    // Xoá toàn bộ filter folder cũ
-    [...params.keys()].forEach((k) => {
-      if (k.startsWith('where[folder]')) params.delete(k);
-    });
+    const newWhere = { ...(query?.where || {}) };
+    
+    // Xoá filter folder cũ
+    delete newWhere.folder;
 
     if (folderId !== null) {
-      params.set('where[folder][equals]', String(folderId));
+      newWhere.folder = { equals: folderId };
     }
 
-    // Reset về trang đầu khi đổi thư mục
-    params.set('page', '1');
-
-    router.push(`?${params.toString()}`);
+    if (handleWhereChange) {
+      handleWhereChange(newWhere);
+    }
+    
+    // Reset về trang đầu
+    if (handlePageChange) {
+      handlePageChange(1);
+    }
   };
 
   // Nhóm thư mục gốc và thư mục con
