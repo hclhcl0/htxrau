@@ -26,10 +26,9 @@ interface AdSliderProps {
   slides: AdSlide[];
   title?: string;
   autoplayInterval?: number; // giây, 0 = tắt
-  matchHeight?: boolean; // Nếu true, tự động dãn chiều cao bằng container cha thay vì dùng tỉ lệ
 }
 
-export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = false }: AdSliderProps) {
+export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps) {
   const validSlides = slides.filter((s) => getUrl(s.image));
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -78,23 +77,21 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
     <div
       style={{
         position: 'relative',
-        height: matchHeight ? '100%' : undefined,
-        aspectRatio: `${imgW}/${imgH}`,
-        width: matchHeight ? 'auto' : '100%',
-        minHeight: matchHeight ? 200 : undefined,
+        width: '100%',
+        flex: 1,
+        minHeight: 200,
         overflow: 'hidden',
         borderRadius: 6,
-        background: '#111',
+        background: '#fff',
         cursor: slide.linkUrl ? 'pointer' : 'default',
-        flex: matchHeight ? 1 : undefined,
       }}
     >
       <Image
         src={imgUrl}
         alt={slide.altText || slide.image?.alt || `Quảng cáo ${active + 1}`}
         fill
-        sizes="(max-width: 1024px) 100vw, 220px"
-        style={{ objectFit: 'cover' }}
+        sizes="(max-width: 1024px) 100vw, 300px"
+        style={{ objectFit: 'contain' }}
         className="transition-opacity duration-300"
         priority={active === 0}
       />
@@ -143,7 +140,8 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
         boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
         display: 'flex',
         flexDirection: 'column',
-        ...(matchHeight ? { flex: 1, width: 'auto' } : { width: '100%' }),
+        height: '100%',
+        width: '100%',
       }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -160,7 +158,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
       )}
 
       {/* Ảnh + link */}
-      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column', width: matchHeight ? 'auto' : '100%' }}>
+      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
         {slide.linkUrl ? (
           <Link
             href={slide.linkUrl}
