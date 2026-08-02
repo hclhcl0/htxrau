@@ -125,6 +125,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
               background: 'rgba(0,0,0,0.45)', border: 'none', borderRadius: '50%',
               width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', color: '#fff', padding: 0,
+              opacity: paused ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: paused ? 'auto' : 'none'
             }}
             aria-label="Ảnh trước"
           >
@@ -137,6 +138,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
               background: 'rgba(0,0,0,0.45)', border: 'none', borderRadius: '50%',
               width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', color: '#fff', padding: 0,
+              opacity: paused ? 1 : 0, transition: 'opacity 0.2s ease', pointerEvents: paused ? 'auto' : 'none'
             }}
             aria-label="Ảnh tiếp"
           >
