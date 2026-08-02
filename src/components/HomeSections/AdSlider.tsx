@@ -37,6 +37,9 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const intervalMs = (autoplayInterval || 0) * 1000;
 
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
+  const [computedWidth, setComputedWidth] = useState<number | undefined>(undefined);
+
   const prev = useCallback(() => setActive((i) => (i - 1 + validSlides.length) % validSlides.length), [validSlides.length]);
   const next = useCallback(() => setActive((i) => (i + 1) % validSlides.length), [validSlides.length]);
 
@@ -73,11 +76,32 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
   const imgW = slide.image?.width || 9;
   const imgH = slide.image?.height || 16;
 
+  useEffect(() => {
+    if (!imageWrapperRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const h = entry.contentRect.height;
+        if (h > 0) {
+          const w = h * (imgW / imgH);
+          setComputedWidth((prev) => {
+            if (prev === undefined || Math.abs(prev - w) > 1) {
+              return w;
+            }
+            return prev;
+          });
+        }
+      }
+    });
+    observer.observe(imageWrapperRef.current);
+    return () => observer.disconnect();
+  }, [imgW, imgH]);
+
   const ImageContent = (
     <div
+      ref={imageWrapperRef}
       style={{
         position: 'relative',
-        width: 'auto',
+        width: '100%',
         height: '100%',
         minHeight: 200,
         overflow: 'hidden',
@@ -90,10 +114,9 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
       <Image
         src={imgUrl}
         alt={slide.altText || slide.image?.alt || `Quảng cáo ${active + 1}`}
-        width={imgW * 100}
-        height={imgH * 100}
+        fill
         sizes="(max-width: 1024px) 100vw, 300px"
-        style={{ width: 'auto', height: '100%', objectFit: 'contain' }}
+        style={{ objectFit: 'cover' }}
         className="transition-opacity duration-300"
         priority={active === 0}
       />
@@ -143,7 +166,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        width: 'auto',
+        width: computedWidth ? `${computedWidth}px` : '240px',
       }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -160,7 +183,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
       )}
 
       {/* Ảnh + link */}
-      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column', width: 'auto' }}>
+      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
         {slide.linkUrl ? (
           <Link
             href={slide.linkUrl}
