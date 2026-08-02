@@ -77,21 +77,23 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
     <div
       style={{
         position: 'relative',
-        width: '100%',
-        flex: 1,
+        width: 'auto',
+        height: '100%',
         minHeight: 200,
         overflow: 'hidden',
         borderRadius: 6,
         background: '#fff',
         cursor: slide.linkUrl ? 'pointer' : 'default',
+        display: 'flex',
       }}
     >
       <Image
         src={imgUrl}
         alt={slide.altText || slide.image?.alt || `Quảng cáo ${active + 1}`}
-        fill
+        width={imgW * 100}
+        height={imgH * 100}
         sizes="(max-width: 1024px) 100vw, 300px"
-        style={{ objectFit: 'contain' }}
+        style={{ width: 'auto', height: '100%', objectFit: 'contain' }}
         className="transition-opacity duration-300"
         priority={active === 0}
       />
@@ -141,7 +143,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        width: '100%',
+        width: 'auto',
       }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -158,7 +160,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
       )}
 
       {/* Ảnh + link */}
-      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
+      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column', width: 'auto' }}>
         {slide.linkUrl ? (
           <Link
             href={slide.linkUrl}
