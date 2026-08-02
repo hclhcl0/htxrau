@@ -29,7 +29,7 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
             const hasAd = ad?.enabled && ad?.slides?.length > 0;
             return (
               <div key={`${blockType}-${index}`} className="container">
-                <div className={hasAd ? 'flex gap-4 items-stretch' : ''}>
+                <div className={hasAd ? 'flex gap-4 items-start' : ''}>
                   {/* Cột tin tức */}
                   <div className={hasAd ? 'flex-1 min-w-0' : 'w-full'}>
                     <NewsGrid
@@ -40,7 +40,7 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
                   </div>
                   {/* Sidebar quảng cáo — desktop: bên phải, mobile: ẩn (xem bên dưới) */}
                   {hasAd && (
-                    <div className="hidden lg:flex flex-col flex-shrink-0 w-auto self-stretch">
+                    <div className="hidden lg:block flex-shrink-0 w-[240px] xl:w-[280px] sticky top-[100px]">
                       <AdSlider
                         slides={ad.slides}
                         title={ad.title}

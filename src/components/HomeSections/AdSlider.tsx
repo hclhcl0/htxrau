@@ -87,15 +87,15 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
             href={slide.linkUrl}
             target={slide.openInNewTab ? '_blank' : '_self'}
             rel={slide.openInNewTab ? 'noopener noreferrer' : undefined}
-            style={{ display: 'flex', height: '100%' }}
+            style={{ display: 'block' }}
           >
             <img
               src={imgUrl}
               alt={slide.altText || slide.image?.alt || `Quảng cáo ${active + 1}`}
               style={{
-                height: '100%',
-                width: 'auto',
-                objectFit: 'contain',
+                width: '100%',
+                height: 'auto',
+                display: 'block',
                 borderRadius: title ? '0 0 10px 10px' : '10px',
                 border: '1px solid #e0e4ea',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
@@ -108,9 +108,9 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
             src={imgUrl}
             alt={slide.altText || slide.image?.alt || `Quảng cáo ${active + 1}`}
             style={{
-              height: '100%',
-              width: 'auto',
-              objectFit: 'contain',
+              width: '100%',
+              height: 'auto',
+              display: 'block',
               borderRadius: title ? '0 0 10px 10px' : '10px',
               border: '1px solid #e0e4ea',
               boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
