@@ -58,6 +58,10 @@ function GallerySlider({ images }: { images: any[] }) {
 
   const activeImg = images[active];
   const activeUrl = getImageUrl(activeImg)!;
+  // Lấy kích thước thực của ảnh từ Payload media object
+  const imgW = activeImg?.width || 0;
+  const imgH = activeImg?.height || 0;
+  const hasNaturalSize = imgW > 0 && imgH > 0;
 
   return (
     <div style={{ width: '100%', overflow: 'hidden' }}
@@ -69,22 +73,41 @@ function GallerySlider({ images }: { images: any[] }) {
         style={{
           position: 'relative',
           width: '100%',
-          aspectRatio: '16/9',
+          // Nếu có kích thước thực → dùng đúng tỉ lệ, không cắt
+          // Nếu không có → giới hạn max-height 500px
+          ...(hasNaturalSize
+            ? { aspectRatio: `${imgW}/${imgH}`, maxHeight: '75vh' }
+            : { height: 400 }),
           background: '#111',
           cursor: 'zoom-in',
           overflow: 'hidden',
         }}
         onClick={() => setLightbox(true)}
       >
-        <Image
-          key={activeUrl}
-          src={activeUrl}
-          alt={activeImg?.alt || activeImg?.filename || `Ảnh ${active + 1}`}
-          fill
-          sizes="100vw"
-          className="object-cover transition-opacity duration-300"
-          priority={active === 0}
-        />
+        {hasNaturalSize ? (
+          // Container đúng tỉ lệ ảnh thực → object-contain fill vừa khít, không cắt
+          <Image
+            key={activeUrl}
+            src={activeUrl}
+            alt={activeImg?.alt || activeImg?.filename || `Ảnh ${active + 1}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 80vw"
+            style={{ objectFit: 'contain' }}
+            className="transition-opacity duration-300"
+            priority={active === 0}
+          />
+        ) : (
+          <Image
+            key={activeUrl}
+            src={activeUrl}
+            alt={activeImg?.alt || activeImg?.filename || `Ảnh ${active + 1}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 80vw"
+            style={{ objectFit: 'contain' }}
+            className="transition-opacity duration-300"
+            priority={active === 0}
+          />
+        )}
         {/* Số thứ tự */}
         <div
           style={{
