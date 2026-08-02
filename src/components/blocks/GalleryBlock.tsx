@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 
@@ -15,26 +15,62 @@ function getImageUrl(img: any): string | null {
   return `${SERVER_URL}${url}`;
 }
 
+const AUTOPLAY_DELAY = 4000; // ms
+
 // ==================== SLIDER / CAROUSEL ====================
 function GallerySlider({ images }: { images: any[] }) {
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const prev = () => setActive((i) => (i - 1 + images.length) % images.length);
-  const next = () => setActive((i) => (i + 1) % images.length);
+  const prev = useCallback(() => setActive((i) => (i - 1 + images.length) % images.length), [images.length]);
+  const next = useCallback(() => setActive((i) => (i + 1) % images.length), [images.length]);
+
+  const resetTimers = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (progressRef.current) clearInterval(progressRef.current);
+    setProgress(0);
+    if (!paused && images.length > 1) {
+      const step = 50;
+      progressRef.current = setInterval(() => {
+        setProgress((p) => Math.min(p + (step / AUTOPLAY_DELAY) * 100, 100));
+      }, step);
+      timerRef.current = setInterval(() => {
+        setActive((i) => (i + 1) % images.length);
+        setProgress(0);
+      }, AUTOPLAY_DELAY);
+    }
+  }, [paused, images.length]);
+
+  useEffect(() => {
+    resetTimers();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (progressRef.current) clearInterval(progressRef.current);
+    };
+  }, [paused, resetTimers]);
+
+  // Reset progress khi active thay đổi do click prev/next
+  useEffect(() => { setProgress(0); }, [active]);
 
   const activeImg = images[active];
   const activeUrl = getImageUrl(activeImg)!;
 
   return (
-    <div style={{ width: '100%', overflow: 'hidden' }}>
+    <div style={{ width: '100%', overflow: 'hidden' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       {/* ── Ảnh chính ── */}
       <div
         style={{
           position: 'relative',
           width: '100%',
           aspectRatio: '16/9',
-          background: '#000',
+          background: '#111',
           cursor: 'zoom-in',
           overflow: 'hidden',
         }}
@@ -46,7 +82,7 @@ function GallerySlider({ images }: { images: any[] }) {
           alt={activeImg?.alt || activeImg?.filename || `Ảnh ${active + 1}`}
           fill
           sizes="100vw"
-          className="object-contain"
+          className="object-cover transition-opacity duration-300"
           priority={active === 0}
         />
         {/* Số thứ tự */}
@@ -62,14 +98,21 @@ function GallerySlider({ images }: { images: any[] }) {
             fontSize: 13,
           }}
         >
-          {active + 1} / {images.length}
+          {paused ? '⏸ ' : ''}{active + 1} / {images.length}
         </div>
+
+        {/* Progress bar tự động chuyển */}
+        {images.length > 1 && (
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: 'rgba(255,255,255,0.2)' }}>
+            <div style={{ height: '100%', width: `${progress}%`, background: '#42a5f5', transition: 'width 0.05s linear' }} />
+          </div>
+        )}
 
         {/* Nút prev/next */}
         {images.length > 1 && (
           <>
             <button
-              onClick={(e) => { e.stopPropagation(); prev(); }}
+              onClick={(e) => { e.stopPropagation(); prev(); resetTimers(); }}
               style={{
                 position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)',
                 background: 'rgba(0,0,0,0.5)', border: 'none', borderRadius: '50%',
@@ -80,7 +123,7 @@ function GallerySlider({ images }: { images: any[] }) {
               <ChevronLeft size={20} />
             </button>
             <button
-              onClick={(e) => { e.stopPropagation(); next(); }}
+              onClick={(e) => { e.stopPropagation(); next(); resetTimers(); }}
               style={{
                 position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
                 background: 'rgba(0,0,0,0.5)', border: 'none', borderRadius: '50%',
