@@ -351,6 +351,74 @@ export const Settings: GlobalConfig = {
                 },
               ]
             },
+            // ── Sidebar quảng cáo dịch vụ ──
+            {
+              name: 'adSlider',
+              type: 'group',
+              label: '📢 Sidebar Quảng cáo dịch vụ (ảnh 9:16)',
+              admin: {
+                description: 'Hiển thị bên phải trên desktop, bên dưới trên mobile.',
+              },
+              fields: [
+                {
+                  name: 'enabled',
+                  type: 'checkbox',
+                  label: 'Bật sidebar quảng cáo',
+                  defaultValue: false,
+                },
+                {
+                  name: 'title',
+                  type: 'text',
+                  label: 'Tiêu đề sidebar (tùy chọn)',
+                  admin: { condition: (_, siblingData) => siblingData?.enabled },
+                },
+                {
+                  name: 'autoplayInterval',
+                  type: 'number',
+                  label: 'Tự động chuyển ảnh (giây)',
+                  defaultValue: 5,
+                  min: 2,
+                  max: 30,
+                  admin: {
+                    description: 'Đặt 0 để tắt tự động chuyển.',
+                    condition: (_, siblingData) => siblingData?.enabled,
+                  },
+                },
+                {
+                  name: 'slides',
+                  type: 'array',
+                  label: 'Danh sách ảnh quảng cáo',
+                  minRows: 0,
+                  admin: { condition: (_, siblingData) => siblingData?.enabled },
+                  fields: [
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      required: true,
+                      label: 'Ảnh (nên dùng tỉ lệ 9:16 dọc)',
+                    },
+                    {
+                      name: 'linkUrl',
+                      type: 'text',
+                      label: 'Link khi click (tùy chọn)',
+                      admin: { description: 'VD: /dich-vu/kham-suc-khoe hoặc https://...' },
+                    },
+                    {
+                      name: 'openInNewTab',
+                      type: 'checkbox',
+                      label: 'Mở link trong tab mới',
+                      defaultValue: false,
+                    },
+                    {
+                      name: 'altText',
+                      type: 'text',
+                      label: 'Mô tả ảnh (alt text)',
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         },
 

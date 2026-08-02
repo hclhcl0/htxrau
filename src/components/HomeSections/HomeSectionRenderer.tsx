@@ -9,6 +9,7 @@ import { VideoSection } from './VideoSection';
 import { TikTokSection } from './TikTokSection';
 import { ScheduleBlock } from '../blocks/ScheduleBlock';
 import { VaccineSection } from './VaccineSection';
+import { AdSlider } from './AdSlider';
 
 interface HomeSectionRendererProps {
   sections: any[];
@@ -23,14 +24,44 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
         const blockType = section.blockType;
 
         switch (blockType) {
-          case 'latestNewsSection':
+          case 'latestNewsSection': {
+            const ad = section.adSlider;
+            const hasAd = ad?.enabled && ad?.slides?.length > 0;
             return (
-              <NewsGrid
-                key={`${blockType}-${index}`}
-                limitOverride={section.limit}
-                layoutOverride={section.layout}
-              />
+              <div key={`${blockType}-${index}`} className="container">
+                <div className={hasAd ? 'flex gap-4 items-start' : ''}>
+                  {/* Cột tin tức */}
+                  <div className={hasAd ? 'flex-1 min-w-0' : 'w-full'}>
+                    <NewsGrid
+                      limitOverride={section.limit}
+                      layoutOverride={section.layout}
+                      disableContainer
+                    />
+                  </div>
+                  {/* Sidebar quảng cáo — desktop: bên phải, mobile: ẩn (xem bên dưới) */}
+                  {hasAd && (
+                    <div className="hidden lg:block flex-shrink-0 w-[200px]">
+                      <AdSlider
+                        slides={ad.slides}
+                        title={ad.title}
+                        autoplayInterval={ad.autoplayInterval ?? 5}
+                      />
+                    </div>
+                  )}
+                </div>
+                {/* Sidebar quảng cáo — mobile: bên dưới */}
+                {hasAd && (
+                  <div className="lg:hidden mt-4">
+                    <AdSlider
+                      slides={ad.slides}
+                      title={ad.title}
+                      autoplayInterval={ad.autoplayInterval ?? 5}
+                    />
+                  </div>
+                )}
+              </div>
             );
+          }
 
           case 'newsCategorySection': {
             const catObj = typeof section.category === 'object' ? section.category : null;
