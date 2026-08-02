@@ -100,7 +100,6 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
                 border: '1px solid #e0e4ea',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
                 backgroundColor: '#fff',
-                maxWidth: '300px', // Prevent it from getting absurdly wide if height is huge
               }}
             />
           </Link>
@@ -116,7 +115,6 @@ export function AdSlider({ slides, title, autoplayInterval = 5 }: AdSliderProps)
               border: '1px solid #e0e4ea',
               boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
               backgroundColor: '#fff',
-              maxWidth: '300px',
             }}
           />
         )}
