@@ -40,7 +40,7 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
                   </div>
                   {/* Sidebar quảng cáo — desktop: bên phải, mobile: ẩn (xem bên dưới) */}
                   {hasAd && (
-                    <div className="hidden lg:block flex-shrink-0 h-full" style={{ aspectRatio: '9/16' }}>
+                    <div className="hidden lg:block flex-shrink-0 w-[220px]">
                       <AdSlider
                         slides={ad.slides}
                         title={ad.title}
