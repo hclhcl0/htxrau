@@ -143,7 +143,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
         boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
         display: 'flex',
         flexDirection: 'column',
-        ...(matchHeight ? { height: '100%', width: 'auto' } : { width: '100%' }),
+        ...(matchHeight ? { flex: 1, width: 'auto' } : { width: '100%' }),
       }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}

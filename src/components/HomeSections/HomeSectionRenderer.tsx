@@ -40,7 +40,7 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
                   </div>
                   {/* Sidebar quảng cáo — desktop: bên phải, mobile: ẩn (xem bên dưới) */}
                   {hasAd && (
-                    <div className="hidden lg:block flex-shrink-0 w-auto h-full">
+                    <div className="hidden lg:flex flex-col flex-shrink-0 w-auto self-stretch">
                       <AdSlider
                         slides={ad.slides}
                         title={ad.title}
