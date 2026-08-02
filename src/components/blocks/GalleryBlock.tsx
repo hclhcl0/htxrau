@@ -43,35 +43,72 @@ export default function GalleryBlock({ data }: { data: any }) {
           {data.caption || 'Thư viện ảnh'} ({images.length} ảnh)
         </h2>
       </div>
-      <div className="p-4 bg-gray-50">
-        <div
-          className={
-            isSlider
-              ? 'flex gap-2 overflow-x-auto pb-2 snap-x'
-              : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2'
-          }
-        >
-          {images.map((img: any, i: number) => {
-            const url = getImageUrl(img)!;
-            return (
-              <div
-                key={img.id || i}
-                className={`relative rounded-md overflow-hidden group cursor-pointer border border-gray-200 ${
-                  isSlider ? 'flex-shrink-0 w-48 h-48 snap-start' : 'aspect-square'
-                }`}
-                onClick={() => openLightbox(i)}
-              >
-                <Image
-                  src={url}
-                  alt={img.alt || img.filename || `Ảnh ${i + 1}`}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            );
-          })}
-        </div>
+      <div className="p-4 bg-gray-50 overflow-hidden">
+        {isSlider ? (
+          /* ===== SLIDER MODE ===== */
+          <div
+            style={{
+              display: 'flex',
+              gap: '8px',
+              overflowX: 'auto',
+              overflowY: 'hidden',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              paddingBottom: '8px',
+            }}
+          >
+            {images.map((img: any, i: number) => {
+              const url = getImageUrl(img)!;
+              return (
+                <div
+                  key={img.id || i}
+                  onClick={() => openLightbox(i)}
+                  style={{
+                    flexShrink: 0,
+                    width: '220px',
+                    height: '165px',
+                    position: 'relative',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    scrollSnapAlign: 'start',
+                    cursor: 'pointer',
+                    border: '1px solid #e5e7eb',
+                  }}
+                >
+                  <Image
+                    src={url}
+                    alt={img.alt || img.filename || `Ảnh ${i + 1}`}
+                    fill
+                    sizes="220px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* ===== GRID MODE ===== */
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            {images.map((img: any, i: number) => {
+              const url = getImageUrl(img)!;
+              return (
+                <div
+                  key={img.id || i}
+                  className="relative aspect-square rounded-md overflow-hidden group cursor-pointer border border-gray-200"
+                  onClick={() => openLightbox(i)}
+                >
+                  <Image
+                    src={url}
+                    alt={img.alt || img.filename || `Ảnh ${i + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Lightbox */}
