@@ -73,6 +73,7 @@ export const Settings: GlobalConfig = {
         { label: 'Danh sách chi tiết (List)', value: 'list' },
         { label: 'Danh sách rút gọn / Tin vắn (Compact)', value: 'compact' },
         { label: 'Tin tiêu điểm + Danh sách phụ (Featured)', value: 'featured' },
+        { label: 'Ảnh lớn trên + Danh sách tin nhỏ bên dưới', value: 'featured-stacked' },
       ],
       admin: {
         description: 'Lựa chọn hiển thị danh sách bài viết mới dưới dạng lưới tĩnh hoặc slider trượt tự động.',
@@ -311,6 +312,7 @@ export const Settings: GlobalConfig = {
                     { label: 'Danh sách chi tiết (List)', value: 'list' },
                     { label: 'Danh sách rút gọn / Tin vắn (Compact)', value: 'compact' },
                     { label: 'Tin tiêu điểm + Danh sách phụ (Featured)', value: 'featured' },
+                    { label: 'Ảnh lớn trên + Danh sách tin nhỏ bên dưới', value: 'featured-stacked' },
                   ],
                 },
               ]
@@ -347,6 +349,7 @@ export const Settings: GlobalConfig = {
                     { label: 'Danh sách chi tiết (List)', value: 'list' },
                     { label: 'Danh sách rút gọn / Tin vắn (Compact)', value: 'compact' },
                     { label: 'Tin tiêu điểm + Danh sách phụ (Featured)', value: 'featured' },
+                    { label: 'Ảnh lớn trên + Danh sách tin nhỏ bên dưới', value: 'featured-stacked' },
                   ],
                 },
               ]

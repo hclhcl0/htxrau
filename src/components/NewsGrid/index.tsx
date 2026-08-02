@@ -293,6 +293,103 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
               </div>
             );
           })()
+        ) : layout === 'featured-stacked' ? (
+          (() => {
+            const featuredArticle = articles[0];
+            const listArticles = articles.slice(1);
+            const featuredMediaUrl = featuredArticle.image?.url || '/logo.png';
+            return (
+              <div>
+                {/* ── Ảnh lớn bài tiêu điểm ── */}
+                <div className={styles.bigCard} style={{ marginBottom: 12 }}>
+                  <div className={styles.bigImageHolder}>
+                    <Link href={`/bai-viet/${featuredArticle.slug || featuredArticle.id}`}>
+                      <Image
+                        src={featuredMediaUrl}
+                        alt={featuredArticle.title}
+                        width={960}
+                        height={540}
+                        sizes="(max-width: 768px) 100vw, 80vw"
+                        className="w-full h-full object-cover"
+                        priority
+                        quality={70}
+                        unoptimized={!isInternalUrl(featuredMediaUrl)}
+                      />
+                    </Link>
+                  </div>
+                  <div className={styles.bigBody}>
+                    <h3 className={styles.bigTitle}>
+                      <Link href={`/bai-viet/${featuredArticle.slug || featuredArticle.id}`}>
+                        {featuredArticle.title}
+                      </Link>
+                    </h3>
+                    {featuredArticle.description && (
+                      <p className={styles.bigExcerpt}>{featuredArticle.description}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* ── Danh sách tin nhỏ bên dưới (dạng list) ── */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {listArticles.map((article: any) => {
+                    const smallUrl = article.image?.url || '/logo.png';
+                    return (
+                      <article
+                        key={article.id}
+                        style={{
+                          display: 'flex',
+                          gap: 10,
+                          padding: '8px 0',
+                          borderBottom: '1px solid #f0f0f0',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {/* Thumbnail */}
+                        <div style={{ flexShrink: 0, width: 88, height: 60, borderRadius: 6, overflow: 'hidden', background: '#eee' }}>
+                          <Link href={`/bai-viet/${article.slug || article.id}`}>
+                            <Image
+                              src={smallUrl}
+                              alt={article.title}
+                              width={88}
+                              height={60}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              quality={60}
+                              unoptimized={!isInternalUrl(smallUrl)}
+                            />
+                          </Link>
+                        </div>
+                        {/* Tiêu đề */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <Link
+                            href={`/bai-viet/${article.slug || article.id}`}
+                            style={{
+                              fontSize: 13,
+                              fontWeight: 500,
+                              lineHeight: 1.4,
+                              color: '#1a1a2e',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                              textDecoration: 'none',
+                            }}
+                          >
+                            {article.title}
+                          </Link>
+                          {article.publishedAt && (
+                            <p style={{ fontSize: 11, color: '#999', marginTop: 3 }}>
+                              {new Date(article.publishedAt).toLocaleDateString('vi-VN')}
+                            </p>
+                          )}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()
         ) : (
           <div 
             className={styles.grid} 
