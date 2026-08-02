@@ -78,13 +78,15 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
     <div
       style={{
         position: 'relative',
-        width: '100%',
-        ...(matchHeight ? { height: '100%', minHeight: 200 } : { aspectRatio: `${imgW}/${imgH}` }),
+        height: matchHeight ? '100%' : undefined,
+        aspectRatio: `${imgW}/${imgH}`,
+        width: matchHeight ? 'auto' : '100%',
+        minHeight: matchHeight ? 200 : undefined,
         overflow: 'hidden',
         borderRadius: 6,
         background: '#111',
         cursor: slide.linkUrl ? 'pointer' : 'default',
-        flex: 1, // for column flex
+        flex: matchHeight ? 1 : undefined,
       }}
     >
       <Image
@@ -141,7 +143,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
         boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
         display: 'flex',
         flexDirection: 'column',
-        ...(matchHeight ? { height: '100%' } : {}),
+        ...(matchHeight ? { height: '100%', width: 'auto' } : { width: '100%' }),
       }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -158,7 +160,7 @@ export function AdSlider({ slides, title, autoplayInterval = 5, matchHeight = fa
       )}
 
       {/* Ảnh + link */}
-      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: title ? '8px' : '0', flex: 1, display: 'flex', flexDirection: 'column', width: matchHeight ? 'auto' : '100%' }}>
         {slide.linkUrl ? (
           <Link
             href={slide.linkUrl}
