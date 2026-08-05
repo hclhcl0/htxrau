@@ -54,6 +54,10 @@ export const Media: CollectionConfig = {
           format: 'jpeg',
           options: { quality: 85 },
         },
+        generateImageName: ({ originalName, sizeName }) => {
+          const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '');
+          return `${nameWithoutExt}-${sizeName}.jpg`;
+        }
       },
     ],
     adminThumbnail: 'thumbnail',
