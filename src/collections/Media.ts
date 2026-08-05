@@ -45,6 +45,16 @@ export const Media: CollectionConfig = {
         height: null,
         position: 'centre',
       },
+      {
+        name: 'zalo',
+        width: 1024,
+        height: null,
+        position: 'centre',
+        formatOptions: {
+          format: 'jpeg',
+          options: { quality: 85 },
+        },
+      },
     ],
     adminThumbnail: 'thumbnail',
     mimeTypes: [

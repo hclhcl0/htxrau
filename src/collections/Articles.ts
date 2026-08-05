@@ -102,12 +102,14 @@ function lexicalNodesToHtml(nodes: any[], baseUrl: string): string {
       case 'upload': {
         // Hình ảnh inline
         if (node.relationTo === 'media' && node.value) {
-          const imgUrl = typeof node.value === 'object'
-            ? (node.value.url?.startsWith('/') ? `${baseUrl}${node.value.url}` : node.value.url)
-            : '';
-          if (imgUrl) {
-            const alt = node.value?.alt || '';
-            return `<img src="${imgUrl}" alt="${alt}">`;
+          const imgObj = typeof node.value === 'object' ? node.value : null;
+          if (imgObj) {
+            const urlPath = imgObj.sizes?.zalo?.url || imgObj.url;
+            const imgUrl = urlPath?.startsWith('/') ? `${baseUrl}${urlPath}` : urlPath;
+            if (imgUrl) {
+              const alt = imgObj.alt || '';
+              return `<img src="${imgUrl}" alt="${alt}">`;
+            }
           }
         }
         return '';
@@ -334,8 +336,9 @@ export const Articles: CollectionConfig = {
 
             // Resolve image URL
             const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000';
+            // Lấy URL ảnh cover (ưu tiên size zalo định dạng JPG, fallback webp)
             const imgField = doc.image && typeof doc.image === 'object' ? doc.image : null;
-            const imgPath = imgField?.sizes?.card?.url || imgField?.url || '';
+            const imgPath = imgField?.sizes?.zalo?.url || imgField?.sizes?.card?.url || imgField?.url || '';
             const coverUrl = imgPath.startsWith('/') ? `${baseUrl}${imgPath}` : imgPath;
 
             // Convert Lexical JSON content sang HTML để gửi kèm webhook
