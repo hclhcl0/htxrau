@@ -334,18 +334,33 @@ export const Articles: CollectionConfig = {
               return doc;
             }
 
+            // Re-fetch populated doc to ensure deep relationships (cover image, lexical uploads) are fully populated
+            let populatedDoc = doc;
+            try {
+              const fetched = await req.payload.findByID({
+                collection: 'articles',
+                id: doc.id,
+                depth: 2,
+              });
+              if (fetched) {
+                populatedDoc = fetched;
+              }
+            } catch (err) {
+              console.warn('[Auto Broadcast] Failed to fetch populated doc:', err);
+            }
+
             // Resolve image URL
             const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000';
             // Lấy URL ảnh cover (ưu tiên size zalo định dạng JPG, fallback webp)
-            const imgField = doc.image && typeof doc.image === 'object' ? doc.image : null;
+            const imgField = populatedDoc.image && typeof populatedDoc.image === 'object' ? populatedDoc.image : null;
             const imgPath = imgField?.sizes?.zalo?.url || imgField?.sizes?.card?.url || imgField?.url || '';
             const coverUrl = imgPath.startsWith('/') ? `${baseUrl}${imgPath}` : imgPath;
 
             // Convert Lexical JSON content sang HTML để gửi kèm webhook
             let htmlContent = '';
             try {
-              if (doc.content?.root) {
-                htmlContent = lexicalNodesToHtml(doc.content.root.children || [], baseUrl);
+              if (populatedDoc.content?.root) {
+                htmlContent = lexicalNodesToHtml(populatedDoc.content.root.children || [], baseUrl);
               }
             } catch (e) {
               console.warn('[Auto Broadcast] Không chuyển đổi được content sang HTML:', e);
@@ -356,9 +371,9 @@ export const Articles: CollectionConfig = {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                title: doc.title,
-                slug: doc.slug,
-                description: doc.description || '',
+                title: populatedDoc.title,
+                slug: populatedDoc.slug,
+                description: populatedDoc.description || '',
                 imageUrl: coverUrl,
                 htmlContent,
                 webhookSecret,
