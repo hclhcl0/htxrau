@@ -3679,5 +3679,15 @@ export const MIGRATION_STATEMENTS = [
   `CREATE SEQUENCE IF NOT EXISTS "ssbln_ad_slider_slides_id_seq"`,
   `DO $$ BEGIN ALTER TABLE "site_settings_blocks_latest_news_section_ad_slider_slides" ALTER COLUMN "id" SET DEFAULT nextval('public.ssbln_ad_slider_slides_id_seq'::regclass); EXCEPTION WHEN others THEN null; END $$`,
   `CREATE INDEX IF NOT EXISTS "ssbln_slides_order_idx" ON "site_settings_blocks_latest_news_section_ad_slider_slides" USING btree ("_order")`,
-  `CREATE INDEX IF NOT EXISTS "ssbln_slides_parent_idx" ON "site_settings_blocks_latest_news_section_ad_slider_slides" USING btree ("_parent_id")`
+  `CREATE INDEX IF NOT EXISTS "ssbln_slides_parent_idx" ON "site_settings_blocks_latest_news_section_ad_slider_slides" USING btree ("_parent_id")`,
+
+  // ==================================================
+  // BATCH: Add zalo sizes to media
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_url" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_width" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_height" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_mime_type" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_filesize" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_filename" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`
 ];
