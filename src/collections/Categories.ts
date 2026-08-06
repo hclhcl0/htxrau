@@ -82,12 +82,12 @@ export const Categories: CollectionConfig = {
     },
     {
       name: 'assignedDepartments',
-      type: 'join',
-      collection: 'departments',
-      on: 'allowedCategories',
+      type: 'relationship',
+      relationTo: 'departments',
+      hasMany: true,
       label: 'Phân công theo phòng ban',
       admin: {
-        description: 'Các phòng ban được phân công phụ trách chuyên mục này.',
+        description: 'Chọn các phòng ban được phân công phụ trách chuyên mục này.',
       },
     },
     {

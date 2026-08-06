@@ -3689,5 +3689,22 @@ export const MIGRATION_STATEMENTS = [
   `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_height" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_mime_type" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
   `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_filesize" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
-  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_filename" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "media" ADD COLUMN "sizes_zalo_filename" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: categories_rels for assignedDepartments
+  // ==================================================
+  `CREATE TABLE IF NOT EXISTS "categories_rels" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "order" integer,
+    "parent_id" integer NOT NULL,
+    "path" varchar NOT NULL,
+    "departments_id" integer
+  )`,
+  `DO $$ BEGIN ALTER TABLE "categories_rels" ADD CONSTRAINT "categories_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "categories_rels" ADD CONSTRAINT "categories_rels_departments_fk" FOREIGN KEY ("departments_id") REFERENCES "public"."departments"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `CREATE INDEX IF NOT EXISTS "categories_rels_order_idx" ON "categories_rels" USING btree ("order")`,
+  `CREATE INDEX IF NOT EXISTS "categories_rels_parent_idx" ON "categories_rels" USING btree ("parent_id")`,
+  `CREATE INDEX IF NOT EXISTS "categories_rels_path_idx" ON "categories_rels" USING btree ("path")`,
+  `CREATE INDEX IF NOT EXISTS "categories_rels_departments_id_idx" ON "categories_rels" USING btree ("departments_id")`
 ];
