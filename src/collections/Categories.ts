@@ -81,6 +81,16 @@ export const Categories: CollectionConfig = {
       },
     },
     {
+      name: 'assignedDepartments',
+      type: 'join',
+      collection: 'departments',
+      on: 'allowedCategories',
+      label: 'Phân công theo phòng ban',
+      admin: {
+        description: 'Các phòng ban được phân công phụ trách chuyên mục này.',
+      },
+    },
+    {
       name: 'orderNum',
       type: 'number',
       label: 'Thứ tự sắp xếp',
