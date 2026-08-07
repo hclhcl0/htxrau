@@ -7,11 +7,15 @@ export const GlobalLogoutButton = ({ children }: { children: React.ReactNode }) 
   const handleLogout = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
-      await fetch('/api/users/logout', { method: 'POST' });
-      window.location.href = '/admin/login';
+      await fetch('/api/users/logout', {
+        method: 'POST',
+        credentials: 'include', // Bắt buộc gửi cookie theo request
+      });
     } catch (error) {
       console.error('Logout failed:', error);
-      window.location.href = '/admin/logout'; // Fallback
+    } finally {
+      // Luôn chuyển hướng dù thành công hay thất bại
+      window.location.replace('/admin/login');
     }
   };
 
