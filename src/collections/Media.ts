@@ -7,6 +7,8 @@ export const Media: CollectionConfig = {
     plural: 'Thư viện phương tiện',
   },
   admin: {
+    useAsTitle: 'filename',
+    defaultColumns: ['filename', 'alt', 'folder', 'updatedAt'],
     group: 'Nội dung',
     components: {
       beforeListTable: [

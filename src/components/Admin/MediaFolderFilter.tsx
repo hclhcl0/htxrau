@@ -63,6 +63,23 @@ export function MediaFolderFilter() {
       borderBottom: '1px solid var(--theme-elevation-100)',
       marginBottom: '12px',
     }}>
+      <style>{`
+        /* Phóng to ảnh thumbnail trong danh sách Media của Payload */
+        table.payload-table td.cell-thumbnail img,
+        table.payload-table td.cell-_thumbnail img,
+        .thumbnail img, 
+        .cell-thumbnail img,
+        [class*="thumbnail"] img {
+          max-width: 150px !important;
+          max-height: 150px !important;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+        table.payload-table td.cell-thumbnail,
+        table.payload-table td.cell-_thumbnail {
+          width: 160px !important;
+        }
+      `}</style>
       <span style={{ fontSize: '12px', color: 'var(--theme-elevation-500)', marginRight: '4px', whiteSpace: 'nowrap' }}>
         📁 Thư mục:
       </span>
