@@ -16,6 +16,7 @@ export async function GET(req: Request) {
         id: users.docs[0].id,
         data: {
           password: 'AdminPassword123!',
+          role: 'admin',
         }
       });
       return NextResponse.json({ success: true, message: 'Mật khẩu đã được reset thành công!' });
