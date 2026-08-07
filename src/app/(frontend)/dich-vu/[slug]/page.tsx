@@ -19,7 +19,7 @@ async function getService(slug: string) {
     }
 
     const { docs } = await payload.find({
-      collection: 'services',
+      collection: 'articles',
       where: query,
       limit: 1,
     });
