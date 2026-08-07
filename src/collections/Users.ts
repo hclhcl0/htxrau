@@ -17,6 +17,11 @@ export const Users: CollectionConfig = {
   },
   auth: {
     maxLoginAttempts: 10000, // Tạm thời vô hiệu hóa khóa tài khoản do bot tấn công
+    cookies: {
+      secure: process.env.NODE_ENV === 'production', // HTTPS production
+      sameSite: process.env.NODE_ENV === 'production' ? 'Lax' : 'Lax',
+    },
+    tokenExpiration: 28800, // 8 tiếng
   },
   access: {
     admin: ({ req: { user } }) => {
