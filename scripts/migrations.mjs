@@ -3706,5 +3706,10 @@ export const MIGRATION_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS "categories_rels_order_idx" ON "categories_rels" USING btree ("order")`,
   `CREATE INDEX IF NOT EXISTS "categories_rels_parent_idx" ON "categories_rels" USING btree ("parent_id")`,
   `CREATE INDEX IF NOT EXISTS "categories_rels_path_idx" ON "categories_rels" USING btree ("path")`,
-  `CREATE INDEX IF NOT EXISTS "categories_rels_departments_id_idx" ON "categories_rels" USING btree ("departments_id")`
+  `CREATE INDEX IF NOT EXISTS "categories_rels_departments_id_idx" ON "categories_rels" USING btree ("departments_id")`,
+
+  // ==================================================
+  // BATCH: Unlock all locked accounts (Reset login attempts)
+  // ==================================================
+  `DO $$ BEGIN UPDATE "users" SET "lock_until" = NULL, "login_attempts" = 0 WHERE "lock_until" IS NOT NULL; EXCEPTION WHEN others THEN null; END $$`
 ];
