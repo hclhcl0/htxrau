@@ -4,18 +4,9 @@ import React from 'react'
 import { LogOut } from 'lucide-react'
 
 export const LogoutButton = () => {
-  const handleLogout = async (e: React.MouseEvent) => {
+  const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
-    try {
-      await fetch('/api/users/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      window.location.replace('/admin/login');
-    }
+    window.location.replace('/admin/logout');
   };
 
   return (

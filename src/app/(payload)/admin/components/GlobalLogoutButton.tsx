@@ -4,19 +4,10 @@ import React from 'react'
 import { LogOut } from 'lucide-react'
 
 export const GlobalLogoutButton = ({ children }: { children: React.ReactNode }) => {
-  const handleLogout = async (e: React.MouseEvent) => {
+  const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
-    try {
-      await fetch('/api/users/logout', {
-        method: 'POST',
-        credentials: 'include', // Bắt buộc gửi cookie theo request
-      });
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      // Luôn chuyển hướng dù thành công hay thất bại
-      window.location.replace('/admin/login');
-    }
+    // Hard navigate đến /admin/logout — Payload xử lý xóa cookie phía server
+    window.location.replace('/admin/logout');
   };
 
   return (
