@@ -8,6 +8,7 @@ export async function GET(req: Request) {
     const users = await payload.find({
       collection: 'users',
       where: { email: { equals: 'hclhcl0@gmail.com' } },
+      overrideAccess: true,
     });
     
     if (users.docs.length > 0) {
@@ -17,7 +18,8 @@ export async function GET(req: Request) {
         data: {
           password: 'AdminPassword123!',
           role: 'admin',
-        }
+        },
+        overrideAccess: true,
       });
       return NextResponse.json({ success: true, message: 'Mật khẩu đã được reset thành công!' });
     }
