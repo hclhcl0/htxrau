@@ -64,33 +64,97 @@ export function MediaFolderFilter() {
       marginBottom: '12px',
     }}>
       <style>{`
-        /* Phóng to ảnh thumbnail và cả khung chứa ảnh trong danh sách Media của Payload */
-        table.payload-table td .thumbnail,
-        table.payload-table td [class*="thumbnail"],
-        table.payload-table td .file-thumbnail {
-          width: 120px !important;
-          height: 120px !important;
-          max-width: 120px !important;
-          max-height: 120px !important;
-          flex-shrink: 0 !important;
-          border-radius: 8px !important;
+        /* Chuyển đổi bảng danh sách thành dạng Lưới (Grid) */
+        .collection-list table.payload-table {
+          display: block;
         }
-        table.payload-table td .thumbnail img,
-        table.payload-table td [class*="thumbnail"] img,
-        table.payload-table td img {
-          width: 120px !important;
-          height: 120px !important;
-          max-width: 120px !important;
-          max-height: 120px !important;
-          object-fit: cover !important;
-          border-radius: 8px !important;
+        .collection-list table.payload-table thead {
+          display: none; /* Ẩn tiêu đề cột */
         }
-        /* Đảm bảo dòng chữ (Tên file) không bị chèn ép quá mức */
-        table.payload-table td.cell-filename > div,
-        table.payload-table td > div {
+        .collection-list table.payload-table tbody {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 16px;
+          padding: 8px 0;
+        }
+        .collection-list table.payload-table tr {
+          display: flex;
+          flex-direction: column;
+          border: 1px solid var(--theme-elevation-150);
+          border-radius: 12px;
+          padding: 12px;
+          position: relative;
+          background: var(--theme-elevation-50);
+          transition: all 0.2s;
+        }
+        .collection-list table.payload-table tr:hover {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          border-color: var(--theme-elevation-200);
+        }
+        .collection-list table.payload-table td {
+          display: block;
+          border: none !important;
+          padding: 4px 0 !important;
+        }
+        
+        /* Checkbox ở góc trên trái */
+        .collection-list table.payload-table td.cell-_select {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          z-index: 10;
+          background: rgba(255,255,255,0.8);
+          border-radius: 4px;
+        }
+
+        /* Hình ảnh và tên file (cột filename) */
+        .collection-list table.payload-table td.cell-filename {
+          width: 100% !important;
+        }
+        .collection-list table.payload-table td.cell-filename > div {
           display: flex !important;
-          align-items: center !important;
-          gap: 16px !important;
+          flex-direction: column;
+          align-items: stretch !important;
+          gap: 8px !important;
+        }
+        
+        /* Ảnh vuông */
+        .collection-list table.payload-table td .thumbnail,
+        .collection-list table.payload-table td [class*="thumbnail"],
+        .collection-list table.payload-table td .file-thumbnail {
+          width: 100% !important;
+          height: 160px !important;
+          max-width: none !important;
+          max-height: none !important;
+          border-radius: 8px !important;
+          overflow: hidden;
+        }
+        .collection-list table.payload-table td .thumbnail img,
+        .collection-list table.payload-table td [class*="thumbnail"] img,
+        .collection-list table.payload-table td img {
+          width: 100% !important;
+          height: 100% !important;
+          max-width: none !important;
+          max-height: none !important;
+          object-fit: cover !important;
+        }
+
+        /* Ẩn các cột phụ để lưới nhìn gọn gàng */
+        .collection-list table.payload-table td:not(.cell-_select):not(.cell-filename) {
+          display: none !important;
+        }
+        
+        /* Căn giữa tên file */
+        .collection-list table.payload-table td.cell-filename a {
+          text-align: center;
+          font-weight: 500;
+          word-break: break-word;
+          font-size: 13px;
+          line-height: 1.4;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
       <span style={{ fontSize: '12px', color: 'var(--theme-elevation-500)', marginRight: '4px', whiteSpace: 'nowrap' }}>
