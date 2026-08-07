@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       allowedOrigins: [
         'ecdc.vnos.org',
+        'ecdc.ksbtdanang.vn',
         'localhost:3000',
         '127.0.0.1:3000',
       ],
@@ -49,6 +50,11 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
+        protocol: 'https',
+        hostname: 'ecdc.ksbtdanang.vn',
+        pathname: '/**',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
         pathname: '/**',
@@ -56,6 +62,17 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: '127.0.0.1',
+        pathname: '/**',
+      },
+      // MinIO/S3 nội bộ Coolify (wildcard cho mọi hostname nội bộ)
+      {
+        protocol: 'http',
+        hostname: '**',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
         pathname: '/**',
       },
     ],
