@@ -15,7 +15,9 @@ export const Users: CollectionConfig = {
       ],
     },
   },
-  auth: true,
+  auth: {
+    maxLoginAttempts: 10000, // Tạm thời vô hiệu hóa khóa tài khoản do bot tấn công
+  },
   access: {
     admin: ({ req: { user } }) => {
       const role = Array.isArray(user?.role) ? user.role[0]?.toLowerCase() : user?.role?.toLowerCase();
