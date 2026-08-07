@@ -64,20 +64,33 @@ export function MediaFolderFilter() {
       marginBottom: '12px',
     }}>
       <style>{`
-        /* Phóng to ảnh thumbnail trong danh sách Media của Payload */
-        table.payload-table td.cell-thumbnail img,
-        table.payload-table td.cell-_thumbnail img,
-        .thumbnail img, 
-        .cell-thumbnail img,
-        [class*="thumbnail"] img {
-          max-width: 150px !important;
-          max-height: 150px !important;
-          object-fit: cover;
-          border-radius: 8px;
+        /* Phóng to ảnh thumbnail và cả khung chứa ảnh trong danh sách Media của Payload */
+        table.payload-table td .thumbnail,
+        table.payload-table td [class*="thumbnail"],
+        table.payload-table td .file-thumbnail {
+          width: 120px !important;
+          height: 120px !important;
+          max-width: 120px !important;
+          max-height: 120px !important;
+          flex-shrink: 0 !important;
+          border-radius: 8px !important;
         }
-        table.payload-table td.cell-thumbnail,
-        table.payload-table td.cell-_thumbnail {
-          width: 160px !important;
+        table.payload-table td .thumbnail img,
+        table.payload-table td [class*="thumbnail"] img,
+        table.payload-table td img {
+          width: 120px !important;
+          height: 120px !important;
+          max-width: 120px !important;
+          max-height: 120px !important;
+          object-fit: cover !important;
+          border-radius: 8px !important;
+        }
+        /* Đảm bảo dòng chữ (Tên file) không bị chèn ép quá mức */
+        table.payload-table td.cell-filename > div,
+        table.payload-table td > div {
+          display: flex !important;
+          align-items: center !important;
+          gap: 16px !important;
         }
       `}</style>
       <span style={{ fontSize: '12px', color: 'var(--theme-elevation-500)', marginRight: '4px', whiteSpace: 'nowrap' }}>
