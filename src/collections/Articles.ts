@@ -7,6 +7,7 @@ import { NewsListBlockStub, ExternalLinksBlockStub } from '../blocks/OrphanStubs
 import { GalleryBlock } from '../blocks/GalleryBlock.ts';
 import { CalloutBlock } from '../blocks/CalloutBlock.ts';
 import { ButtonBlock } from '../blocks/ButtonBlock.ts';
+import { ImageLinkBlock } from '../blocks/ImageLinkBlock.ts';
 import { RelatedArticlesBlock } from '../blocks/RelatedArticlesBlock.ts';
 import { ColumnsBlock } from '../blocks/ColumnsBlock.ts';
 import { TableBlock } from '../blocks/TableBlock.ts';
@@ -517,7 +518,7 @@ export const Articles: CollectionConfig = {
           AlignFeature(),
           HTMLConverterFeature({}),
           BlocksFeature({ blocks: [
-            VideoBlock, TikTokBlock, PDFBlock, GalleryBlock, CalloutBlock, ButtonBlock, RelatedArticlesBlock, ColumnsBlock,
+            VideoBlock, TikTokBlock, PDFBlock, GalleryBlock, CalloutBlock, ButtonBlock, ImageLinkBlock, RelatedArticlesBlock, ColumnsBlock,
             TableBlock, ExcelTableBlock, FaqBlock, EmbedBlock, QuoteBlock, AudioBlock,
             FileDownloadsBlock, SliderBlock, InfographicBlock, ZaloWidgetBlock, LivestreamBlock,
             NewsListBlockStub, ExternalLinksBlockStub

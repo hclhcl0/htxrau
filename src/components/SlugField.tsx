@@ -11,7 +11,8 @@ export function slugify(str: string): string {
     .normalize('NFD') // Tách tổ hợp dấu
     .replace(/[\u0300-\u036f]/g, '') // Xóa các ký tự dấu
     .replace(/[đĐ]/g, 'd')
-    .replace(/([^0-9a-z-\s/])/g, '') // Xóa ký tự đặc biệt (giữ lại dấu gạch chéo / cho đường dẫn lồng)
+    .replace(/\//g, '-') // Thay dấu gạch chéo thành dấu gạch ngang
+    .replace(/([^0-9a-z-\s])/g, '') // Xóa ký tự đặc biệt (không còn giữ dấu gạch chéo)
     .replace(/(\s+)/g, '-') // Thay khoảng trắng bằng -
     .replace(/-+/g, '-') // Xóa nhiều ký tự - liên tiếp
     .replace(/^-+|-+$/g, ''); // Xóa ký tự - ở đầu và cuối

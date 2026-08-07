@@ -261,6 +261,22 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
         </div>
       );
     },
+    imageLinkBlock: ({ node }: any) => {
+      const { image, linkUrl, openInNewTab } = node.fields;
+      if (!image || !image.url) return null;
+      return (
+        <span className="block my-6 w-full flex justify-center">
+          <a href={linkUrl} target={openInNewTab ? '_blank' : '_self'} rel="noopener noreferrer" className="block max-w-full hover:opacity-90 transition-opacity">
+            <img 
+              src={image.url} 
+              alt={image.alt || "Ảnh minh họa"} 
+              className="rounded-xl shadow-sm border border-gray-100" 
+              style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }}
+            />
+          </a>
+        </span>
+      );
+    },
     tableBlock: ({ node }: any) => <TableBlock {...node.fields} />,
     faqBlock: ({ node }: any) => <FaqBlock {...node.fields} />,
     embedBlock: ({ node }: any) => <EmbedBlock {...node.fields} />,
