@@ -346,6 +346,9 @@
   .fixed {
     position: fixed;
   }
+  .fixed\! {
+    position: fixed !important;
+  }
   .relative {
     position: relative;
   }
@@ -2239,6 +2242,9 @@
   }
   .bg-red-100 {
     background-color: var(--color-red-100);
+  }
+  .bg-red-500 {
+    background-color: var(--color-red-500);
   }
   .bg-red-600 {
     background-color: var(--color-red-600);
@@ -4309,6 +4315,13 @@
     &:hover {
       @media (hover: hover) {
         opacity: 80%;
+      }
+    }
+  }
+  .hover\:opacity-90 {
+    &:hover {
+      @media (hover: hover) {
+        opacity: 90%;
       }
     }
   }
