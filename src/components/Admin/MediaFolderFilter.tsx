@@ -9,7 +9,7 @@ interface Folder {
   parent?: { id: number; name: string } | null;
 }
 
-export function MediaFolderFilter() {
+export default function MediaFolderFilter() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const { query, handleWhereChange, handlePageChange } = useListQuery();
 

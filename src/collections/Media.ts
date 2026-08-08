@@ -12,7 +12,7 @@ export const Media: CollectionConfig = {
     group: 'Nội dung',
     components: {
       beforeListTable: [
-        '@/components/Admin/MediaFolderFilter#MediaFolderFilter',
+        '@/components/Admin/MediaFolderFilter',
       ],
     },
   },

@@ -24,6 +24,34 @@ async function downloadImage(url: string) {
   }
 }
 
+async function processHtmlImages($: cheerio.CheerioAPI, payload: any, articleTitle: string) {
+  const images = $('img').toArray();
+  for (const img of images) {
+    let src = $(img).attr('src');
+    if (src) {
+      if (src.startsWith('/')) src = 'https://ksbtdanang.vn' + src;
+      const imgData = await downloadImage(src);
+      if (imgData) {
+        try {
+          const mediaDoc = await payload.create({
+            collection: 'media',
+            data: { alt: articleTitle },
+            file: {
+              data: imgData.buffer,
+              mimetype: imgData.mimetype,
+              name: imgData.filename,
+              size: imgData.size
+            }
+          });
+          $(img).attr('data-media-id', String(mediaDoc.id));
+        } catch (e) {
+          console.error('Failed to upload image:', src);
+        }
+      }
+    }
+  }
+}
+
 // Basic HTML to Lexical JSON converter
 function parseNode($, el: any): any[] {
   if (el.type === 'text') {
@@ -76,9 +104,22 @@ function parseNode($, el: any): any[] {
     }
     
     if (tagName === 'img') {
-      const src = $(el).attr('src');
-      if (src) {
-        return [{ type: 'text', text: `\n[Hình ảnh: ${src}]\n`, version: 1, format: 2, mode: 'normal', style: '' }];
+      const mediaId = $(el).attr('data-media-id');
+      if (mediaId) {
+        return [{
+          type: "upload",
+          relationTo: "media",
+          value: parseInt(mediaId, 10),
+          version: 1,
+          format: "",
+          id: String(Date.now() + Math.floor(Math.random() * 10000)),
+          fields: {}
+        }];
+      } else {
+        const src = $(el).attr('src');
+        if (src) {
+          return [{ type: 'text', text: `\n[Hình ảnh: ${src}]\n`, version: 1, format: 2, mode: 'normal', style: '' }];
+        }
       }
     }
 
@@ -147,12 +188,25 @@ export async function GET(request: Request) {
   let errorCount = 0;
 
   try {
-    const catRes = await payload.find({
+    let catRes = await payload.find({
         collection: 'categories',
         where: { slug: { equals: 'cam-nang-vac-xin' } }
     });
+    if (catRes.docs.length === 0) {
+      catRes = await payload.find({
+          collection: 'categories',
+          where: { slug: { equals: 'cam-nang' } } // Try another slug
+      });
+    }
+    if (catRes.docs.length === 0) {
+      catRes = await payload.find({
+          collection: 'categories',
+          where: { name: { like: 'cẩm nang' } }
+      });
+    }
     const categoryId = catRes.docs[0]?.id || 2; 
 
+    logs.push(`Category ID sử dụng: ${categoryId}`);
     logs.push(`Bắt đầu lấy dữ liệu từ https://ksbtdanang.vn/cam-nang-vac-xin/ ...`);
     const indexRes = await fetch('https://ksbtdanang.vn/cam-nang-vac-xin/');
     const indexHtml = await indexRes.text();
@@ -201,11 +255,14 @@ export async function GET(request: Request) {
           continue;
         }
 
-        const contentHtml = $art('#news-bodyhtml').html() || '';
-        const lexicalContent = htmlToLexical(contentHtml);
-
         let description = $art('meta[name="description"]').attr('content') || '';
         if (description.length > 250) description = description.substring(0, 247) + '...';
+
+        // Xử lý tải ảnh trong nội dung bài viết trước
+        const contentHtml = $art('#news-bodyhtml').html() || '';
+        const $content = cheerio.load(contentHtml);
+        await processHtmlImages($content, payload, title);
+        const lexicalContent = htmlToLexical($content.html());
 
         // Thumbnail
         let imageId = null;
@@ -230,7 +287,7 @@ export async function GET(request: Request) {
               });
               imageId = mediaDoc.id;
             } catch (uploadErr: any) {
-               logs.push(`=> Lỗi upload ảnh (${imgUrl}): ${uploadErr.message}`);
+               logs.push(`=> Lỗi upload ảnh og:image (${imgUrl}): ${uploadErr.message}`);
             }
           }
         }
