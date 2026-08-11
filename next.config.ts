@@ -81,6 +81,14 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     qualities: [60, 70, 75, 80, 90, 100],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/media/:path*',
+        destination: '/api/media/file/:path*',
+      },
+    ];
+  },
   async redirects() {
     return [
       {
