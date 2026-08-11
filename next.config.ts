@@ -82,12 +82,7 @@ const nextConfig: NextConfig = {
     qualities: [60, 70, 75, 80, 90, 100],
   },
   async rewrites() {
-    return [
-      {
-        source: '/media/:path*',
-        destination: '/api/media/file/:path*',
-      },
-    ];
+    return [];
   },
   async redirects() {
     return [
