@@ -112,21 +112,25 @@ export default async function ServiceDetailPage({
   
   if (pricingFileUrl) {
     try {
-      const fetchUrl = pricingFileUrl.startsWith('http') 
-        ? pricingFileUrl 
-        : `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://127.0.0.1:3000'}${pricingFileUrl}`;
-        
-      const response = await fetch(fetchUrl);
-      if (response.ok) {
-        const arrayBuffer = await response.arrayBuffer();
-        const XLSX = await import('xlsx');
-        const workbook = XLSX.read(arrayBuffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const parsed = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
-        // Filter out empty rows
-        excelData = parsed.filter(row => row && row.length > 0 && row.some(cell => cell !== undefined && cell !== null && cell !== ''));
+      let buffer: Buffer | ArrayBuffer;
+      if (pricingFileUrl.startsWith('http')) {
+        const response = await fetch(pricingFileUrl);
+        if (!response.ok) throw new Error('Failed to fetch external file');
+        buffer = await response.arrayBuffer();
+      } else {
+        const fs = await import('fs');
+        const path = await import('path');
+        const filePath = path.join(process.cwd(), 'media', pricingFileObj.filename);
+        buffer = await fs.promises.readFile(filePath);
       }
+      
+      const XLSX = await import('xlsx');
+      const workbook = XLSX.read(buffer, { type: 'buffer' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const parsed = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+      // Filter out empty rows
+      excelData = parsed.filter(row => row && row.length > 0 && row.some(cell => cell !== undefined && cell !== null && cell !== ''));
     } catch (e) {
       console.error('Failed to parse excel file:', e);
     }
