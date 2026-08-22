@@ -191,22 +191,16 @@ export default buildConfig({
         pool: {
           connectionString: dbUrl,
         },
-        // push: false — Schema được quản lý bởi migrate.mjs (chạy trước next build).
-        // Drizzle push ở production sẽ hỏi interactive → treo Docker container.
-        // Để force sync 1 lần (khi có schema mới lớn): đặt PAYLOAD_FORCE_PUSH=true tạm thời.
         push: (() => {
-          // Temporarily disable auto-push in dev to prevent interactive prompt hangs
-          return false;
-          // if (process.env.NODE_ENV === 'development') return true;
-          // const val = String(process.env['PAYLOAD_FORCE_PUSH']).toLowerCase().trim();
-          // return val === 'true' || val === '1' || val === 'yes';
+          const val = String(process.env.PAYLOAD_FORCE_PUSH || '').toLowerCase().trim();
+          return val === 'true' || val === '1' || val === 'yes' || process.env.NODE_ENV === 'development';
         })(),
       })
     : sqliteAdapter({
         client: {
           url: process.env.SQLITE_URL || 'file:./payload-data.db',
         },
-        push: false,
+        push: true,
       }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
