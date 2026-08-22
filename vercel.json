@@ -1,6 +1,6 @@
 {
   "buildCommand": "node migrate.mjs && next build",
-  "installCommand": "npm install",
+  "installCommand": "npm install --include=optional --os=linux --cpu=x64",
   "framework": "nextjs",
   "regions": ["sin1"]
 }

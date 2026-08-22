@@ -22,10 +22,14 @@ function buildAllowedHosts(): string[] {
 const allowedHosts = buildAllowedHosts();
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: process.env.VERCEL ? undefined : 'standalone',
   compress: true,
   outputFileTracingRoot: path.resolve(__dirname),
-  serverExternalPackages: ['sharp'],
+  serverExternalPackages: [
+    'sharp',
+    '@img/sharp-linux-x64',
+    '@img/sharp-libvips-linux-x64',
+  ],
   typescript: {
     ignoreBuildErrors: true,
   },
