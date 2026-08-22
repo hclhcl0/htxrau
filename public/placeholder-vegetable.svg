@@ -1,0 +1,20 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#15803d" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g)" />
+  <g fill="#ffffff" opacity="0.9" transform="translate(350, 150)">
+    <path d="M50 0 C20 0, 0 30, 0 60 C0 90, 40 120, 50 130 C60 120, 100 90, 100 60 C100 30, 80 0, 50 0 Z" fill="#22c55e" opacity="0.3"/>
+    <path d="M50 15 C30 15, 15 35, 15 60 C15 80, 45 105, 50 110 C55 105, 85 80, 85 60 C85 35, 70 15, 50 15 Z" fill="#86efac" />
+    <path d="M50 30 L50 95 M35 55 L50 70 M65 55 L50 70" stroke="#15803d" stroke-width="4" stroke-linecap="round" />
+  </g>
+  <text x="400" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    NÔNG SẢN SẠCH &amp; RAU AN TOÀN VIETGAP
+  </text>
+  <text x="400" y="355" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#dcfce7" text-anchor="middle">
+    Tươi ngon - An toàn - Thu hoạch trong ngày
+  </text>
+</svg>

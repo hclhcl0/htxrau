@@ -12,10 +12,7 @@ async function getCategoryNews(categoryId: string | number, limit: number) {
     const result = await payload.find({
       collection: 'articles',
       where: {
-        or: [
-          { category: { equals: categoryId } },
-          { additionalCategories: { equals: categoryId } }
-        ],
+        category: { equals: categoryId },
       },
       sort: '-createdAt',
       limit: limit,

@@ -10,7 +10,7 @@ export const Categories: CollectionConfig = {
     description: '👉 Đường dẫn xem trên website: /[slug]',
     useAsTitle: 'name',
     defaultColumns: ['name', 'orderNum'],
-    group: 'Nội dung',
+    group: 'Tin tức & Nội dung',
   },
   defaultSort: '-orderNum',
   access: {
@@ -68,7 +68,7 @@ export const Categories: CollectionConfig = {
       label: 'Biểu tượng (Icon/Emoji)',
       admin: {
         position: 'sidebar',
-        description: 'Emoji hoặc tên icon đại diện (VD: 🦟, 💉, 🫁...)',
+        description: 'Emoji đại diện (VD: 🌱 Rau, 🥕 Củ quả, 🍄 Nấm...)',
       },
     },
     {
@@ -78,16 +78,6 @@ export const Categories: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: 'Mã màu hex (VD: #E53E3E, #38A169...) dùng làm màu thẻ chủ đề',
-      },
-    },
-    {
-      name: 'assignedDepartments',
-      type: 'relationship',
-      relationTo: 'departments',
-      hasMany: true,
-      label: 'Phân công theo phòng ban',
-      admin: {
-        description: 'Chọn các phòng ban được phân công phụ trách chuyên mục này.',
       },
     },
     {

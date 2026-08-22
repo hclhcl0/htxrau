@@ -108,13 +108,17 @@ export const Videos: CollectionConfig = {
           label: 'Video có sử dụng AI',
           defaultValue: false,
         },
-        {
-          name: 'isWarning',
-          type: 'checkbox',
-          label: 'Video cảnh báo',
-          defaultValue: false,
-        },
       ],
+    },
+    {
+      name: 'relatedProducts',
+      type: 'relationship',
+      relationTo: 'products',
+      hasMany: true,
+      label: 'Sản phẩm rau liên quan',
+      admin: {
+        description: 'Chọn các loại rau xuất hiện trong video này (tùy chọn).',
+      },
     },
   ],
   hooks: {

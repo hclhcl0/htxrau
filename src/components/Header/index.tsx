@@ -23,17 +23,17 @@ export const Header = async () => {
   let menuPosition = 'right';
   let logoConfig = {
     height: 52, position: 'left', showSiteName: true,
-    line1: 'TRUNG TÂM KIỂM SOÁT BỆNH TẬT', line2: 'THÀNH PHỐ ĐÀ NẴNG',
-    tagline: '', bannerImageUrl: '', mobileLogoUrl: '',
+    line1: 'TRANG TRẠI NÔNG SẢN SẠCH', line2: 'RAU AN TOÀN VIETGAP',
+    tagline: 'Tươi Sạch Từ Nông Trại Đến Bàn Ăn', bannerImageUrl: '', mobileLogoUrl: '',
     mobileHeight: 52, mobileShowSiteName: false, hoverEffect: 'scale-tilt',
   };
   let searchConfig = { position: 'hotline', style: 'inline', width: 250 };
-  let fb: any, tw: any, yt: any, ig: any, zalo: any, miniapp: any;
-  let phone = '0909 408 895';
-  let actionLink = '#';
+  let fb: any, tw: any, yt: any, ig: any, zalo: any;
+  let phone = '0905 123 456';
+  let actionLink = '/contact';
   let hotlinePosition = 'below-nav';
   let logoUrl = '/logo.png';
-  let siteName = 'CDC Đà Nẵng';
+  let siteName = 'Rau An Toàn VietGAP';
   let navStyle: 'white' | 'primary' | 'gradient' = 'white';
 
   try {
@@ -48,8 +48,8 @@ export const Header = async () => {
       height: lc.logoHeight || 52,
       position: lc.logoPosition || 'left',
       showSiteName: lc.showSiteName !== false,
-      line1: lc.siteNameLine1 || 'TRUNG TÂM KIỂM SOÁT BỆNH TẬT',
-      line2: lc.siteNameLine2 || 'THÀNH PHỐ ĐÀ NẴNG',
+      line1: lc.siteNameLine1 || 'TRANG TRẠI NÔNG SẢN SẠCH',
+      line2: lc.siteNameLine2 || 'RAU AN TOÀN VIETGAP',
       tagline: lc.siteTagline || '',
       bannerImageUrl: (lc.logoBannerImage as any)?.url || '',
       mobileLogoUrl: (lc.mobileLogo as any)?.url || '',
@@ -64,12 +64,22 @@ export const Header = async () => {
     yt = headerData.socialLinks?.youtube;
     ig = headerData.socialLinks?.instagram;
     zalo = headerData.socialLinks?.zalo;
-    miniapp = headerData.socialLinks?.miniapp;
     phone = headerData.hotline?.phone || '0909 408 895';
     actionLink = headerData.hotline?.actionLink || '#';
     hotlinePosition = headerData.hotline?.position || 'below-nav';
     logoUrl = (headerData.logo as any)?.url || '/logo.png';
-    siteName = headerData.siteName || 'CDC Đà Nẵng';
+    siteName = headerData.siteName || 'Rau An Toàn VietGAP';
+
+    if (!menuItems || menuItems.length === 0) {
+      menuItems = [
+        { label: 'Trang chủ', linkType: 'custom', url: '/' },
+        { label: 'Sản phẩm rau sạch', linkType: 'custom', url: '/san-pham' },
+        { label: '🛒 Đặt Hàng', linkType: 'custom', url: '/dat-hang' },
+        { label: 'Tin tức & Kiến thức', linkType: 'custom', url: '/bai-viet' },
+        { label: 'Video nông trại', linkType: 'custom', url: '/video' },
+        { label: 'Liên hệ', linkType: 'custom', url: '/contact' },
+      ];
+    }
   } catch (e) {
     console.error('Header: error fetching global header data:', e);
   }
@@ -86,7 +96,7 @@ export const Header = async () => {
       siteName={siteName}
       phone={phone}
       actionLink={actionLink}
-      socials={{ fb, tw, yt, ig, zalo, miniapp }}
+      socials={{ fb, tw, yt, ig, zalo }}
     />
   );
 };

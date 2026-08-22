@@ -14,20 +14,11 @@ import { RichTextBlock } from '../blocks/RichTextBlock.ts';
 import { SectionTitleBlock } from '../blocks/SectionTitleBlock.ts';
 import { CardGridBlock } from '../blocks/CardGridBlock.ts';
 import { StepsBlock } from '../blocks/StepsBlock.ts';
-import { FaqBlock } from '../blocks/FaqBlock.ts';
 import { DividerBlock } from '../blocks/DividerBlock.ts';
 import { CtaBannerBlock } from '../blocks/CtaBannerBlock.ts';
 import { EmbedBlock } from '../blocks/EmbedBlock.ts';
-import { TableBlock } from '../blocks/TableBlock.ts';
-import { QuoteBlock } from '../blocks/QuoteBlock.ts';
-import { AudioBlock } from '../blocks/AudioBlock.ts';
 import { FileDownloadsBlock } from '../blocks/FileDownloadsBlock.ts';
 import { SliderBlock } from '../blocks/SliderBlock.ts';
-import { InfographicBlock } from '../blocks/InfographicBlock.ts';
-import { ZaloWidgetBlock } from '../blocks/ZaloWidgetBlock.ts';
-import { LivestreamBlock } from '../blocks/LivestreamBlock.ts';
-import { ScheduleBlock } from '../blocks/ScheduleBlock.ts';
-import { MagazineBlock } from '../blocks/MagazineBlock.ts';
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -40,10 +31,9 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     group: 'Nội dung',
     defaultColumns: ['title', 'slug', 'pageType', 'updatedAt'],
-    description: 'Tạo và quản lý các trang nội dung như Giới thiệu, Liên hệ, FAQ, v.v.',
     preview: (doc) => {
       if (doc?.slug) {
-        return `/${doc.slug}?preview=true`;
+        return '/' + doc.slug + '?preview=true';
       }
       return null;
     },
@@ -58,7 +48,6 @@ export const Pages: CollectionConfig = {
     drafts: true,
   },
   fields: [
-    // ── Thông tin cơ bản ──
     {
       name: 'title',
       type: 'text',
@@ -85,7 +74,7 @@ export const Pages: CollectionConfig = {
       defaultValue: 'standard',
       options: [
         { label: '📄 Trang thông tin chuẩn', value: 'standard' },
-        { label: '🏥 Trang Giới thiệu / Về chúng tôi', value: 'about' },
+        { label: '🌿 Trang Giới thiệu nông trại / Về chúng tôi', value: 'about' },
         { label: '📞 Trang Liên hệ (có form)', value: 'contact' },
         { label: '❓ Trang FAQ / Hỏi đáp', value: 'faq' },
         { label: '🚀 Trang Landing Page', value: 'landing' },
@@ -95,7 +84,6 @@ export const Pages: CollectionConfig = {
         description: 'Chọn loại trang để áp dụng template phù hợp.',
       },
     },
-    // ── Layout & Hiển thị ──
     {
       name: 'layout',
       type: 'select',
@@ -110,7 +98,6 @@ export const Pages: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    // ── SEO ──
     {
       name: 'seo',
       type: 'group',
@@ -123,7 +110,7 @@ export const Pages: CollectionConfig = {
           name: 'title',
           type: 'text',
           label: 'Tiêu đề SEO (để trống = dùng tiêu đề trang)',
-          admin: { description: 'Tối đa 60 ký tự. VD: Giới thiệu CDC Đà Nẵng | Trung tâm Kiểm soát Bệnh tật' },
+          admin: { description: 'Tối đa 60 ký tự. VD: Giới thiệu Trang Trại Rau Sạch VietGAP' },
         },
         {
           name: 'description',
@@ -140,7 +127,6 @@ export const Pages: CollectionConfig = {
         },
       ],
     },
-    // ── Nội dung trang (Blocks) ──
     {
       name: 'content',
       type: 'blocks',
@@ -153,44 +139,25 @@ export const Pages: CollectionConfig = {
         description: 'Kéo thả để sắp xếp thứ tự hiển thị các thành phần của trang.',
       },
       blocks: [
-        // Văn bản & Trình soạn thảo
         RichTextBlock,
         SectionTitleBlock,
         CalloutBlock,
-        // Layout
         ColumnsBlock,
         DividerBlock,
-        // Thẻ & Danh sách
         CardGridBlock,
         CardBlock,
         StepsBlock,
-        // Tương tác
-        FaqBlock,
         ButtonBlock,
         CtaBannerBlock,
-        // Phương tiện
         VideoBlock,
         TikTokBlock,
         GalleryBlock,
         PDFBlock,
-        // Nhúng & Bảng
         EmbedBlock,
-        TableBlock,
-        // Bài viết
         RelatedArticlesBlock,
         CategoryNewsBlock,
-        // Quote & Audio
-        QuoteBlock,
-        AudioBlock,
-        // New Media Blocks
         FileDownloadsBlock,
         SliderBlock,
-        InfographicBlock,
-        ZaloWidgetBlock,
-        LivestreamBlock,
-        ScheduleBlock,
-        MagazineBlock,
-        // Legacy
         HeroBannerBlock,
       ],
     },

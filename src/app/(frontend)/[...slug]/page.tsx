@@ -11,7 +11,6 @@ export const revalidate = 60; // ISR: cache trang 60 giây, tránh SSR mỗi req
 import { PageBlockRenderer } from '@/components/PageBlocks/PageBlockRenderer';
 import { SidebarRenderer } from '@/components/SidebarRenderer';
 import { ContactForm } from '@/components/ContactForm';
-import { OrgChartPageTemplate } from '@/components/OrgChartPageTemplate';
 import { CategoryTemplate } from '@/components/CategoryTemplate';
 
 // ─────────────────────────────────────────────
@@ -92,20 +91,16 @@ export async function generateMetadata({
   const { slug: slugArray } = await params;
   const slug = slugArray.join('/');
 
-  let orgSlug = 'gioi-thieu/co-cau-to-chuc';
-
-  if (slug === orgSlug) return { title: 'Cơ cấu tổ chức — CDC Đà Nẵng' };
-  
   const page = await getPageBySlug(slug);
   if (!page) {
     const category = await getCategoryBySlug(slug);
     if (category) {
       return {
-        title: `${category.name} | CDC Đà Nẵng`,
+        title: `${category.name} | Rau Sạch VietGAP`,
         description: category.description || '',
       };
     }
-    return { title: 'Không tìm thấy trang | CDC Đà Nẵng' };
+    return { title: 'Không tìm thấy trang' };
   }
 
   const seo = (page as any).seo || {};
@@ -163,21 +158,21 @@ function ContactPageTemplate({ page }: { page: any }) {
             <ul className="space-y-4">
               <li className="flex gap-3 items-start">
                 <MapPin size={18} className="mt-0.5 flex-shrink-0 text-white/80" />
-                <span className="text-white/90 text-sm">3 Quang Trung, Hải Châu 1, Hải Châu, Đà Nẵng</span>
+                <span className="text-white/90 text-sm">Thôn Túy Loan Đông, Xã Hòa Phong, H. Hòa Vang, TP. Đà Nẵng</span>
               </li>
               <li className="flex gap-3 items-center">
                 <Phone size={18} className="flex-shrink-0 text-white/80" />
-                <a href="tel:02363822731" className="text-white/90 text-sm hover:text-white transition-colors">(0236) 3.822.731</a>
+                <a href="tel:0905559206" className="text-white/90 text-sm hover:text-white transition-colors">0905 559 206</a>
               </li>
               <li className="flex gap-3 items-center">
                 <Mail size={18} className="flex-shrink-0 text-white/80" />
-                <a href="mailto:info@cdcdanang.vn" className="text-white/90 text-sm hover:text-white transition-colors break-all">info@cdcdanang.vn</a>
+                <a href="mailto:contact@rautuyloan.vn" className="text-white/90 text-sm hover:text-white transition-colors break-all">contact@rautuyloan.vn</a>
               </li>
               <li className="flex gap-3 items-start">
                 <Clock size={18} className="mt-0.5 flex-shrink-0 text-white/80" />
                 <div className="text-white/90 text-sm">
-                  <div>Thứ 2 – Thứ 6: 7:30 – 17:00</div>
-                  <div>Thứ 7: 7:30 – 12:00</div>
+                  <div>Thứ 2 – Chủ nhật: 06:00 – 18:00</div>
+                  <div>Giao hàng trong ngày</div>
                 </div>
               </li>
             </ul>
@@ -210,11 +205,6 @@ export default async function DynamicPage({
   const pageNumber = typeof sp.page === 'string' ? parseInt(sp.page) : 1;
   const slug = slugArray.join('/');
 
-  let orgSlug = 'gioi-thieu/co-cau-to-chuc';
-
-  if (slug === orgSlug) {
-    return <OrgChartPageTemplate slug={slug} />;
-  }
   const page = await getPageBySlug(slug);
 
   if (!page) {

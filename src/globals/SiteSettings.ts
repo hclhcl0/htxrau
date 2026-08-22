@@ -1,5 +1,4 @@
 import type { GlobalConfig } from 'payload';
-import { Settings } from './Settings.ts';
 import { CategoryNewsBlock } from '../blocks/CategoryNews.ts';
 import { lexicalEditor, BlocksFeature } from '@payloadcms/richtext-lexical';
 import { VideoBlock } from '../blocks/VideoBlock.ts';
@@ -10,11 +9,24 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Cài đặt trang web',
   admin: {
-    group: 'Cài đặt giao diện',
+    group: 'Tài nguyên & Giao diện',
   },
   access: {
     read: () => true,
     update: ({ req: { user } }: any) => (Array.isArray(user?.role) ? user.role.includes('admin') : user?.role === 'admin'),
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        try {
+          const { revalidateTag, revalidatePath } = await import('next/cache');
+          revalidateTag('site-settings');
+          revalidatePath('/', 'layout');
+        } catch (e) {
+          // ignore in environments where next/cache is not available
+        }
+      },
+    ],
   },
 
   fields: [
@@ -161,13 +173,424 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
 
-        // ─────────────────────────────────────────────,
+        // ─────────────────────────────────────────────
             {
           type: 'collapsible',
-          label: 'Bố cục Trang chủ',
+          label: 'Bố cục & Nội dung Trang chủ',
           fields: [
-            ...(Settings.fields as any[]).filter(f => ['homeContent', 'homeSections'].includes(f.name))
-          ]
+            {
+              name: 'homeContent',
+              type: 'richText',
+              label: 'Nội dung tùy chỉnh bổ sung trang chủ',
+              admin: {
+                description: 'Hiển thị ngay dưới slider banner trang chủ (nếu có nội dung).',
+              },
+            },
+            {
+              name: 'homeSections',
+              type: 'blocks',
+              label: 'Các khối thành phần trên Trang chủ',
+              labels: {
+                singular: 'Khối thành phần',
+                plural: 'Danh sách khối thành phần trang chủ',
+              },
+              admin: {
+                description: 'Kéo thả để sắp xếp lại thứ tự hiển thị các khối nội dung trên trang chủ.',
+              },
+              blocks: [
+                {
+                  slug: 'commitmentSection',
+                  labels: {
+                    singular: 'Cam kết chất lượng 4 tiêu chí',
+                    plural: 'Cam kết chất lượng',
+                  },
+                  fields: [
+                    {
+                      name: 'enabled',
+                      type: 'checkbox',
+                      label: 'Bật hiển thị',
+                      defaultValue: true,
+                    },
+                  ],
+                },
+                {
+                  slug: 'productSection',
+                  labels: {
+                    singular: 'Khối Sản phẩm Rau An Toàn',
+                    plural: 'Khối Sản phẩm Rau',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề khối',
+                      defaultValue: 'Nông Sản & Rau Củ Tươi Sạch Trong Ngày',
+                    },
+                    {
+                      name: 'subtitle',
+                      type: 'text',
+                      label: 'Mô tả phụ',
+                      defaultValue: '100% đạt chuẩn VietGAP, thu hoạch từ vườn sớm mỗi sáng',
+                    },
+                    {
+                      name: 'categoryFilter',
+                      type: 'select',
+                      label: 'Lọc theo danh mục rau',
+                      defaultValue: 'all',
+                      options: [
+                        { label: 'Tất cả nông sản', value: 'all' },
+                        { label: '🌿 Rau ăn lá', value: 'rau-an-la' },
+                        { label: '🥕 Rau ăn củ, quả', value: 'rau-an-cu-qua' },
+                        { label: '🌱 Rau mầm & Thủy canh', value: 'rau-mam-thuy-canh' },
+                        { label: '🧄 Rau gia vị & Rau thơm', value: 'rau-gia-vi' },
+                        { label: '🍄 Nấm tươi sạch', value: 'nam-tuoi' },
+                        { label: '🍎 Trái cây & Nông sản theo mùa', value: 'trai-cay-theo-mua' },
+                      ],
+                    },
+                    {
+                      name: 'limit',
+                      type: 'number',
+                      label: 'Số lượng sản phẩm hiển thị',
+                      defaultValue: 8,
+                    },
+                  ],
+                },
+                {
+                  slug: 'processStepsSection',
+                  labels: {
+                    singular: 'Quy trình canh tác an toàn 4 bước',
+                    plural: 'Quy trình canh tác',
+                  },
+                  fields: [],
+                },
+                {
+                  slug: 'certificatesSection',
+                  labels: {
+                    singular: 'Chứng nhận & Kiểm định ATVSTP',
+                    plural: 'Chứng nhận ATVSTP',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề khối',
+                      defaultValue: 'Chứng nhận Chất lượng & Kiểm định ATVSTP',
+                    },
+                    {
+                      name: 'subtitle',
+                      type: 'text',
+                      label: 'Mô tả phụ',
+                      defaultValue: 'Minh bạch nguồn gốc, kiểm nghiệm định kỳ, an toàn tuyệt đối',
+                    },
+                    {
+                      name: 'limit',
+                      type: 'number',
+                      label: 'Số lượng chứng nhận hiển thị',
+                      defaultValue: 6,
+                    },
+                  ],
+                },
+                {
+                  slug: 'latestNewsSection',
+                  labels: {
+                    singular: 'Tin tức mới nhất',
+                    plural: 'Tin tức mới nhất',
+                  },
+                  fields: [
+                    {
+                      name: 'limit',
+                      type: 'number',
+                      label: 'Số lượng tin',
+                      defaultValue: 6,
+                    },
+                    {
+                      name: 'layout',
+                      type: 'select',
+                      label: 'Bố cục',
+                      defaultValue: 'grid',
+                      options: [
+                        { label: 'Lưới tin tức (Grid)', value: 'grid' },
+                        { label: 'Slider trượt (Carousel)', value: 'slider' },
+                        { label: 'Danh sách chi tiết (List)', value: 'list' },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  slug: 'newsCategorySection',
+                  labels: {
+                    singular: 'Tin tức theo chuyên mục',
+                    plural: 'Tin theo chuyên mục',
+                  },
+                  fields: [
+                    {
+                      name: 'category',
+                      type: 'relationship',
+                      relationTo: 'categories',
+                      required: true,
+                      label: 'Chuyên mục bài viết',
+                    },
+                    {
+                      name: 'limit',
+                      type: 'number',
+                      label: 'Số lượng tin',
+                      defaultValue: 6,
+                    },
+                    {
+                      name: 'layout',
+                      type: 'select',
+                      label: 'Bố cục',
+                      defaultValue: 'grid',
+                      options: [
+                        { label: 'Lưới tin tức (Grid)', value: 'grid' },
+                        { label: 'Slider trượt (Carousel)', value: 'slider' },
+                        { label: 'Danh sách chi tiết (List)', value: 'list' },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  slug: 'bannerSection',
+                  labels: {
+                    singular: 'Banner đơn giữa trang',
+                    plural: 'Banner đơn',
+                  },
+                  fields: [
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      required: true,
+                      label: 'Ảnh Banner',
+                    },
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề',
+                    },
+                    {
+                      name: 'subtitle',
+                      type: 'text',
+                      label: 'Mô tả phụ',
+                    },
+                    {
+                      name: 'linkUrl',
+                      type: 'text',
+                      label: 'Đường dẫn liên kết',
+                    },
+                    {
+                      name: 'openInNewTab',
+                      type: 'checkbox',
+                      label: 'Mở tab mới',
+                      defaultValue: false,
+                    },
+                    {
+                      name: 'style',
+                      type: 'select',
+                      label: 'Kiểu hiển thị',
+                      defaultValue: 'default',
+                      options: [
+                        { label: 'Mặc định', value: 'default' },
+                        { label: 'Tràn viền', value: 'full' },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  slug: 'multiBannerSection',
+                  labels: {
+                    singular: 'Khối nhiều Banner hàng ngang',
+                    plural: 'Khối nhiều Banner',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề',
+                    },
+                    {
+                      name: 'columns',
+                      type: 'number',
+                      label: 'Số cột',
+                      defaultValue: 3,
+                    },
+                    {
+                      name: 'bannerHeight',
+                      type: 'number',
+                      label: 'Chiều cao (px)',
+                    },
+                    {
+                      name: 'banners',
+                      type: 'array',
+                      label: 'Danh sách Banner',
+                      fields: [
+                        {
+                          name: 'image',
+                          type: 'upload',
+                          relationTo: 'media',
+                          required: true,
+                          label: 'Ảnh Banner',
+                        },
+                        {
+                          name: 'linkUrl',
+                          type: 'text',
+                          label: 'Liên kết',
+                        },
+                        {
+                          name: 'openInNewTab',
+                          type: 'checkbox',
+                          label: 'Mở tab mới',
+                          defaultValue: false,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  slug: 'videoSection',
+                  labels: {
+                    singular: 'Video nông trại',
+                    plural: 'Video nông trại',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề khối',
+                      defaultValue: 'Video Từ Đồng Ruộng & Kỹ Thuật Trồng',
+                    },
+                    {
+                      name: 'sourceType',
+                      type: 'select',
+                      label: 'Nguồn video',
+                      defaultValue: 'all',
+                      options: [
+                        { label: 'Tất cả video mới nhất', value: 'all' },
+                        { label: 'Theo kênh', value: 'channels' },
+                        { label: 'Chọn thủ công', value: 'manual' },
+                      ],
+                    },
+                    {
+                      name: 'limit',
+                      type: 'number',
+                      label: 'Số lượng video',
+                      defaultValue: 4,
+                    },
+                    {
+                      name: 'layout',
+                      type: 'select',
+                      label: 'Bố cục',
+                      defaultValue: 'grid',
+                      options: [
+                        { label: 'Lưới', value: 'grid' },
+                        { label: 'Slider', value: 'slider' },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  slug: 'statsSection',
+                  labels: {
+                    singular: 'Khối số liệu thống kê',
+                    plural: 'Số liệu thống kê',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề khối',
+                      defaultValue: 'Con Số Ấn Tượng Của Hợp Tác Xã',
+                    },
+                    {
+                      name: 'backgroundColor',
+                      type: 'text',
+                      label: 'Màu nền',
+                      defaultValue: '#f8fafc',
+                    },
+                    {
+                      name: 'stats',
+                      type: 'array',
+                      label: 'Danh sách con số',
+                      fields: [
+                        {
+                          name: 'icon',
+                          type: 'text',
+                          label: 'Icon (Emoji)',
+                        },
+                        {
+                          name: 'value',
+                          type: 'text',
+                          label: 'Số liệu (VD: 50+ Ha, 100% Sạch, 10.000+ Khách hàng)',
+                          required: true,
+                        },
+                        {
+                          name: 'label',
+                          type: 'text',
+                          label: 'Ý nghĩa / Tên chỉ số',
+                          required: true,
+                        },
+                        {
+                          name: 'suffix',
+                          type: 'text',
+                          label: 'Hậu tố (VD: +, %)',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  slug: 'quickLinksSection',
+                  labels: {
+                    singular: 'Khối liên kết nhanh',
+                    plural: 'Liên kết nhanh',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề khối',
+                      defaultValue: 'Liên Kết Nhanh',
+                    },
+                    {
+                      name: 'links',
+                      type: 'array',
+                      label: 'Danh sách liên kết',
+                      fields: [
+                        {
+                          name: 'icon',
+                          type: 'text',
+                          label: 'Icon (Emoji)',
+                        },
+                        {
+                          name: 'label',
+                          type: 'text',
+                          label: 'Nhãn hiển thị',
+                          required: true,
+                        },
+                        {
+                          name: 'url',
+                          type: 'text',
+                          label: 'Đường dẫn liên kết',
+                          required: true,
+                        },
+                        {
+                          name: 'openInNewTab',
+                          type: 'checkbox',
+                          label: 'Mở tab mới',
+                          defaultValue: false,
+                        },
+                        {
+                          name: 'color',
+                          type: 'text',
+                          label: 'Màu sắc (Hex)',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         // ─────────────────────────────────────────────
           ]
@@ -408,8 +831,7 @@ export const SiteSettings: GlobalConfig = {
                 {
                   type: 'row',
                   fields: [
-                    { name: 'zalo', type: 'text', label: 'Zalo OA URL' },
-                    { name: 'miniapp', type: 'text', label: 'Zalo Mini App URL' },
+                    { name: 'zalo', type: 'text', label: 'Zalo URL' },
                   ]
                 },
               ],
@@ -516,7 +938,7 @@ export const SiteSettings: GlobalConfig = {
                       name: 'copyrightText',
                       type: 'text',
                       label: 'Dòng bản quyền (Copyright)',
-                      defaultValue: '© Bản quyền thuộc về TRUNG TÂM KIỂM SOÁT BỆNH TẬT THÀNH PHỐ ĐÀ NẴNG',
+                      defaultValue: '© {year} Bản quyền thuộc về TRANG TRẠI NÔNG SẢN SẠCH & RAU AN TOÀN VIETGAP',
                       admin: {
                         description: 'Sử dụng {year} để tự động hiển thị năm hiện tại.',
                       },
@@ -525,7 +947,7 @@ export const SiteSettings: GlobalConfig = {
                       name: 'designerCredit',
                       type: 'text',
                       label: 'Thông tin thiết kế',
-                      defaultValue: 'thiết kế bởi CNTT CDC Đà Nẵng',
+                      defaultValue: 'Tươi Sạch Từ Nông Trại Đến Bàn Ăn',
                     },
                   ]
                 },
@@ -596,15 +1018,10 @@ export const SiteSettings: GlobalConfig = {
                       label: '📌 Chọn trang có sẵn (tùy chọn)',
                       options: [
                         { label: '🏠 Trang chủ', value: '/' },
-                        { label: '📰 Tất cả Bài viết', value: '/bai-viet' },
-                        { label: '🩺 Sức khỏe cộng đồng', value: '/suc-khoe' },
-                        { label: '📄 Văn bản điều hành', value: '/documents' },
-                        { label: '📋 Thủ tục hành chính', value: '/procedures' },
-                        { label: '🛒 Mua sắm & Đấu thầu', value: '/mua-sam' },
-                        { label: '🏥 Dịch vụ y tế', value: '/dich-vu' },
-                        { label: '🎬 Video truyền thông', value: '/video' },
-                        { label: '📅 Lịch công tác', value: '/lich-cong-tac' },
-                        { label: '📞 Liên hệ', value: '/contact' },
+                        { label: '🌿 Sản phẩm rau sạch', value: '/san-pham' },
+                        { label: '📰 Tin tức & Kiến thức', value: '/bai-viet' },
+                        { label: '🎬 Video nông trại', value: '/video' },
+                        { label: '📞 Liên hệ & Báo giá sỉ', value: '/contact' },
                         { label: '🔍 Tìm kiếm', value: '/search' },
                       ],
                       admin: {
@@ -639,15 +1056,10 @@ export const SiteSettings: GlobalConfig = {
                       label: '📌 Chọn trang có sẵn (tùy chọn)',
                       options: [
                         { label: '🏠 Trang chủ', value: '/' },
-                        { label: '📰 Tất cả Bài viết', value: '/bai-viet' },
-                        { label: '🩺 Sức khỏe cộng đồng', value: '/suc-khoe' },
-                        { label: '📄 Văn bản điều hành', value: '/documents' },
-                        { label: '📋 Thủ tục hành chính', value: '/procedures' },
-                        { label: '🛒 Mua sắm & Đấu thầu', value: '/mua-sam' },
-                        { label: '🏥 Dịch vụ y tế', value: '/dich-vu' },
-                        { label: '🎬 Video truyền thông', value: '/video' },
-                        { label: '📅 Lịch công tác', value: '/lich-cong-tac' },
-                        { label: '📞 Liên hệ', value: '/contact' },
+                        { label: '🌿 Sản phẩm rau sạch', value: '/san-pham' },
+                        { label: '📰 Tin tức & Kiến thức', value: '/bai-viet' },
+                        { label: '🎬 Video nông trại', value: '/video' },
+                        { label: '📞 Liên hệ & Báo giá sỉ', value: '/contact' },
                         { label: '🔍 Tìm kiếm', value: '/search' },
                       ],
                       admin: {
@@ -838,84 +1250,149 @@ export const SiteSettings: GlobalConfig = {
             },
           ],
         },
-        // ─────────────────────────────────────────────,
+        // ─────────────────────────────────────────────
             {
           type: 'collapsible',
           label: 'Cấu hình Nâng cao',
           fields: [
-            ...(Settings.fields as any[]).filter(f => ['themeConfig', 'sidebarWidgets'].includes(f.name))
-          ]
-        }
+            {
+              name: 'themeConfig',
+              type: 'group',
+              label: 'Màu sắc & Giao diện',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'primaryColor',
+                      type: 'text',
+                      label: 'Màu chủ đạo (Hex)',
+                      defaultValue: '#15803d',
+                      admin: {
+                        description: 'Mã màu Hex (VD: #15803d cho màu xanh lá nông nghiệp)',
+                      },
+                    },
+                    {
+                      name: 'primaryDarkColor',
+                      type: 'text',
+                      label: 'Màu chủ đạo đậm (Hex)',
+                      defaultValue: '#14532d',
+                    },
+                    {
+                      name: 'secondaryColor',
+                      type: 'text',
+                      label: 'Màu phụ (Hex)',
+                      defaultValue: '#16a34a',
+                    },
+                    {
+                      name: 'fontFamily',
+                      type: 'text',
+                      label: 'Font chữ',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'sidebarWidgets',
+              type: 'blocks',
+              label: 'Widget thanh bên (Sidebar)',
+              blocks: [
+                {
+                  slug: 'categoriesWidget',
+                  labels: {
+                    singular: 'Widget Danh mục',
+                    plural: 'Widget Danh mục',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề Widget',
+                      defaultValue: 'Danh Mục Nông Sản',
+                    },
+                    {
+                      name: 'limit',
+                      type: 'number',
+                      label: 'Số lượng danh mục',
+                      defaultValue: 10,
+                    },
+                  ],
+                },
+                {
+                  slug: 'recentArticlesWidget',
+                  labels: {
+                    singular: 'Widget Bài viết mới',
+                    plural: 'Widget Bài viết mới',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề Widget',
+                      defaultValue: 'Tin Tức Mới Nhất',
+                    },
+                    {
+                      name: 'limit',
+                      type: 'number',
+                      label: 'Số lượng bài viết',
+                      defaultValue: 5,
+                    },
+                  ],
+                },
+                {
+                  slug: 'bannerWidget',
+                  labels: {
+                    singular: 'Widget Banner quảng cáo',
+                    plural: 'Widget Banner',
+                  },
+                  fields: [
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      required: true,
+                      label: 'Ảnh Banner',
+                    },
+                    {
+                      name: 'linkUrl',
+                      type: 'text',
+                      label: 'Link liên kết',
+                    },
+                  ],
+                },
+                {
+                  slug: 'customHtmlWidget',
+                  labels: {
+                    singular: 'Widget HTML tùy biến',
+                    plural: 'Widget HTML',
+                  },
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Tiêu đề',
+                    },
+                    {
+                      name: 'htmlContent',
+                      type: 'textarea',
+                      label: 'Mã HTML / Nhúng',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
           ]
         },
         {
           label: 'Tính năng mở rộng',
           fields: [
             {
-          type: 'group',
-          label: 'AI Chat',
-          name: 'aiChatSettings',
-          fields: [
-            {
-              name: 'chatEnabled',
-              type: 'checkbox',
-              label: 'Bật widget AI Chat trên website',
-              defaultValue: true,
-              admin: {
-                description: 'Tích vào để hiển thị nút chat AI ở góc dưới phải trang web.',
-              },
-            },
-            {
-              name: 'chatWelcomeMessage',
-              type: 'text',
-              label: 'Tin nhắn chào mừng',
-              defaultValue: 'Xin chào! Tôi là Trợ lý AI của CDC Đà Nẵng. Tôi có thể giúp gì cho bạn hôm nay?',
-            },
-            {
-              name: 'chatCustomPrompt',
-              type: 'textarea',
-              label: 'Hướng dẫn bổ sung cho AI (tùy chọn)',
-              admin: {
-                rows: 4,
-                placeholder: 'Ví dụ: Luôn nhắc hotline ở cuối mỗi câu trả lời...',
-              },
-            },
-            {
-              type: 'row',
-              fields: [
-                {
-                  name: 'aiHotline',
-                  type: 'text',
-                  label: 'Số Hotline liên hệ',
-                  defaultValue: '1900988975',
-                },
-                {
-                  name: 'aiModel',
-                  type: 'select',
-                  label: 'Mô hình AI sử dụng',
-                  defaultValue: 'gemini-2.5-flash',
-                  options: [
-                    { label: 'Gemini 2.5 Flash (Tốc độ cao, Khuyên dùng)', value: 'gemini-2.5-flash' },
-                    { label: 'Gemini 2.5 Pro (Thông minh, Phức tạp)', value: 'gemini-2.5-pro' },
-                    { label: 'Llama 3.3 70B (Groq - Miễn phí)', value: 'llama-3.3-70b-versatile' },
-                  ],
-                },
-              ]
-            },
-            {
-              name: 'aiAddress',
-              type: 'text',
-              label: 'Địa chỉ cơ quan',
-              defaultValue: '118 Lê Đình Lý, Phường Thanh Khê Đông, Quận Thanh Khê, Thành phố Đà Nẵng',
-            },
-          ],
-        },
-
-        // ─────────────────────────────────────────────,
-            {
-          type: 'group',
-          label: 'Thông báo (Popup)',
-          name: 'popup',
+              type: 'group',
+              label: 'Thông báo (Popup)',
+              name: 'popup',
           fields: [
             {
               name: 'enabled',
@@ -945,7 +1422,7 @@ export const SiteSettings: GlobalConfig = {
               name: 'servicesTitle',
               type: 'text',
               label: '[Dịch vụ] Tiêu đề banner',
-              defaultValue: 'Dịch vụ & Thông báo CDC Đà Nẵng',
+              defaultValue: 'Thông báo & Ưu đãi Nông Sản Sạch VietGAP',
               admin: {
                 condition: (data) => data?.popup?.enabled && data?.popup?.type === 'services',
                 description: 'Tiêu đề hiển thị trên banner màu xanh ở đầu popup.',
@@ -973,10 +1450,10 @@ export const SiteSettings: GlobalConfig = {
               name: 'servicesHeaderColor',
               type: 'text',
               label: '[Dịch vụ] Màu banner (hex)',
-              defaultValue: '#00a99d',
+              defaultValue: '#15803d',
               admin: {
                 condition: (data) => data?.popup?.enabled && data?.popup?.type === 'services',
-                description: 'Màu nền của banner tiêu đề. Ví dụ: #00a99d, #1a4fa0',
+                description: 'Màu nền của banner tiêu đề. Ví dụ: #15803d, #14532d',
               },
             },
             {
@@ -1130,111 +1607,143 @@ export const SiteSettings: GlobalConfig = {
                     description: 'Khi bật, nếu người dùng đã đóng popup, lần sau truy cập sẽ không hiện lại để tránh phiền hà (lưu qua localStorage).',
                   },
                 },
-              ]
+              ],
             },
           ],
         },
-
-        // ─────────────────────────────────────────────
-        {
-          type: 'group',
-          label: 'Phân cảnh báo quan trọng',
-          name: 'warningSection',
-          fields: [
-            {
-              name: 'isEnabled',
-              type: 'checkbox',
-              label: 'Hi\u1ec3n th\u1ecb c\u1ea3nh b\u00e1o quan tr\u1ecdng',
-              defaultValue: true,
-              admin: {
-                description: 'B\u1eadt/t\u1eaft to\u00e0n b\u1ed9 c\u1ed9t C\u1ea3nh b\u00e1o quan tr\u1ecdng b\u00ean ph\u1ea3i slider trang ch\u1ee7.',
-              },
-            },
-            {
-              type: 'row',
-              fields: [
-                {
-                  name: 'icon',
-                  type: 'text',
-                  label: 'Biểu tượng (Icon)',
-                  defaultValue: '🔥',
-                },
-                {
-                  name: 'title',
-                  type: 'text',
-                  label: 'Tiêu đề cảnh báo',
-                  defaultValue: 'Cảnh báo quan trọng',
-                },
-              ]
-            },
-            {
-              name: 'videos',
-              type: 'relationship',
-              relationTo: 'videos',
-              hasMany: true,
-              label: 'Danh sách Video cảnh báo',
-            }
-          ]
-        },
-
-        // ─────────────────────────────────────────────,
-            {
-          type: 'group',
-          label: 'Zalo Mini App',
-          name: 'zaloMiniApp',
-          fields: [
-            {
-              name: 'themeColor',
-              type: 'text',
-              label: 'Màu chủ đạo (Hex)',
-              defaultValue: '#007a8c',
-              admin: {
-                description: 'Mã màu Hex cho Mini App (VD: #007a8c, #00a651)',
-              },
-            },
-            {
-              name: 'bannerImage',
-              type: 'upload',
-              relationTo: 'media',
-              label: 'Ảnh Banner Trang chủ',
-            },
-            {
-              name: 'features',
-              type: 'group',
-              label: 'Bật/Tắt Tính năng',
-              fields: [
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'enableAppointments',
-                      type: 'checkbox',
-                      label: 'Cho phép Đặt lịch khám',
-                      defaultValue: true,
-                    },
-                    {
-                      name: 'enableTestResults',
-                      type: 'checkbox',
-                      label: 'Cho phép Tra cứu kết quả xét nghiệm',
-                      defaultValue: true,
-                    },
-                  ]
-                },
-              ]
-            },
-            {
-              name: 'hotline',
-              type: 'text',
-              label: 'Số điện thoại Hotline Zalo',
-              defaultValue: '1900988975',
-            }
-          ],
-        },
-        // ─────────────────────────────────────────────
-          ]
-        }
-
       ],
     },
+
+    // ─── Tab Thanh Toán & Đặt Hàng ────────────────────────────────────────
+    {
+      name: 'payment',
+      label: '💳 Thanh Toán & Đặt Hàng',
+      fields: [
+        {
+          type: 'group',
+          name: 'payment',
+          label: 'Thông tin Thanh Toán Chuyển Khoản',
+          fields: [
+            {
+              name: 'bankName',
+              type: 'text',
+              label: 'Tên ngân hàng',
+              admin: {
+                placeholder: 'VD: Vietcombank, Techcombank, MBBank...',
+              },
+            },
+            {
+              name: 'bankAccount',
+              type: 'text',
+              label: 'Số tài khoản',
+              admin: {
+                placeholder: 'VD: 1234567890',
+              },
+            },
+            {
+              name: 'bankOwner',
+              type: 'text',
+              label: 'Chủ tài khoản',
+              admin: {
+                placeholder: 'VD: HTX DICH VU SAN XUAT VA TIEU THU RAU TUY LOAN',
+              },
+            },
+            {
+              name: 'qrImageUrl',
+              type: 'text',
+              label: 'URL ảnh QR Code chuyển khoản',
+              admin: {
+                placeholder: 'https://img.vietqr.io/image/...',
+                description: 'Ảnh QR chuyển khoản sẽ hiển thị trên trang đặt hàng khi khách chọn thanh toán chuyển khoản. Dùng VietQR (img.vietqr.io) để tạo QR miễn phí.',
+              },
+            },
+          ],
+        },
+        {
+          type: 'group',
+          name: 'notifications',
+          label: '📧 Thông Báo Đơn Hàng',
+          fields: [
+            {
+              name: 'telegramBotToken',
+              type: 'text',
+              label: 'Telegram Bot Token',
+              admin: {
+                placeholder: 'VD: 7123456789:AAFxxxxxx',
+                description: 'Token của Bot Telegram tạo từ @BotFather.',
+              },
+            },
+            {
+              name: 'telegramChatId',
+              type: 'text',
+              label: 'Telegram Chat ID nhận thông báo',
+              admin: {
+                placeholder: 'VD: -100123456789',
+                description: 'Chat ID của nhóm hoặc cá nhân sẽ nhận thông báo đơn hàng.',
+              },
+            },
+            {
+              name: 'smtpHost',
+              type: 'text',
+              label: 'SMTP Host',
+              defaultValue: 'smtp.gmail.com',
+              admin: {
+                placeholder: 'VD: smtp.gmail.com',
+                description: 'Máy chủ gửi email (Mặc định: smtp.gmail.com).',
+              },
+            },
+            {
+              name: 'smtpPort',
+              type: 'number',
+              label: 'SMTP Port',
+              defaultValue: 587,
+              admin: {
+                placeholder: 'VD: 587',
+                description: 'Cổng kết nối SMTP (Thường là 587 hoặc 465).',
+              },
+            },
+            {
+              name: 'smtpSecure',
+              type: 'checkbox',
+              label: 'SMTP Secure (SSL/TLS)',
+              defaultValue: false,
+              admin: {
+                description: 'Chọn nếu sử dụng cổng 465.',
+              },
+            },
+            {
+              name: 'smtpUser',
+              type: 'text',
+              label: 'SMTP User (Email gửi)',
+              admin: {
+                placeholder: 'VD: your@gmail.com',
+                description: 'Địa chỉ email dùng để gửi thư.',
+              },
+            },
+            {
+              name: 'smtpPass',
+              type: 'text',
+              label: 'SMTP Password (Mật khẩu ứng dụng)',
+              admin: {
+                placeholder: 'VD: xxxxxxxxxxxxxxxx',
+                description: 'Mật khẩu ứng dụng (App Password) của Gmail, KHÔNG phải mật khẩu đăng nhập thông thường.',
+              },
+            },
+            {
+              name: 'adminEmail',
+              type: 'email',
+              label: 'Email nhận thông báo đơn hàng',
+              admin: {
+                placeholder: 'VD: htxtuyloandanang@gmail.com',
+                description: 'Email quản trị viên sẽ nhận thông báo khi có đơn hàng mới từ website.',
+              },
+            },
+          ],
+        },
+      ],
+    },
+
   ],
+},
+],
 };

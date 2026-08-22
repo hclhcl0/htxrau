@@ -38,7 +38,7 @@ interface Props {
   siteName: string;
   phone: string;
   actionLink: string;
-  socials: { fb?: string; tw?: string; yt?: string; ig?: string; zalo?: string; miniapp?: string; };
+  socials: { fb?: string; tw?: string; yt?: string; ig?: string; zalo?: string; };
 }
 
 export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logoUrl, logoConfig, searchConfig, hotlinePosition, siteName, phone, actionLink, socials }: Props) => {
@@ -142,7 +142,7 @@ export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logo
   }, []);
 
   const isActive = (url?: string) => url && (pathname === url || pathname.startsWith(url + '/'));
-  const resolveUrl = (item: { url?: string; presetUrl?: string }) => item.presetUrl || item.url || '';
+  const resolveUrl = (item: { url?: string; presetUrl?: string }) => item.url || item.presetUrl || '';
 
   const renderHotlineBar = () => (
     <div className={styles.trendingBar}>
@@ -190,8 +190,7 @@ export const HeaderClient = ({ menuItems, menuPosition, navStyle = 'white', logo
             {socials.tw && <Link href={socials.tw} target="_blank" aria-label="Twitter"><FaTwitter size={16} /></Link>}
             {socials.yt && <Link href={socials.yt} target="_blank" aria-label="Youtube"><FaYoutube size={16} /></Link>}
             {socials.ig && <Link href={socials.ig} target="_blank" aria-label="Instagram"><FaInstagram size={16} /></Link>}
-            {socials.zalo && <Link href={socials.zalo} target="_blank" aria-label="Zalo OA" style={{ fontSize: '11px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '3px' }}><span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '16px', height: '16px', backgroundColor: 'currentColor', color: 'white', borderRadius: '50%' }}>Z</span></Link>}
-            {socials.miniapp && <Link href={socials.miniapp} target="_blank" aria-label="Mini App" style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '3px' }}>Mini App</Link>}
+            {socials.zalo && <Link href={socials.zalo} target="_blank" aria-label="Zalo" style={{ fontSize: '11px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '3px' }}><span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '16px', height: '16px', backgroundColor: 'currentColor', color: 'white', borderRadius: '50%' }}>Z</span></Link>}
           </div>
           <div className={styles.authLinks} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {searchConfig.position === 'topbar' && (
@@ -479,7 +478,7 @@ function NavMenu({ menuItems, pathname, styles, openDropdown, setOpenDropdown, i
               onMouseEnter={() => hasDropdown && setOpenDropdown(key)}
               onMouseLeave={() => setOpenDropdown(null)}
             >
-              {(() => { const resolvedUrl = item.presetUrl || item.url; return resolvedUrl ? (
+              {(() => { const resolvedUrl = item.url || item.presetUrl; return resolvedUrl ? (
                 <a href={resolvedUrl} className={hasDropdown ? styles.dropdownToggle : ''} target={item.openInNewTab ? '_blank' : undefined} rel={item.openInNewTab ? 'noreferrer' : undefined}>
                   {item.label}
                   {hasDropdown && <ChevronDown size={14} className={styles.chevron} />}
@@ -492,13 +491,16 @@ function NavMenu({ menuItems, pathname, styles, openDropdown, setOpenDropdown, i
               ); })()}
               {hasDropdown && (
                 <ul className={`${styles.dropdown} ${openDropdown === key ? styles.dropdownOpen : ''} bg-white`}>
-                  {item.subItems.map((sub: any, si: number) => (
-                    <li key={si}>
-                      <a href={sub.presetUrl || sub.url || '#'} className={isActive(sub.presetUrl || sub.url) ? styles.activeSubItem : ''} target={sub.openInNewTab ? '_blank' : undefined} rel={sub.openInNewTab ? 'noreferrer' : undefined}>
-                        {sub.label}
-                      </a>
-                    </li>
-                  ))}
+                  {item.subItems.map((sub: any, si: number) => {
+                    const subResolvedUrl = sub.url || sub.presetUrl || '#';
+                    return (
+                      <li key={si}>
+                        <a href={subResolvedUrl} className={isActive(subResolvedUrl) ? styles.activeSubItem : ''} target={sub.openInNewTab ? '_blank' : undefined} rel={sub.openInNewTab ? 'noreferrer' : undefined}>
+                          {sub.label}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </li>

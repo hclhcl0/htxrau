@@ -1,0 +1,56 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#047857" />
+      <stop offset="100%" stop-color="#0d9488" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.04" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bgGrad)" />
+
+  <!-- Decorative circles -->
+  <circle cx="1100" cy="100" r="280" fill="#ffffff" fill-opacity="0.05" />
+  <circle cx="100" cy="580" r="200" fill="#22c55e" fill-opacity="0.08" />
+  <circle cx="950" cy="550" r="160" fill="#15803d" fill-opacity="0.2" />
+
+  <!-- Inner Glass Card -->
+  <rect x="60" y="60" width="1080" height="555" rx="32" fill="url(#cardGrad)" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2" filter="url(#shadow)" />
+
+  <!-- Badge -->
+  <g transform="translate(110, 120)">
+    <rect width="280" height="46" rx="23" fill="#16a34a" fill-opacity="0.85" />
+    <text x="140" y="28" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" text-anchor="middle" letter-spacing="1">
+      RAU ĂN QUẢ
+    </text>
+  </g>
+
+  <!-- Large Central Emoji Icon -->
+  <g transform="translate(940, 310)">
+    <circle cx="0" cy="0" r="100" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.25" stroke-width="3" />
+    <text x="0" y="32" font-size="80" text-anchor="middle">🥒</text>
+  </g>
+
+  <!-- Article Title (Wrapped) -->
+  <foreignObject x="110" y="200" width="760" height="280">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 40px; font-weight: 800; line-height: 1.25; text-shadow: 0 2px 8px rgba(0,0,0,0.35);">
+      Mướp hương tươi: Thơm nức mũi từ vườn nhà, món canh thanh mát bổ dưỡng
+    </div>
+  </foreignObject>
+
+  <!-- Footer Branding -->
+  <g transform="translate(110, 530)">
+    <rect width="40" height="40" rx="10" fill="#22c55e" />
+    <text x="20" y="27" font-size="22" text-anchor="middle">🌱</text>
+    <text x="54" y="27" fill="#86efac" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700">
+      HTX RAU AN TOÀN TÚY LOAN • NÔNG SẢN VIETGAP &amp; OCOP
+    </text>
+  </g>
+</svg>

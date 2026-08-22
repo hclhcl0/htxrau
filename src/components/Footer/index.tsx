@@ -8,13 +8,13 @@ import styles from './Footer.module.css';
 import { VisitorCounter } from '@/components/VisitorCounter';
 
 export const Footer = async () => {
-  let aboutText = 'Trung tâm Kiểm soát Bệnh tật Thành phố Đà Nẵng';
-  let addressMain = '118 Lê Đình Lý, Phường Thanh Khê, Thành phố Đà Nẵng';
-  let addressSub = '';
-  let phone = '0236 3890 407';
-  let email = 'kiemsoatbenhtat@danang.gov.vn';
-  let copyrightText = `© Bản quyền thuộc về TRUNG TÂM KIỂM SOÁT BỆNH TẬT THÀNH PHỐ ĐÀ NẴNG`;
-  let designerCredit = 'thiết kế bởi CNTT CDC Đà Nẵng';
+  let aboutText = 'Trang trại Nông sản Sạch & Rau An Toàn VietGAP';
+  let addressMain = 'Khu Nông Nghiệp Công Nghệ Cao, Hòa Vang, TP. Đà Nẵng';
+  let addressSub = 'Cửa hàng phân phối: 120 Nguyễn Văn Linh, Hải Châu, TP. Đà Nẵng';
+  let phone = '0905 123 456';
+  let email = 'nongsanrausach@gmail.com';
+  let copyrightText = `© Bản quyền thuộc về TRANG TRẠI NÔNG SẢN SẠCH & RAU AN TOÀN VIETGAP`;
+  let designerCredit = 'Tươi Sạch Từ Nông Trại Đến Bàn Ăn';
   let globalFooter: any = {};
 
   try {
@@ -27,9 +27,13 @@ export const Footer = async () => {
     phone = globalFooter.phone || phone;
     email = globalFooter.email || email;
     const currentYear = new Date().getFullYear().toString();
-    const rawCopyright = globalFooter.copyrightText || copyrightText;
+    const rawCopyright = globalFooter.copyrightText && !globalFooter.copyrightText.includes('TRUNG TÂM KIỂM SOÁT')
+      ? globalFooter.copyrightText
+      : copyrightText;
     copyrightText = rawCopyright.replace('{year}', currentYear);
-    designerCredit = globalFooter.designerCredit || designerCredit;
+    designerCredit = globalFooter.designerCredit && !globalFooter.designerCredit.includes('CDC Đà Nẵng')
+      ? globalFooter.designerCredit
+      : designerCredit;
   } catch (e) {
     console.error('Footer: error fetching global footer data:', e);
   }
@@ -80,10 +84,10 @@ export const Footer = async () => {
               ) : (
                 <>
                   <li><Link href="/">Trang chủ</Link></li>
-                  <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
-                  <li><Link href="/category/dich-vu">Hoạt động dịch vụ</Link></li>
-                  <li><Link href="/category/dao-tao">Công tác đào tạo</Link></li>
-                  <li><Link href="/lien-he">Liên hệ - Góp ý</Link></li>
+                  <li><Link href="/san-pham">Sản phẩm rau sạch</Link></li>
+                  <li><Link href="/bai-viet">Tin tức & Kiến thức</Link></li>
+                  <li><Link href="/video">Video nông trại</Link></li>
+                  <li><Link href="/contact">Liên hệ & Báo giá sỉ</Link></li>
                 </>
               )}
             </ul>

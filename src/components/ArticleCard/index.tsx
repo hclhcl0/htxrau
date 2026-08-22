@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, Eye, HeartPulse } from 'lucide-react';
+import { Calendar, Eye, Sprout } from 'lucide-react';
 import Image from 'next/image';
 
 interface ArticleCardProps {
@@ -15,7 +15,9 @@ function isInternalUrl(url: string) {
 }
 
 export function ArticleCard({ article, featured = false }: ArticleCardProps) {
-  const imgUrl = article.image?.url || null;
+  const imgUrl = (article.image?.url && !article.image?.url?.includes('logo.webp'))
+    ? article.image.url
+    : (article.slug ? `/images/articles/${article.slug}.svg` : null);
   const date = new Date(article.publishedAt || article.createdAt).toLocaleDateString('vi-VN');
   const catName = article.category?.name || '';
 
@@ -37,14 +39,14 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
               unoptimized={!isInternalUrl(imgUrl)}
             />
           ) : (
-            <div className="w-full h-full min-h-[200px] flex items-center justify-center bg-teal-50">
-              <HeartPulse className="w-16 h-16 text-teal-200" />
+            <div className="w-full h-full min-h-[200px] flex items-center justify-center bg-emerald-50">
+              <Sprout className="w-16 h-16 text-emerald-300" />
             </div>
           )}
         </Link>
         <div className="p-6 flex flex-col justify-center flex-grow">
           {catName && (
-            <span className="inline-block text-xs font-bold text-[var(--primary)] bg-blue-50 px-3 py-1 rounded-full mb-3 w-fit">
+            <span className="inline-block text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full mb-3 w-fit border border-emerald-100">
               {catName}
             </span>
           )}
@@ -57,8 +59,8 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
             <p className="text-gray-500 text-sm line-clamp-3 mb-4">{article.description}</p>
           )}
           <div className="flex items-center gap-4 text-xs text-gray-400 font-medium mt-auto pt-2">
-            <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" />{date}</span>
-            <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" />{article.views || 0}</span>
+            <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-emerald-600" />{date}</span>
+            <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5 text-emerald-600" />{article.views || 0}</span>
           </div>
         </div>
       </div>
@@ -79,14 +81,14 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
             unoptimized={!isInternalUrl(imgUrl)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-teal-50">
-            <HeartPulse className="w-10 h-10 text-teal-200" />
+          <div className="w-full h-full flex items-center justify-center bg-emerald-50">
+            <Sprout className="w-10 h-10 text-emerald-300" />
           </div>
         )}
       </Link>
       <div className="p-4 flex flex-col flex-grow">
         {catName && (
-          <span className="text-xs font-bold text-[var(--primary)] mb-2 block">{catName}</span>
+          <span className="text-xs font-bold text-emerald-700 mb-2 block">{catName}</span>
         )}
         <Link href={`/bai-viet/${article.slug || article.id}`}>
           <h3 className="font-bold text-gray-900 leading-snug group-hover:text-[var(--primary)] transition-colors line-clamp-3 text-[15px] mb-2 flex-grow">
@@ -97,8 +99,8 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
           <p className="text-gray-400 text-xs line-clamp-2 mb-2">{article.description}</p>
         )}
         <div className="flex items-center gap-4 text-xs text-gray-400 font-medium mt-auto pt-2">
-          <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" />{date}</span>
-          <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" />{article.views || 0}</span>
+          <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-emerald-600" />{date}</span>
+          <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5 text-emerald-600" />{article.views || 0}</span>
         </div>
       </div>
     </div>

@@ -3,12 +3,15 @@ import { RichText } from '@payloadcms/richtext-lexical/react';
 import Script from 'next/script';
 
 import { UploadBlock } from './UploadBlock';
-import { TableBlock } from './PageBlocks/TableBlock';
-import { FaqBlock } from './PageBlocks/FaqBlock';
 import { EmbedBlock } from './PageBlocks/EmbedBlock';
 import { SliderClientBlock } from './blocks/SliderClientBlock';
 import { InfographicClientBlock } from './blocks/InfographicClientBlock';
 import { ExcelTableServerBlock } from './blocks/ExcelTableServerBlock';
+import VideoBlock from './blocks/VideoBlock';
+
+console.log("LexicalConverters Imports Debug:", {
+  UploadBlock, EmbedBlock, SliderClientBlock, InfographicClientBlock, ExcelTableServerBlock, VideoBlock, RichText
+});
 
 function getGDriveEmbedUrl(url: string): { embedUrl: string; directUrl: string } {
   if (url && url.includes('drive.google.com')) {
@@ -31,8 +34,6 @@ function getGDriveEmbedUrl(url: string): { embedUrl: string; directUrl: string }
   }
   return { embedUrl: url, directUrl: url };
 }
-
-import VideoBlock from './blocks/VideoBlock';
 
 export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }: any) => ({
   ...defaultConverters,
@@ -277,30 +278,7 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
         </span>
       );
     },
-    tableBlock: ({ node }: any) => <TableBlock {...node.fields} />,
-    faqBlock: ({ node }: any) => <FaqBlock {...node.fields} />,
     embedBlock: ({ node }: any) => <EmbedBlock {...node.fields} />,
-    quoteBlock: ({ node }: any) => {
-      const { quote, author, role } = node.fields;
-      if (!quote) return null;
-      return (
-        <blockquote className="my-6 p-6 md:p-8 bg-blue-50/50 rounded-2xl border-l-4 border-[var(--primary)] relative">
-          <div className="absolute top-4 left-4 text-4xl text-[var(--primary)] opacity-20 font-serif">"</div>
-          <p className="text-lg md:text-xl font-medium text-gray-800 leading-relaxed mb-4 relative z-10 italic">
-            {quote}
-          </p>
-          {author && (
-            <footer className="mt-4 flex items-center">
-              <div className="w-8 h-1 bg-[var(--primary)] mr-4 rounded-full"></div>
-              <div>
-                <strong className="text-gray-900 block">{author}</strong>
-                {role && <span className="text-sm text-gray-600 block">{role}</span>}
-              </div>
-            </footer>
-          )}
-        </blockquote>
-      );
-    },
     audioBlock: ({ node }: any) => {
       const { title, sourceType, audioFile, audioUrl, description } = node.fields;
       const src = sourceType === 'upload' ? audioFile?.url : audioUrl;
@@ -356,27 +334,7 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
     infographicBlock: ({ node }: any) => {
       return <InfographicClientBlock image={node.fields.image} caption={node.fields.caption} />;
     },
-    zaloWidgetBlock: ({ node }: any) => {
-      const { oaId, title, widgetType } = node.fields;
-      if (!oaId) return null;
-      
-      let html = '';
-      if (widgetType === 'chat') {
-         html = `<div class="zalo-chat-widget" data-oaid="${oaId}" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="0" data-width="" data-height=""></div>`;
-      } else if (widgetType === 'article') {
-         html = `<div class="zalo-article-widget" data-oaid="${oaId}" data-limit="5" data-width="100%" data-height="500"></div>`;
-      } else if (widgetType === 'follow') {
-         html = `<div class="zalo-follow-only-button" data-oaid="${oaId}"></div>`;
-      }
 
-      return (
-        <div className="my-6 p-6 bg-blue-50/50 rounded-2xl border border-blue-100 flex flex-col items-center">
-          {title && <h3 className="font-bold text-[#0180c7] mb-4 text-center">{title}</h3>}
-          <div dangerouslySetInnerHTML={{ __html: html }} />
-          <Script src="https://sp.zalo.me/plugins/workspace.js" strategy="lazyOnload" />
-        </div>
-      );
-    },
     livestreamBlock: ({ node }: any) => {
       const { title, platform, videoId, status, description } = node.fields;
       if (!videoId) return null;

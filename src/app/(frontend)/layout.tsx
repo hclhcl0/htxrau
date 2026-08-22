@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import "./globals-compiled.css";
+import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BackToTop } from "@/components/BackToTop";
-import ChatWidget from "@/components/ChatWidget/ChatWidget";
 import { SitePopup } from "@/components/SitePopup";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import Script from "next/script";
 import { ScrollToTopHelper } from "@/components/ScrollToTopHelper";
 import { VisitTracker } from "@/components/VisitTracker";
@@ -15,34 +13,32 @@ import configPromise from "@payload-config";
 
 export const revalidate = 60;
 
-const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://ecdc.ksbtdanang.vn";
+const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(serverUrl),
-  title: "TRUNG TÂM KIỂM SOÁT BỆNH TẬT THÀNH PHỐ ĐÀ NẴNG",
-  description: "Trung tâm Kiểm soát Bệnh tật Thành phố Đà Nẵng - Thông tin y tế, phòng chống dịch bệnh, an toàn thực phẩm tại thành phố Đà Nẵng.",
-  manifest: "/manifest.webmanifest",
-  // ── OG Tags (Fix #5) ─────────────────────────────────────────────
+  title: "TRANG TRẠI NÔNG SẢN SẠCH & RAU AN TOÀN VIETGAP",
+  description: "Chuyên cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Túy Loan, thu hoạch trong ngày và giao tận nơi cho gia đình, nhà hàng, bếp ăn tập thể.",
   openGraph: {
     type: "website",
     locale: "vi_VN",
     url: "/",
-    siteName: "CDC Đà Nẵng",
-    title: "Trung tâm Kiểm soát Bệnh tật Thành phố Đà Nẵng",
-    description: "Thông tin y tế, phòng chống dịch bệnh, an toàn thực phẩm tại thành phố Đà Nẵng.",
+    siteName: "Rau An Toàn VietGAP",
+    title: "Trang Trại Nông Sản Sạch & Rau An Toàn VietGAP",
+    description: "Chuyên cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Túy Loan, thu hoạch trong ngày và giao tận nơi.",
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "CDC Đà Nẵng - Trung tâm Kiểm soát Bệnh tật",
+        alt: "Rau An Toàn VietGAP - Nông Sản Sạch Tươi Ngon",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trung tâm Kiểm soát Bệnh tật Thành phố Đà Nẵng",
-    description: "Thông tin y tế, phòng chống dịch bệnh, an toàn thực phẩm tại thành phố Đà Nẵng.",
+    title: "Trang Trại Nông Sản Sạch & Rau An Toàn VietGAP",
+    description: "Chuyên cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Túy Loan.",
     images: ["/logo.png"],
   },
   icons: {
@@ -56,12 +52,6 @@ export const metadata: Metadata = {
     ],
     shortcut: '/favicon-32x32.png',
   },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "CDC Đà Nẵng",
-    startupImage: '/icon-512x512.png',
-  },
   formatDetection: {
     telephone: false,
   },
@@ -69,19 +59,17 @@ export const metadata: Metadata = {
 
 import { Viewport } from 'next';
 export const viewport: Viewport = {
-  themeColor: '#007a8c',
+  themeColor: '#15803d',
   width: 'device-width',
   initialScale: 1,
-  // FIX #4: Bỏ maximumScale:1 và userScalable:false để không bị Lighthouse penalize
-  // và hỗ trợ người dùng khiếm thị có thể zoom màn hình
 };
 
 function hexToRgb(hex: string | undefined | null) {
-  if (!hex) return '58, 127, 199';
+  if (!hex) return '21, 128, 61';
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   const hexFull = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexFull);
-  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '58, 127, 199';
+  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '21, 128, 61';
 }
 
 // Map font value → tên font thực tế (có dấu cách)
@@ -110,9 +98,9 @@ export default async function RootLayout({
     console.error("Error fetching settings in layout:", e);
   }
 
-  const primaryColor = themeConfig?.primaryColor || '#3a7fc7';
-  const primaryDarkColor = themeConfig?.primaryDarkColor || '#0055a7';
-  const secondaryColor = themeConfig?.secondaryColor || '#4999d6';
+  const primaryColor = themeConfig?.primaryColor || '#15803d';
+  const primaryDarkColor = themeConfig?.primaryDarkColor || '#14532d';
+  const secondaryColor = themeConfig?.secondaryColor || '#16a34a';
   const primaryRgb = hexToRgb(primaryColor);
 
   // Font
@@ -148,17 +136,17 @@ export default async function RootLayout({
             }
           `
         }} />
-        <Script id="pwa-init" strategy="afterInteractive">
+        <Script id="sw-cleanup" strategy="afterInteractive">
           {`
-            window.deferredPrompt = null;
-            window.addEventListener('beforeinstallprompt', (e) => {
-              e.preventDefault();
-              window.deferredPrompt = e;
-            });
             if ('serviceWorker' in navigator) {
-              window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js');
+              navigator.serviceWorker.getRegistrations().then(function(regs) {
+                for (var r of regs) { r.unregister(); }
               });
+              if ('caches' in window) {
+                caches.keys().then(function(keys) {
+                  for (var k of keys) { caches.delete(k); }
+                });
+              }
             }
           `}
         </Script>
@@ -197,7 +185,7 @@ export default async function RootLayout({
           `}
         </Script>
       </head>
-      <body className="bg-gray-100/80 antialiased selection:bg-teal-600 selection:text-white">
+      <body className="bg-gray-100/80 antialiased selection:bg-emerald-600 selection:text-white">
         <ScrollToTopHelper />
         <div className="w-full bg-white min-h-screen shadow-2xl flex flex-col overflow-x-clip relative">
           <Header />
@@ -206,9 +194,7 @@ export default async function RootLayout({
         </div>
         
         <BackToTop />
-        <ChatWidget />
         {!isDraftMode && <SitePopup popupConfig={popupConfig} />}
-        <PWAInstallPrompt />
         <VisitTracker />
       </body>
     </html>

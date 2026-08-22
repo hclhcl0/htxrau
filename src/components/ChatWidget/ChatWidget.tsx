@@ -10,17 +10,17 @@ interface Message {
   timestamp: number;
 }
 
-const STORAGE_KEY = "cdc_chat_history";
+const STORAGE_KEY = "rau_chat_history";
 const MAX_STORED_MESSAGES = 20;
 
 const SUGGESTED_QUESTIONS = [
-  "Giá tiêm vắc xin tại CDC Đà Nẵng?",
-  "Lịch làm việc của CDC Đà Nẵng?",
-  "Cách phòng ngừa sốt xuất huyết?",
-  "Xét nghiệm HIV ở đâu tại Đà Nẵng?",
+  "Rau an toàn Túy Loan đạt chứng nhận OCOP và VietGAP thế nào?",
+  "Các loại rau ăn quả OCOP 4 sao và rau ăn lá OCOP 3 sao?",
+  "Chính sách báo giá sỉ cho trường học, siêu thị, bếp ăn?",
+  "Làm sao để đặt mua rau tươi giao tận nơi tại Đà Nẵng?",
 ];
 
-const BOT_GREETING = `Xin chào! Tôi là Trợ lý AI của Trung tâm Kiểm soát Bệnh tật TP. Đà Nẵng.\n\nTôi có thể giúp bạn tìm hiểu về các dịch vụ y tế, phòng bệnh, lịch tiêm chủng và nhiều thông tin sức khỏe khác.\n\nBạn muốn hỏi gì hôm nay?`;
+const BOT_GREETING = `Xin chào! Tôi là Trợ lý AI của Hợp Tác Xã Sản Xuất & Tiêu Thụ Rau An Toàn Túy Loan (Hòa Phong, Hòa Vang, Đà Nẵng).\n\nTôi có thể hỗ trợ bạn tìm hiểu về các loại rau đạt chuẩn OCOP 4 sao, tiêu chuẩn VietGAP, giá các loại rau tươi và chính sách báo giá sỉ cho trường học, siêu thị và bếp ăn.\n\nBạn cần HTX Túy Loan hỗ trợ thông tin gì hôm nay?`;
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -210,12 +210,12 @@ export default function ChatWidget() {
             <div className={styles.header}>
               <div className={styles.headerLeft}>
                 <div className={styles.avatarWrap}>
-                  <span className={styles.avatarIcon}>🤖</span>
+                  <span className={styles.avatarIcon}>🌱</span>
                   <span className={styles.onlineDot} />
                 </div>
                 <div>
-                  <div className={styles.headerTitle}>Trợ lý AI CDC Đà Nẵng</div>
-                  <div className={styles.headerSub}>Hỗ trợ thông tin y tế</div>
+                  <div className={styles.headerTitle}>Trợ lý AI HTX Túy Loan</div>
+                  <div className={styles.headerSub}>Rau an toàn VietGAP & OCOP Đà Nẵng</div>
                 </div>
               </div>
               <div className={styles.headerActions}>
@@ -259,7 +259,7 @@ export default function ChatWidget() {
                   transition={{ duration: 0.2 }}
                 >
                   {msg.role === "assistant" && (
-                    <div className={styles.botIcon}>🤖</div>
+                    <div className={styles.botIcon}>🌱</div>
                   )}
                   <div className={styles.bubbleContent}>
                     <div className={styles.bubbleText}>
@@ -282,7 +282,7 @@ export default function ChatWidget() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <div className={styles.botIcon}>🤖</div>
+                  <div className={styles.botIcon}>🌱</div>
                   <div className={styles.bubbleContent}>
                     <div className={styles.typingIndicator}>
                       <span />
@@ -346,7 +346,7 @@ export default function ChatWidget() {
       <motion.button
         className={styles.fab}
         onClick={handleToggle}
-        aria-label={isOpen ? "Đóng trợ lý AI" : "Mở trợ lý AI CDC Đà Nẵng"}
+        aria-label={isOpen ? "Đóng trợ lý AI" : "Mở trợ lý AI Nông Sản Sạch"}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         animate={isOpen ? {} : { y: [0, -4, 0] }}

@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 const SUBJECT_OPTIONS = [
-  { value: 'feedback', label: 'Góp ý / Phản hồi dịch vụ' },
-  { value: 'medical_info', label: 'Hỏi thông tin dịch vụ y tế' },
-  { value: 'report', label: 'Báo cáo sự cố / Dịch bệnh' },
-  { value: 'cooperation', label: 'Yêu cầu hợp tác / Truyền thông' },
-  { value: 'other', label: 'Khác' },
+  { value: 'retail_order', label: 'Đặt mua rau tươi lẻ / Đơn hàng theo ngày' },
+  { value: 'wholesale_quote', label: 'Báo giá sỉ cho trường học / bếp ăn / nhà hàng' },
+  { value: 'partnership', label: 'Hợp tác đại lý phân phối / Cung ứng nông sản' },
+  { value: 'feedback', label: 'Góp ý & Phản hồi chất lượng sản phẩm' },
+  { value: 'other', label: 'Nhu cầu khác' },
 ];
 
 export function ContactForm() {
@@ -140,7 +140,7 @@ export function ContactForm() {
             type="text"
             value={form.organization}
             onChange={handleChange}
-            placeholder="Bệnh viện / Trường học / ..."
+            placeholder="Trường học / Bếp ăn / Nhà hàng / Hộ gia đình..."
             className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition-all text-gray-800 placeholder-gray-400"
           />
         </div>

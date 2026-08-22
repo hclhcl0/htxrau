@@ -62,7 +62,7 @@ export default async function SearchPage({ searchParams }: PageParams) {
       ) : (
         <div className={styles.grid}>
           {articles.map((article: any) => {
-            const mediaUrl = article.image?.url || 'https://via.placeholder.com/800x450?text=CDC+Da+Nang';
+            const mediaUrl = article.image?.url || '/placeholder-vegetable.svg';
             const date = new Date(article.createdAt).toLocaleDateString('vi-VN');
             
             return (

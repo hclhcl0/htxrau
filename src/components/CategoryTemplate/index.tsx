@@ -91,12 +91,7 @@ export async function CategoryTemplate({ category, slugArray, page = 1 }: Catego
     filterIds = [rootCat.id, ...topicIds, ...subIds];
   }
 
-  const articleFilter = {
-    or: [
-      { category: { in: filterIds } },
-      { additionalCategories: { in: filterIds } }
-    ]
-  };
+  const articleFilter = { category: { in: filterIds } };
 
   // Truy vấn bài viết
   const { docs: articles, totalPages, page: currentPage, hasPrevPage, hasNextPage } = await payload.find({

@@ -1,54 +1,22 @@
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
 import React from 'react';
 
-export async function UploadBlock({ node, fallbackAlt }: { node: any, fallbackAlt?: string }) {
-  // Removed console.log
+export function UploadBlock({ node, fallbackAlt }: { node: any; fallbackAlt?: string }) {
   if (!node?.value) return null;
 
-  // If already populated
-  if (typeof node.value === 'object' && node.value.url) {
-    const altText = node.value.alt || fallbackAlt || "Hình ảnh minh họa";
+  // If node.value is an object with url
+  const imgUrl = typeof node.value === 'object' ? node.value.url : (typeof node.value === 'string' && (node.value.startsWith('http') || node.value.startsWith('/')) ? node.value : null);
+  const altText = (typeof node.value === 'object' ? (node.value.alt || fallbackAlt) : fallbackAlt) || "Hình ảnh minh họa";
+
+  if (imgUrl) {
     return (
-      <span className="block my-6 w-full flex justify-center">
+      <span className="block my-6 w-full flex justify-center not-prose">
         <img 
-          src={node.value.url} 
+          src={imgUrl} 
           alt={altText} 
-          className="rounded-xl shadow-sm border border-gray-100" 
-          style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }}
+          className="rounded-2xl shadow-sm border border-emerald-100 max-w-full h-auto mx-auto block" 
         />
       </span>
     );
-  }
-
-  // If it's an ID, fetch it!
-  const mediaId = typeof node.value === 'string' || typeof node.value === 'number' 
-    ? node.value 
-    : (node.value?.id || null);
-  if (!mediaId) return null;
-
-  try {
-    const payload = await getPayload({ config: configPromise });
-    const media = await payload.findByID({
-      collection: 'media',
-      id: mediaId,
-    });
-
-    if (media?.url) {
-      const altText = media.alt || fallbackAlt || "Hình ảnh minh họa";
-      return (
-        <span className="block my-6 w-full flex justify-center">
-          <img 
-            src={media.url} 
-            alt={altText} 
-            className="rounded-xl shadow-sm border border-gray-100" 
-            style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }}
-          />
-        </span>
-      );
-    }
-  } catch (error) {
-    console.error("Error fetching media for upload block:", error);
   }
 
   return null;

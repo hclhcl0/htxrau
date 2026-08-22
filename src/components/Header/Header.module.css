@@ -94,17 +94,21 @@
   transition: transform var(--transition-slow);
 }
 .logoLine1 {
-  font-weight: 800;
+  font-weight: 700;
   color: var(--primary);
-  font-size: 1.1rem;
-  line-height: 1.2;
-  letter-spacing: 0.02em;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 .logoLine2 {
-  font-weight: 600;
+  font-weight: 900;
   color: var(--primary-dark);
-  font-size: 0.95rem;
-  line-height: 1.2;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin-top: 1px;
 }
 .logoTagline {
   font-size: var(--text-xs);
@@ -667,14 +671,17 @@
     text-align: center;
   }
   .logoLine1 {
-    font-size: clamp(0.55rem, 3.2vw, 0.9rem);
-    line-height: 1.35;
-    padding-top: 2px;
-    margin-top: 2px;
+    font-size: clamp(0.55rem, 2.2vw, 0.75rem);
+    font-weight: 600;
+    line-height: 1.25;
+    text-transform: uppercase;
   }
   .logoLine2 {
-    font-size: clamp(0.5rem, 2.7vw, 0.8rem);
-    line-height: 1.35;
+    font-size: clamp(0.85rem, 3.8vw, 1.25rem);
+    font-weight: 900;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin-top: 1px;
   }
 }
 

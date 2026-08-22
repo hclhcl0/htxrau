@@ -1,13 +1,6 @@
 import type { NextConfig } from "next";
 import { withPayload } from '@payloadcms/next/withPayload';
 import path from 'path';
-import withSerwistInit from "@serwist/next";
-
-const withSerwist = withSerwistInit({
-  swSrc: "src/app/sw.ts",
-  swDest: "public/sw.js",
-  disable: process.env.NODE_ENV === "development",
-});
 
 // Tự động build danh sách domain từ biến môi trường
 // Chỉ cần đổi NEXT_PUBLIC_SERVER_URL trên Coolify, không cần sửa code
@@ -35,9 +28,6 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['sharp'],
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   experimental: {
     cpus: 1,
@@ -95,4 +85,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSerwist(withPayload(nextConfig));
+export default withPayload(nextConfig);

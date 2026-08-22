@@ -86,17 +86,6 @@ export const Users: CollectionConfig = {
       },
     },
     {
-      name: 'department',
-      type: 'relationship',
-      relationTo: 'departments',
-      hasMany: false,
-      label: 'Phòng / Khoa / Bộ phận',
-      admin: {
-        position: 'sidebar',
-        description: 'Phòng ban công tác. Chỉ áp dụng cho Nhân viên/Tác giả.',
-      },
-    },
-    {
       name: 'name',
       type: 'text',
       label: 'Họ và tên',

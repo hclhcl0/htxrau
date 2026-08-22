@@ -54,7 +54,7 @@ export function SitePopupClient({
 
   if (!isVisible) return null;
 
-  const bgColor = headerColor || '#00a99d';
+  const bgColor = headerColor || '#15803d';
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center px-4">
@@ -84,7 +84,7 @@ export function SitePopupClient({
             >
               <img
                 src={resolveMediaUrl(mascotImage.url)}
-                alt={mascotImage.alt || 'Bác sĩ'}
+                alt={mascotImage.alt || 'Linh vật'}
                 className="mascot-glow mascot-hover-scale"
                 style={{ objectFit: 'contain' }}
               />
@@ -102,11 +102,11 @@ export function SitePopupClient({
               zIndex: 15,
             }}>
               <div style={{
-                background: `linear-gradient(135deg, ${bgColor} 0%, #00c9b8 100%)`,
+                background: `linear-gradient(135deg, ${bgColor} 0%, #16a34a 100%)`,
                 borderRadius: '999px',
                 padding: '9px 28px 9px',
                 paddingLeft: mascotImage?.url ? '56px' : '28px',
-                boxShadow: `0 4px 20px rgba(0,169,157,0.45), 0 2px 6px rgba(0,0,0,0.12)`,
+                boxShadow: `0 4px 20px rgba(21,128,61,0.45), 0 2px 6px rgba(0,0,0,0.12)`,
                 border: '2.5px solid rgba(255,255,255,0.6)',
                 minWidth: '200px',
                 maxWidth: '90%',
@@ -128,11 +128,11 @@ export function SitePopupClient({
           <div style={{
             background: transparentBackground
               ? 'transparent'
-              : 'linear-gradient(160deg, #e8f8f7 0%, #f0fbfa 60%, #ffffff 100%)',
+              : 'linear-gradient(160deg, #f0fdf4 0%, #f7fee7 60%, #ffffff 100%)',
             borderRadius: '20px',
             boxShadow: transparentBackground ? 'none' : '0 8px 32px rgba(0,0,0,0.18)',
             overflow: 'hidden',
-            border: transparentBackground ? 'none' : '1.5px solid rgba(0,169,157,0.15)',
+            border: transparentBackground ? 'none' : '1.5px solid rgba(21,128,61,0.15)',
           }}>
 
             {/* Nút đóng */}

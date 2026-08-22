@@ -1,6 +1,6 @@
 /* ── Footer ── */
 .footer {
-  background: linear-gradient(160deg, var(--primary-dark) 0%, #003a44 100%);
+  background: linear-gradient(160deg, #14532d 0%, #052e16 100%);
   color: rgba(255, 255, 255, 0.85);
   padding-top: 0;
   margin-top: 3rem;

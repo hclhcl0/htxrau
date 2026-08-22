@@ -1,5 +1,5 @@
 /* ============================================================
-   Chat Widget — CDC Đà Nẵng
+   Chat Widget — Nông Sản Sạch & Rau An Toàn VietGAP
    Sử dụng CSS variables: --primary, --primary-dark, --primary-rgb
    ============================================================ */
 
@@ -13,22 +13,22 @@
   align-items: center;
   gap: 8px;
   padding: 14px 20px 14px 16px;
-  background: var(--primary, #007a8c);
+  background: var(--primary, #15803d);
   color: #fff;
   border: none;
   border-radius: 50px;
   cursor: pointer;
   box-shadow:
-    0 4px 16px rgba(var(--primary-rgb, 0, 122, 140), 0.45),
+    0 4px 16px rgba(var(--primary-rgb, 21, 128, 61), 0.45),
     0 2px 6px rgba(0, 0, 0, 0.15);
   transition: box-shadow 0.2s ease, background 0.2s ease;
   font-family: var(--font-family, system-ui, sans-serif);
 }
 
 .fab:hover {
-  background: var(--primary-dark, #005a68);
+  background: var(--primary-dark, #14532d);
   box-shadow:
-    0 6px 24px rgba(var(--primary-rgb, 0, 122, 140), 0.55),
+    0 6px 24px rgba(var(--primary-rgb, 21, 128, 61), 0.55),
     0 3px 10px rgba(0, 0, 0, 0.18);
 }
 
@@ -87,7 +87,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background: var(--primary, #007a8c);
+  background: var(--primary, #15803d);
   color: #fff;
   flex-shrink: 0;
 }

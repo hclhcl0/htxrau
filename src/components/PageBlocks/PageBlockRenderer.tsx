@@ -9,11 +9,9 @@ import { PageRichTextBlock } from './RichTextBlock';
 import { SectionTitleBlock } from './SectionTitleBlock';
 import { CardGridBlock } from './CardGridBlock';
 import { StepsBlock } from './StepsBlock';
-import { FaqBlock } from './FaqBlock';
 import { CtaBannerBlock } from './CtaBannerBlock';
 import { EmbedBlock } from './EmbedBlock';
 import { DividerBlock } from './DividerBlock';
-import { TableBlock } from './TableBlock';
 import { MagazineBlock } from '../../blocks/MagazineBlock/Component';
 
 // Existing block components
@@ -21,7 +19,6 @@ import HeroBannerBlockComp from '@/components/blocks/HeroBannerBlock';
 import CategoryNewsBlockComp from '@/components/blocks/CategoryNewsBlock';
 import VideoBlockComp from '@/components/blocks/VideoBlock';
 import GalleryBlockComp from '@/components/blocks/GalleryBlock';
-import { ScheduleBlock } from '@/components/blocks/ScheduleBlock';
 
 interface Props {
   blocks: any[];
@@ -140,34 +137,7 @@ export function PageBlockRenderer({ blocks }: Props) {
               />
             );
 
-          case 'tableBlock':
-            return (
-              <TableBlock
-                key={key}
-                title={block.title}
-                headers={block.headers}
-                rows={block.rows}
-                caption={block.caption}
-                striped={block.striped}
-                bordered={block.bordered}
-              />
-            );
 
-          case 'scheduleBlock':
-            return (
-              <ScheduleBlock
-                key={key}
-                title={block.title}
-                icon={block.icon}
-                scheduleGroups={block.scheduleGroups}
-                highlightBox={block.highlightBox}
-                bottomNote={block.bottomNote}
-              />
-            );
-
-          // ── Tương tác ──
-          case 'faqBlock':
-            return <FaqBlock key={key} title={block.title} faqs={block.faqs || []} />;
 
           case 'buttonBlock': {
             const css = block.style === 'primary'
@@ -201,9 +171,6 @@ export function PageBlockRenderer({ blocks }: Props) {
 
           case 'videoBlock':
             return <VideoBlockComp key={key} data={block} />;
-
-          case 'scheduleBlock':
-            return <ScheduleBlock key={key} {...block} />;
             
           case 'magazineBlock':
             return <MagazineBlock key={key} {...block} />;

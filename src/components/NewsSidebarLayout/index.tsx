@@ -28,12 +28,7 @@ async function getArticles(limit: number, categoryId?: string | number) {
         ]
       }
     };
-    if (categoryId) query.where.and.push({ 
-      or: [
-        { category: { equals: categoryId } },
-        { additionalCategories: { equals: categoryId } }
-      ]
-    });
+    if (categoryId) query.where.and.push({ category: { equals: categoryId } });
     const { docs } = await payload.find(query);
     return docs;
   } catch {
@@ -97,7 +92,7 @@ export const NewsSidebarLayout = async ({
                   <article className={styles.featuredCard}>
                     <Link href={`/bai-viet/${articles[0].slug || articles[0].id}`} className={styles.featuredImg}>
                       <img
-                        src={articles[0].image?.url || 'https://via.placeholder.com/800x450?text=CDC'}
+                        src={articles[0].image?.url || '/placeholder-vegetable.svg'}
                         alt={articles[0].title}
                       />
                     </Link>

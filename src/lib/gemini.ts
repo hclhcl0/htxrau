@@ -68,34 +68,7 @@ export function clearGroqKeyCache() {
 }
 
 export async function loadKnowledgeBase() {
-  const now = Date.now();
-  if (knowledgeBaseCache && (now - knowledgeCacheTime < KNOWLEDGE_CACHE_TTL)) return knowledgeBaseCache;
-
-  try {
-    const payload = await getPayload({ config: configPromise });
-    const res = await payload.find({ collection: 'ai-knowledge' as any, limit: 1000, sort: '-createdAt' });
-    const docs = res.docs;
-    if (docs.length === 0) {
-      knowledgeBaseCache = []; knowledgeCacheTime = now; return [];
-    }
-    
-    let chunks = [];
-    for (const doc of docs) {
-      chunks.push({
-        title: (doc as any).title,
-        category: (doc as any).category,
-        content: (doc as any).content,
-        allowedDepartment: (doc as any).allowedDepartment || null,
-        normalized: removeVietnameseTones((doc as any).title + " " + (doc as any).category + " " + (doc as any).content).toLowerCase()
-      });
-    }
-    
-    knowledgeBaseCache = chunks;
-    knowledgeCacheTime = now;
-    return chunks;
-  } catch (err) {
-    return knowledgeBaseCache || [];
-  }
+  return [];
 }
 
 export function clearKnowledgeCache() {

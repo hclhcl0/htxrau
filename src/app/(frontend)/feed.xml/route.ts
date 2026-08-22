@@ -24,7 +24,7 @@ export async function GET() {
     const payload = await getPayload({ config: configPromise });
     
     // Define base URL for the site
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || 'https://cdcdanang.vn';
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000';
     
     // Fetch articles
     const { docs: articles } = await payload.find({

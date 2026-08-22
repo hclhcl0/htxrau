@@ -8,32 +8,22 @@ export const withRBAC = (collections: CollectionConfig[]): CollectionConfig[] =>
     switch (col.slug) {
       case 'articles':
       case 'media':
+      case 'products':
         allowedRoles = ['admin', 'moderator', 'editor', 'author'];
         break;
       case 'categories':
       case 'tags':
-      case 'documents':
-      case 'document-signers':
-      case 'departments':
+      case 'certificates':
       case 'videos':
       case 'video-channels':
       case 'banners':
-      case 'work-schedules':
+      case 'orders':
         allowedRoles = ['admin', 'moderator', 'editor'];
         break;
       case 'pages':
-      case 'org-units':
-      case 'form-submissions':
-      case 'procurements':
-      case 'procedures':
-      case 'procedure-groups':
-      case 'services':
-      case 'service-categories':
-      case 'ai-knowledge':
         allowedRoles = ['admin', 'moderator'];
         break;
       case 'users':
-      case 'api-keys':
       default:
         allowedRoles = ['admin'];
         break;

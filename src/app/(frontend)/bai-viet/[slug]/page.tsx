@@ -1,11 +1,10 @@
-export const dynamic = 'force-dynamic';
-
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
-import { Calendar, Eye } from 'lucide-react';
+import { Calendar, Eye, Sprout } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { RichText } from '@payloadcms/richtext-lexical/react';
 import { headers } from 'next/headers';
 
@@ -49,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: PageParams) {
   if (docs.length === 0) return {};
   
   return {
-    title: `${docs[0].title} | CDC Đà Nẵng`,
+    title: `${docs[0].title} | HTX Rau An Toàn Túy Loan`,
   };
 }
 
@@ -187,7 +186,7 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
       collection: 'articles', limit: RELATED_LIMIT - relatedArticles.length, depth: 1, sort: '-publishedAt',
       where: { and: [
         { id: { not_in: ids } },
-        { or: [{ category: { equals: targetParentId } }, { additionalCategories: { equals: targetParentId } }] },
+        { category: { equals: targetParentId } },
       ]},
     });
     relatedArticles = [...relatedArticles, ...docs];
@@ -247,30 +246,30 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
             <div className="px-4 md:px-0 md:pr-6 lg:pr-8">
               <div className="flex justify-between items-start mb-2 md:mb-3">
                  <div className="flex items-center text-sm text-gray-500 overflow-x-auto whitespace-nowrap pb-1">
-                    <Link href="/" className="hover:text-gov-primary transition-colors">Trang chủ</Link>
+                    <Link href="/" className="hover:text-emerald-700 transition-colors">Trang chủ</Link>
                     <span className="mx-2 flex-shrink-0">/</span>
-                    <Link href={`/${catSlug}`} className="hover:text-gov-primary transition-colors">{catName}</Link>
+                    <Link href={`/${catSlug || 'bai-viet'}`} className="hover:text-emerald-700 transition-colors">{catName}</Link>
                  </div>
                  {user && (
-                   <Link href={`/admin/collections/articles/${article.id}`} target="_blank" className="flex-shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs md:text-sm font-semibold text-white bg-red-500 rounded hover:bg-red-600 transition-colors shadow-sm ml-3">
+                   <Link href={`/admin/collections/articles/${article.id}`} target="_blank" className="flex-shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-xs md:text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors shadow-sm ml-3">
                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                      Sửa bài
                    </Link>
                  )}
               </div>
               
-              <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-3 md:mb-5 leading-tight break-words">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-gray-900 mb-3 md:mb-5 leading-tight break-words">
                  {article.title}
               </h1>
               
               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-gray-500 border-b border-gray-100 pb-2 mb-2 md:pb-3 md:mb-4">
                  <span className="flex items-center gap-1.5">
-                     <Calendar size={14} className="md:w-4 md:h-4"/>
+                     <Calendar size={14} className="md:w-4 md:h-4 text-emerald-600"/>
                      {new Date((article as any).publishedAt || article.createdAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }).replace(',', '')}
                  </span>
-                 <span className="flex items-center gap-1.5"><Eye size={14} className="md:w-4 md:h-4"/> {(article as any).views || 0} lượt xem</span>
-                 {(article as any).author_name && <span className="flex items-center gap-1.5">Tác giả: <span className="font-medium text-gray-700">{(article as any).author_name}</span></span>}
-                 <Link href={`/${catSlug}`} className="bg-gov-secondary/10 text-gov-secondary hover:bg-gov-secondary hover:text-white transition-colors px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-medium">
+                 <span className="flex items-center gap-1.5"><Eye size={14} className="md:w-4 md:h-4 text-emerald-600"/> {(article as any).views || 0} lượt xem</span>
+                 {(article as any).author_name && <span className="flex items-center gap-1.5">Tác giả: <span className="font-semibold text-emerald-900">{(article as any).author_name}</span></span>}
+                 <Link href={`/${catSlug || 'bai-viet'}`} className="bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-colors px-2.5 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-semibold">
                    {catName}
                  </Link>
               </div>
@@ -290,10 +289,30 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
                 </div>
               </div>
 
-              <div className="prose prose-base md:prose-lg max-w-none break-words prose-p:!my-1.5 md:prose-p:!my-2 prose-headings:!my-3 md:prose-headings:!my-4 prose-ul:!my-1 prose-li:!my-0.5 prose-img:!my-3 prose-headings:text-gov-primary prose-a:text-gov-secondary hover:prose-a:text-gov-primary prose-img:rounded-xl w-full min-w-0 overflow-hidden">
+              <div className="prose prose-base md:prose-lg max-w-none break-words prose-p:!my-2 md:prose-p:!my-3 prose-headings:!my-4 md:prose-headings:!my-5 prose-ul:!my-2 prose-li:!my-1 prose-img:!my-4 prose-headings:text-emerald-900 prose-a:text-emerald-700 hover:prose-a:text-emerald-900 prose-img:rounded-2xl w-full min-w-0 overflow-hidden">
+                 {/* Ảnh Thumbnail / Bìa chính của bài viết */}
+                 {(() => {
+                   const featuredImgUrl = ((article as any).image?.url && !(article as any).image?.url?.includes('logo.webp'))
+                     ? (article as any).image.url
+                     : (article.slug ? `/images/articles/${article.slug}.svg` : null);
+                   
+                   return featuredImgUrl ? (
+                     <div className="relative w-full aspect-[16/9] md:aspect-[21/10] rounded-2xl overflow-hidden mb-6 shadow-md border border-emerald-100 bg-emerald-50/60">
+                       <Image
+                         src={featuredImgUrl}
+                         alt={(article as any).image?.alt || article.title}
+                         fill
+                         sizes="(max-width: 1200px) 100vw, 1000px"
+                         className="object-cover"
+                         priority
+                       />
+                     </div>
+                   ) : null;
+                 })()}
+
                  {/* Mô tả ngắn / Sapo */}
                  {(article as any).description && (
-                   <p className="text-gray-800 text-[15px] md:text-[17px] leading-relaxed font-bold pb-4 mb-4 border-b border-gray-100 text-justify">
+                   <p className="text-gray-800 text-[15px] md:text-[17px] leading-relaxed font-bold pb-4 mb-4 border-b border-emerald-100 bg-emerald-50/40 p-4 rounded-xl text-justify border-l-4 border-l-emerald-600">
                      {(article as any).description}
                    </p>
                  )}

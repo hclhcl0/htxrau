@@ -47,20 +47,7 @@ export const Media: CollectionConfig = {
         height: null,
         position: 'centre',
       },
-      {
-        name: 'zalo',
-        width: 1024,
-        height: null,
-        position: 'centre',
-        formatOptions: {
-          format: 'jpeg',
-          options: { quality: 85 },
-        },
-        generateImageName: ({ originalName, sizeName }) => {
-          const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '');
-          return `${nameWithoutExt}-${sizeName}.jpg`;
-        }
-      },
+
     ],
     adminThumbnail: 'thumbnail',
     mimeTypes: [

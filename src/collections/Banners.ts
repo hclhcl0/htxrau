@@ -7,7 +7,7 @@ export const Banners: CollectionConfig = {
     plural: 'Danh sách Banner',
   },
   admin: {
-    group: 'Cài đặt giao diện',
+    group: 'Tài nguyên & Giao diện',
     useAsTitle: 'title',
     defaultColumns: ['title', 'position', 'order', 'isActive'],
   },
@@ -55,7 +55,8 @@ export const Banners: CollectionConfig = {
       defaultValue: 'home_slider',
       options: [
         { label: 'Slider Trang chủ (URL: /)', value: 'home_slider' },
-        { label: 'Slider Trang Gói/Danh mục Vắc xin (URL: /goi-vac-xin)', value: 'vaccine_slider' },
+        { label: 'Banner Trang Sản Phẩm Rau Sạch (URL: /san-pham)', value: 'products_banner' },
+        { label: 'Banner Trang Combo Giỏ Rau (URL: /combo-rau)', value: 'combo_banner' },
         { label: 'Cột bên phải (Sidebar)', value: 'sidebar' },
         { label: 'Dưới cùng trang (Footer)', value: 'footer' },
       ],

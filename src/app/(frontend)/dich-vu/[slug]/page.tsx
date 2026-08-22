@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronRight, ArrowLeft, HeartPulse, Tag, Phone, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Tag, Phone, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
@@ -248,7 +248,7 @@ export default async function ServiceDetailPage({
                     </thead>
                     <tbody className="text-[13px]">
                       {excelData.slice(1).map((row, i) => (
-                        <tr key={i} className="hover:bg-blue-50/60 even:bg-gray-50/60 odd:bg-white transition-colors group">
+                        <tr key={i} className="hover:bg-emerald-50/60 even:bg-gray-50/60 odd:bg-white transition-colors group">
                           {row.map((cell, j) => (
                             <td key={j} className={`px-3 py-2 border-b border-r border-gray-200 group-last:border-b-0 last:border-r-0 ${j === 0 ? 'text-gray-900 font-semibold text-center' : 'text-gray-700'} ${String(cell).match(/^[0-9.,]+(\s)?(đ|VNĐ|VND)?$/i) ? 'text-rose-600 font-bold whitespace-nowrap text-right' : ''}`}>
                               {cell}
@@ -284,7 +284,7 @@ export default async function ServiceDetailPage({
                       </thead>
                       <tbody className="text-[13px]">
                         {service.pricingTable.map((row: any, i: number) => (
-                          <tr key={i} className="hover:bg-blue-50/60 even:bg-gray-50/60 odd:bg-white transition-colors group">
+                          <tr key={i} className="hover:bg-emerald-50/60 even:bg-gray-50/60 odd:bg-white transition-colors group">
                             <td className="px-3 py-2 border-b border-r border-gray-200 group-last:border-b-0 text-gray-800 font-medium">{row.name}</td>
                             <td className="px-3 py-2 border-b border-r border-gray-200 group-last:border-b-0 text-rose-600 font-bold whitespace-nowrap text-right">{row.price}</td>
                             <td className="px-3 py-2 border-b border-gray-200 group-last:border-b-0 text-gray-600">{row.note || '-'}</td>

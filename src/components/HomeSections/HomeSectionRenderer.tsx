@@ -7,16 +7,24 @@ import { QuickLinksSection } from './QuickLinksSection';
 import { RichTextSection } from './RichTextSection';
 import { VideoSection } from './VideoSection';
 import { TikTokSection } from './TikTokSection';
-import { ScheduleBlock } from '../blocks/ScheduleBlock';
-import { VaccineSection } from './VaccineSection';
 import { AdSlider } from './AdSlider';
+import { ProductSection } from './ProductSection';
+import { ProcessStepsSection } from './ProcessStepsSection';
+import { CertificatesSection } from './CertificatesSection';
 
 interface HomeSectionRendererProps {
   sections: any[];
 }
 
 export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps) {
-  if (!sections?.length) return null;
+  if (!sections?.length) {
+    return (
+      <>
+        <ProductSection />
+        <ProcessStepsSection />
+      </>
+    );
+  }
 
   return (
     <>
@@ -24,13 +32,39 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
         const blockType = section.blockType;
 
         switch (blockType) {
+          case 'commitmentSection':
+            return null;
+
+          case 'productSection':
+            return (
+              <ProductSection
+                key={`${blockType}-${index}`}
+                title={section.title}
+                subtitle={section.subtitle}
+                categoryFilter={section.categoryFilter}
+                limit={section.limit}
+              />
+            );
+
+          case 'processStepsSection':
+            return <ProcessStepsSection key={`${blockType}-${index}`} />;
+
+          case 'certificatesSection':
+            return (
+              <CertificatesSection
+                key={`${blockType}-${index}`}
+                title={section.title}
+                subtitle={section.subtitle}
+                limit={section.limit}
+              />
+            );
+
           case 'latestNewsSection': {
             const ad = section.adSlider;
             const hasAd = ad?.enabled && ad?.slides?.length > 0;
             return (
-              <div key={`${blockType}-${index}`} className="container">
+              <div key={`${blockType}-${index}`} className="container mx-auto px-4 max-w-7xl">
                 <div className={hasAd ? 'flex gap-4 items-start' : ''}>
-                  {/* Cột tin tức */}
                   <div className={hasAd ? 'flex-1 min-w-0' : 'w-full'}>
                     <NewsGrid
                       limitOverride={section.limit}
@@ -38,7 +72,6 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
                       disableContainer
                     />
                   </div>
-                  {/* Sidebar quảng cáo — desktop: bên phải, mobile: ẩn (xem bên dưới) */}
                   {hasAd && (
                     <div className="hidden lg:block flex-shrink-0 w-[235px] xl:w-[274px] sticky top-[100px]">
                       <AdSlider
@@ -49,7 +82,6 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
                     </div>
                   )}
                 </div>
-                {/* Sidebar quảng cáo — mobile: bên dưới */}
                 {hasAd && (
                   <div className="lg:hidden mt-4">
                     <AdSlider
@@ -137,18 +169,6 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
               />
             );
 
-          case 'scheduleBlock':
-            return (
-              <ScheduleBlock
-                key={`${blockType}-${index}`}
-                title={section.title}
-                icon={section.icon}
-                scheduleGroups={section.scheduleGroups}
-                highlightBox={section.highlightBox}
-                bottomNote={section.bottomNote}
-              />
-            );
-
           case 'quickLinksSection':
             return (
               <QuickLinksSection
@@ -163,17 +183,6 @@ export async function HomeSectionRenderer({ sections }: HomeSectionRendererProps
               <RichTextSection
                 key={`${blockType}-${index}`}
                 content={section.content}
-              />
-            );
-
-          case 'vaccineSection':
-            return (
-              <VaccineSection
-                key={`${blockType}-${index}`}
-                title={section.title}
-                subtitle={section.subtitle}
-                limit={section.limit}
-                showViewAll={section.showViewAll !== false}
               />
             );
 

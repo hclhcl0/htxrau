@@ -44,7 +44,7 @@ export default async function AllArticlesPage({ searchParams }: PageParams) {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {articles.map((item: any) => {
-               const mediaUrl = item.image?.url || 'https://via.placeholder.com/800x450?text=CDC+Da+Nang';
+               const mediaUrl = item.image?.url || '/placeholder-vegetable.svg';
                const catName = typeof item.category === 'object' && item.category ? (item.category as any).name : 'Tin tức';
                const catSlug = typeof item.category === 'object' && item.category ? (item.category as any).slug : '';
                

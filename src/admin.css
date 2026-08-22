@@ -19,10 +19,10 @@ html,
 }
 
 /* ==========================================
-   CUSTOM LOGIN PAGE STYLING (CDC ĐÀ NẴNG)
+   CUSTOM LOGIN PAGE STYLING (NÔNG SẢN SẠCH & RAU AN TOÀN)
    ========================================== */
 .template-minimal {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+  background: linear-gradient(135deg, #14532d 0%, #15803d 100%) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;

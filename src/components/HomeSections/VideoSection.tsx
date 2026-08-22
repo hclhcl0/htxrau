@@ -77,7 +77,7 @@ export async function VideoSection({
   return (
     <section className="w-full py-2">
       <div className="container">
-        <div className="bg-gradient-to-t from-[#001a22] via-[var(--primary-dark)] to-[#00b4d8] rounded-xl p-1.5 md:p-2 relative overflow-hidden shadow-lg border-0">
+        <div className="bg-gradient-to-t from-[#052e16] via-[#14532d] to-[#16a34a] rounded-xl p-1.5 md:p-2 relative overflow-hidden shadow-lg border-0">
           {/* Subtle dotted pattern overlay */}
           <div className="absolute inset-0 opacity-[0.07] pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1.5px, transparent 0)', backgroundSize: '20px 20px' }}></div>
           

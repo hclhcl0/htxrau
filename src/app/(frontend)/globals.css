@@ -37,18 +37,18 @@
 }
 
 :root {
-  /* ── Màu chủ đạo ── */
-  --primary:       #007a8c;
-  --primary-light: #009aae;
-  --primary-dark:  #005a68;
-  --primary-50:    #f0f9fa;   /* hover background nhạt */
-  --primary-100:   #d0eef2;   /* border highlight */
-  --primary-rgb:   0, 122, 140; /* dùng trong rgba() */
+  /* ── Màu chủ đạo (Nông sản & Rau an toàn) ── */
+  --primary:       #15803d;   /* green-700 tươi sáng, tự nhiên */
+  --primary-light: #16a34a;   /* green-600 */
+  --primary-dark:  #14532d;   /* green-900 */
+  --primary-50:    #f0fdf4;   /* green-50 hover background nhạt */
+  --primary-100:   #dcfce7;   /* green-100 border highlight */
+  --primary-rgb:   21, 128, 61; /* dùng trong rgba() */
 
   /* ── Màu phụ ── */
-  --secondary:       #4a9fd6;
-  --secondary-light: #7bbde3;
-  --accent:          #f59e0b;   /* highlight / badge */
+  --secondary:       #16a34a;
+  --secondary-light: #4ade80;
+  --accent:          #f59e0b;   /* vàng cam hữu cơ */
 
   /* ── Màu nền & bề mặt ── */
   --white:    #ffffff;
@@ -65,7 +65,7 @@
   /* ── Đường viền ── */
   --border:       #e5e7eb;
   --border-light: #f0f2f5;     /* phân cách nhẹ */
-  --border-focus: rgba(0, 122, 140, 0.4);
+  --border-focus: rgba(21, 128, 61, 0.4);
 
   /* ── Bo góc ── */
   --radius-xs: 0px;
@@ -683,28 +683,28 @@
   transform: scale(1.3) translateY(-8px);
 }
 
-/* ── Hào quang chuyển động quanh bác sĩ ─────────────── */
+/* ── Hào quang chuyển động quanh linh vật / banner ─────────────── */
 @keyframes mascot-glow {
   0%   {
     filter:
-      drop-shadow(0 0 4px  rgba(0, 169, 157, 0.55))
-      drop-shadow(0 0 10px rgba(0, 201, 184, 0.20));
+      drop-shadow(0 0 4px  rgba(21, 128, 61, 0.55))
+      drop-shadow(0 0 10px rgba(74, 222, 128, 0.20));
   }
   40%  {
     filter:
-      drop-shadow(0 0 10px rgba(0, 169, 157, 0.95))
-      drop-shadow(0 0 22px rgba(0, 201, 184, 0.55))
-      drop-shadow(0 0 36px rgba(100, 230, 220, 0.25));
+      drop-shadow(0 0 10px rgba(21, 128, 61, 0.95))
+      drop-shadow(0 0 22px rgba(74, 222, 128, 0.55))
+      drop-shadow(0 0 36px rgba(187, 247, 208, 0.25));
   }
   70%  {
     filter:
-      drop-shadow(0 0 7px  rgba(0, 169, 157, 0.75))
-      drop-shadow(0 0 18px rgba(0, 201, 184, 0.40));
+      drop-shadow(0 0 7px  rgba(21, 128, 61, 0.75))
+      drop-shadow(0 0 18px rgba(74, 222, 128, 0.40));
   }
   100% {
     filter:
-      drop-shadow(0 0 4px  rgba(0, 169, 157, 0.55))
-      drop-shadow(0 0 10px rgba(0, 201, 184, 0.20));
+      drop-shadow(0 0 4px  rgba(21, 128, 61, 0.55))
+      drop-shadow(0 0 10px rgba(74, 222, 128, 0.20));
   }
 }
 

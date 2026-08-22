@@ -1,0 +1,483 @@
+/* ═══════════════════════════════════════════════════════════ */
+/* dat-hang.module.css — Order Form Styles                     */
+/* ═══════════════════════════════════════════════════════════ */
+
+.formCard {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.09);
+  padding: 2rem;
+  border: 1px solid #e5f3ea;
+}
+
+/* ── Step Indicator ── */
+.steps {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #d1fae5;
+}
+
+.step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  background: #f0fdf4;
+  color: #6b7280;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+
+.stepActive {
+  background: #16a34a;
+  color: #fff;
+}
+
+.stepDone {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+.stepNum {
+  display: inline-flex;
+  width: 1.4rem;
+  height: 1.4rem;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stepActive .stepNum { background: rgba(255, 255, 255, 0.35); }
+.stepDone .stepNum { background: #16a34a; color: #fff; }
+
+.stepLabel { display: none; }
+@media (min-width: 500px) {
+  .stepLabel { display: inline; }
+}
+
+/* ── Error Banner ── */
+.errorBanner {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 0.75rem;
+  color: #be123c;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* ── Section ── */
+.section { animation: fadeUp 0.3s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #14532d;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #d1fae5;
+}
+
+.sectionHint {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: -0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Form elements ── */
+.formRow {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.formRow .formGroup { flex: 1; min-width: 140px; }
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.required { color: #dc2626; }
+
+.input, .select, .textarea {
+  width: 100%;
+  border: 1.5px solid #d1d5db;
+  border-radius: 0.625rem;
+  padding: 0.6rem 0.875rem;
+  font-size: 0.9rem;
+  color: #111827;
+  background: #f9fafb;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  font-family: inherit;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  border-color: #16a34a;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+
+.textarea { resize: vertical; }
+
+.selectWrap { position: relative; }
+.selectWrap .select { padding-right: 2rem; appearance: none; }
+.selectIcon {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+  height: 1rem;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+/* ── Payment Options ── */
+.paymentOptions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.payBtn {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.875rem;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  font-family: inherit;
+}
+
+.payBtn:hover { border-color: #16a34a; background: #f0fdf4; }
+
+.payBtnActive {
+  border-color: #16a34a;
+  background: #f0fdf4;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+
+.payBtn span { display: flex; flex-direction: column; gap: 2px; }
+.payBtn strong { font-size: 0.875rem; color: #111827; font-weight: 700; }
+.payBtn small { font-size: 0.75rem; color: #6b7280; }
+
+/* ── Bank Info ── */
+.bankInfo {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.875rem;
+  padding: 1rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.bankTitle { font-weight: 700; color: #14532d; font-size: 0.875rem; margin-bottom: 0.5rem; }
+
+.bankDetails { display: flex; flex-direction: column; gap: 0.375rem; font-size: 0.85rem; color: #374151; }
+.bankDetails span { color: #6b7280; margin-right: 0.375rem; }
+
+.bankAccount {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: #15803d;
+  letter-spacing: 1px;
+}
+
+.bankNote {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #92400e;
+  background: #fffbeb;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.375rem;
+  border-left: 3px solid #f59e0b;
+}
+
+.qrWrap { text-align: center; margin-top: 1rem; }
+.qrImg { max-width: 160px; border-radius: 0.75rem; border: 1px solid #d1fae5; }
+.qrCaption { font-size: 0.75rem; color: #6b7280; margin-top: 0.375rem; }
+
+/* ── Item Cards ── */
+.itemCard {
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 0.875rem;
+  transition: border-color 0.15s;
+}
+
+.itemCard:hover { border-color: #86efac; }
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.itemNum {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6b7280;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  padding: 0.2rem 0.6rem;
+}
+
+.removeBtn {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #dc2626;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+.removeBtn:hover { background: #ffe4e6; }
+
+/* ── Buttons ── */
+.btnPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 0.875rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  margin-top: 1rem;
+  font-family: inherit;
+}
+.btnPrimary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3); }
+.btnPrimary:active { transform: translateY(0); }
+
+.btnSubmit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 0.875rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+.btnSubmit:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3); }
+.btnSubmit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.btnOutline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  background: #fff;
+  border: 2px solid #16a34a;
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+  margin-top: 0.5rem;
+}
+.btnOutline:hover { background: #f0fdf4; }
+
+.btnSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  background: #f3f4f6;
+  border: 1.5px solid #e5e7eb;
+  color: #374151;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+.btnSecondary:hover { background: #e5e7eb; }
+
+.btnRow {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+/* ── Total Estimate ── */
+.totalEstimate {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #15803d;
+  margin-top: 0.75rem;
+}
+.totalEstimate strong { font-size: 1rem; }
+.totalEstimate small { color: #6b7280; font-size: 0.78rem; }
+
+/* ── Confirm Box ── */
+.confirmBox {
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.confirmRow {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+.confirmRow span { color: #6b7280; min-width: 100px; }
+.confirmRow strong { color: #111827; }
+
+/* ── Items Review ── */
+.itemsReview {
+  background: #fff;
+  border: 1.5px solid #d1fae5;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.reviewTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #14532d;
+  margin-bottom: 0.75rem;
+}
+
+.reviewItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.875rem;
+}
+.reviewItem:last-of-type { border-bottom: none; }
+.reviewName { flex: 1; color: #111827; font-weight: 600; }
+.reviewQty { color: #6b7280; white-space: nowrap; }
+.reviewPrice { color: #15803d; font-weight: 700; white-space: nowrap; }
+
+.reviewTotal {
+  margin-top: 0.75rem;
+  text-align: right;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.reviewTotal strong { font-size: 1.1rem; color: #15803d; }
+
+/* ── Note Box ── */
+.noteBox {
+  background: #fffbeb;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.85rem;
+  color: #92400e;
+  margin-bottom: 1rem;
+}
+.noteBox span { font-weight: 700; margin-right: 0.375rem; }
+
+/* ── Submit Notice ── */
+.submitNotice {
+  background: #f0fdf4;
+  border-radius: 0.875rem;
+  border: 1px solid #bbf7d0;
+  padding: 0.875rem 1rem;
+  font-size: 0.82rem;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.phoneLink {
+  color: #16a34a;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.phoneLink:hover { text-decoration: underline; }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .formCard { padding: 1.25rem; border-radius: 1rem; }
+  .formRow { flex-direction: column; }
+  .formRow .formGroup { min-width: unset; }
+  .paymentOptions { flex-direction: column; }
+  .btnRow { flex-direction: column-reverse; }
+  .btnSubmit, .btnSecondary { width: 100%; }
+}

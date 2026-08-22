@@ -35,12 +35,7 @@ async function getLatestArticles(limit: number, categoryId?: string | number, ex
     };
     
     if (categoryId) {
-        query.where.and.push({
-          or: [
-            { category: { equals: categoryId } },
-            { additionalCategories: { equals: categoryId } }
-          ]
-        });
+        query.where.and.push({ category: { equals: categoryId } });
     }
     
     if (excludeId) {

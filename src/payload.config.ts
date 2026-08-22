@@ -15,29 +15,20 @@ import { withRBAC, globalsWithRBAC } from './lib/rbac.ts';
 const dbUrl = process.env.DATABASE_URI || process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
 import { Users } from './collections/Users.ts';
-import { Departments } from './collections/Departments.ts';
 import { Media } from './collections/Media.ts';
+import { MediaFolders } from './collections/MediaFolders.ts';
 import { Categories } from './collections/Categories.ts';
 import { Tags } from './collections/Tags.ts';
-import { MediaFolders } from './collections/MediaFolders.ts';
 import { Articles } from './collections/Articles.ts';
 import { Pages } from './collections/Pages.ts';
 import { Banners } from './collections/Banners.ts';
-import { Documents } from './collections/Documents.ts';
-import { DocumentSigners } from './collections/DocumentSigners.ts';
-import { SiteSettings } from './globals/SiteSettings.ts';
-import { Settings } from './globals/Settings.ts';
-import { SiteStats } from './globals/SiteStats.ts';
-import { WorkSchedules } from './collections/WorkSchedules.ts';
+import { Products } from './collections/Products.ts';
+import { Certificates } from './collections/Certificates.ts';
 import { Videos } from './collections/Videos.ts';
 import { VideoChannels } from './collections/VideoChannels.ts';
-import { FormSubmissions } from './collections/FormSubmissions.ts';
-import { OrgUnits } from './collections/OrgUnits.ts';
-import { AiKnowledge } from './collections/AiKnowledge.ts';
-import { ApiKeys } from './collections/ApiKeys.ts';
-import { Procurements } from './collections/Procurements.ts';
-import { Vaccines } from './collections/Vaccines.ts';
-import { VaccinePackages } from './collections/VaccinePackages.ts';
+import { Orders } from './collections/Orders.ts';
+import { SiteSettings } from './globals/SiteSettings.ts';
+import { SiteStats } from './globals/SiteStats.ts';
 
 
 import { seedAccounts } from './lib/seedAccounts.ts';
@@ -138,27 +129,24 @@ export default buildConfig({
     fallbackLanguage: 'vi',
   },
   collections: withRBAC([
-    Departments,
     Users,
     MediaFolders,
     Media,
+    // Quản lý Nông Sản
+    Products,
+    Certificates,
+    // Kinh doanh
+    Orders,
+    // Tin tức & Nội dung
     Categories,
     Tags,
     Articles,
     Pages,
-    Banners,
-    Documents,
-    DocumentSigners,
-    WorkSchedules,
-    VideoChannels,
+    // Thư viện Video
     Videos,
-    FormSubmissions,
-    OrgUnits,
-    AiKnowledge,
-    ApiKeys,
-    Procurements,
-    Vaccines,
-    VaccinePackages,
+    VideoChannels,
+    // Tài nguyên & Giao diện
+    Banners,
   ]),
   globals: globalsWithRBAC([
     SiteSettings,
@@ -218,6 +206,7 @@ export default buildConfig({
         client: {
           url: process.env.SQLITE_URL || 'file:./payload-data.db',
         },
+        push: false,
       }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
