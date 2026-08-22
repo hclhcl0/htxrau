@@ -1,3 +1,6 @@
+// Allow self-signed / cloud intermediate TLS certificates
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
 import { postgresAdapter } from '@payloadcms/db-postgres';
@@ -190,6 +193,10 @@ export default buildConfig({
     ? postgresAdapter({
         pool: {
           connectionString: dbUrl,
+          ssl: (() => {
+            if (dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1')) return false;
+            return { rejectUnauthorized: false };
+          })(),
         },
         push: (() => {
           const val = String(process.env.PAYLOAD_FORCE_PUSH || '').toLowerCase().trim();

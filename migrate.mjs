@@ -1,5 +1,7 @@
 // migrate.mjs — Chạy tự động khi build trên Vercel/Coolify: node migrate.mjs && next build
 // Chạy thủ công: node migrate.mjs
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import pg from 'pg';
 const { Pool } = pg;
 import { MIGRATION_STATEMENTS } from './scripts/migrations.mjs';
@@ -15,15 +17,11 @@ if (!dbUrl) {
 
 console.log('🚀 Bắt đầu kiểm tra migration database...');
 
-const hasSsl = dbUrl.includes('sslmode=require') ||
-               dbUrl.includes('db.prisma.io') ||
-               dbUrl.includes('vercel-storage.com') ||
-               dbUrl.includes('neon.tech') ||
-               dbUrl.includes('supabase.co');
+const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
 
 const pool = new Pool({
   connectionString: dbUrl,
-  ssl: hasSsl ? { rejectUnauthorized: false } : false,
+  ssl: isLocal ? false : { rejectUnauthorized: false },
 });
 
 // Bắt lỗi pool để tránh unhandled exception làm crash tiến trình build (exit code 255)
