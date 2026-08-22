@@ -27,8 +27,6 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname),
   serverExternalPackages: [
     'sharp',
-    '@img/sharp-linux-x64',
-    '@img/sharp-libvips-linux-x64',
   ],
   typescript: {
     ignoreBuildErrors: true,

@@ -26,7 +26,6 @@ import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { ExportDeliveryButton as ExportDeliveryButton_054f327643ce69ba3bd2e4706646f0b3 } from '@/collections/components/ExportDeliveryButton'
 import { SyncVideoButton as SyncVideoButton_dba3e9ed6d4b815a0cfa3b2087e2f91a } from '@/components/Admin/SyncVideoButton'
 import { AdminIcon as AdminIcon_9f5eba8ffdadf3d52561f60d1de9fa24 } from '@/app/(payload)/admin/components/AdminIcon.tsx'
 import { AdminLogo as AdminLogo_0ec271e8bfb19d99b0e35d61da772365 } from '@/app/(payload)/admin/components/AdminLogo.tsx'
@@ -67,7 +66,6 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
-  "@/collections/components/ExportDeliveryButton#ExportDeliveryButton": ExportDeliveryButton_054f327643ce69ba3bd2e4706646f0b3,
   "@/components/Admin/SyncVideoButton#SyncVideoButton": SyncVideoButton_dba3e9ed6d4b815a0cfa3b2087e2f91a,
   "@/app/(payload)/admin/components/AdminIcon.tsx#AdminIcon": AdminIcon_9f5eba8ffdadf3d52561f60d1de9fa24,
   "@/app/(payload)/admin/components/AdminLogo.tsx#AdminLogo": AdminLogo_0ec271e8bfb19d99b0e35d61da772365,
