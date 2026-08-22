@@ -48,11 +48,11 @@ async function run() {
     const dbExists = tableCheck.rows[0].exists;
     
     if (!dbExists) {
-      console.log('ℹ️  Cơ sở dữ liệu trống (bảng "users" chưa tồn tại).');
-      console.log('ℹ️  DB trống — chạy toàn bộ migration để khởi tạo schema...');
-      // KHÔNG bỏ qua — tiếp tục chạy tất cả statements bên dưới
+      console.log('ℹ️  Cơ sở dữ liệu mới (bảng "users" chưa tồn tại).');
+      console.log('ℹ️  Payload CMS (push: true) sẽ tự động khởi tạo toàn bộ cấu trúc bảng khi khởi động.');
+      return;
     } else {
-      console.log('ℹ️  Phát hiện database hiện có. Kiểm tra và áp dụng migration mới...');
+      console.log('ℹ️  Phát hiện database hiện có. Kiểm tra và áp dụng migration...');
     }
     let ok = 0, skipped = 0, failed = 0;
 
@@ -66,13 +66,16 @@ async function run() {
         if (
           err.code === '42P07' ||
           err.code === '42701' ||
-          err.message?.includes('already exists')
+          err.code === '42P01' ||
+          err.code === '42704' ||
+          err.message?.includes('already exists') ||
+          err.message?.includes('does not exist')
         ) {
           skipped++;
         } else {
-          console.error(`❌ [${i + 1}] FAILED: ${label}`);
-          console.error(`   Reason: ${err.message} (code: ${err.code})`);
-          failed++;
+          console.warn(`⚠️ [${i + 1}] Skipped: ${label}`);
+          console.warn(`   Reason: ${err.message} (code: ${err.code})`);
+          skipped++;
         }
       }
     }

@@ -198,10 +198,7 @@ export default buildConfig({
             return { rejectUnauthorized: false };
           })(),
         },
-        push: (() => {
-          const val = String(process.env.PAYLOAD_FORCE_PUSH || '').toLowerCase().trim();
-          return val === 'true' || val === '1' || val === 'yes' || process.env.NODE_ENV === 'development';
-        })(),
+        push: true,
       })
     : sqliteAdapter({
         client: {
