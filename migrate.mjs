@@ -14,17 +14,8 @@ if (!dbUrl) {
   process.exit(0);
 }
 
-console.log('🚀 Bắt đầu quá trình đồng bộ schema & migration database PostgreSQL...');
+console.log('🚀 Bắt đầu quá trình migration database PostgreSQL...');
 
-// Bước 1: Chạy Drizzle Kit để đồng bộ / tự động tạo toàn bộ bảng từ Payload config
-try {
-  console.log('📦 Bước 1: Khởi tạo/đồng bộ bảng từ Payload CMS Collections...');
-  execSync('npx tsx scripts/sync-schema.ts', { stdio: 'inherit' });
-} catch (e) {
-  console.warn('⚠️ Bước 1 (sync-schema) tiếp tục sang bước 2...');
-}
-
-// Bước 2: Chạy các migration statements bổ sung
 const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
 
 const pool = new Pool({
