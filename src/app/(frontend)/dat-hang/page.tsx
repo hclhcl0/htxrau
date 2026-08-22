@@ -12,21 +12,26 @@ export const metadata: Metadata = {
 
 const getProducts = unstable_cache(
   async () => {
-    const payload = await getPayload({ config: configPromise });
-    const res = await payload.find({
-      collection: 'products',
-      where: { status: { not_equals: 'out_of_stock' } },
-      sort: 'name',
-      limit: 200,
-      depth: 0,
-    });
-    return res.docs.map((p: any) => ({
-      id: p.id,
-      name: p.name,
-      price: p.price,
-      unit: p.unit || 'kg',
-      slug: p.slug,
-    }));
+    try {
+      const payload = await getPayload({ config: configPromise });
+      const res = await payload.find({
+        collection: 'products',
+        where: { status: { not_equals: 'out_of_stock' } },
+        sort: 'name',
+        limit: 200,
+        depth: 0,
+      });
+      return res.docs.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        unit: p.unit || 'kg',
+        slug: p.slug,
+      }));
+    } catch (e) {
+      console.warn('Failed to fetch products for order page, using empty fallback.');
+      return [];
+    }
   },
   ['products-for-order'],
   { revalidate: 300, tags: ['products'] },
@@ -34,15 +39,26 @@ const getProducts = unstable_cache(
 
 const getSiteSettings = unstable_cache(
   async () => {
-    const payload = await getPayload({ config: configPromise });
-    const s = (await payload.findGlobal({ slug: 'site-settings', depth: 0 })) as any;
-    return {
-      phone: s?.header?.hotline?.phone || '0905 559 206',
-      bankName: s?.payment?.bankName || '',
-      bankAccount: s?.payment?.bankAccount || '',
-      bankOwner: s?.payment?.bankOwner || '',
-      qrImageUrl: s?.payment?.qrImageUrl || '',
-    };
+    try {
+      const payload = await getPayload({ config: configPromise });
+      const s = (await payload.findGlobal({ slug: 'site-settings', depth: 0 })) as any;
+      return {
+        phone: s?.header?.hotline?.phone || '0905 559 206',
+        bankName: s?.payment?.bankName || '',
+        bankAccount: s?.payment?.bankAccount || '',
+        bankOwner: s?.payment?.bankOwner || '',
+        qrImageUrl: s?.payment?.qrImageUrl || '',
+      };
+    } catch (e) {
+      console.warn('Failed to fetch site-settings for order page, using default fallback.');
+      return {
+        phone: '0905 559 206',
+        bankName: '',
+        bankAccount: '',
+        bankOwner: '',
+        qrImageUrl: '',
+      };
+    }
   },
   ['site-settings-order'],
   { revalidate: 300, tags: ['site-settings'] },
