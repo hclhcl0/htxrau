@@ -1,5 +1,5 @@
 {
-  "buildCommand": "next build",
+  "buildCommand": "node migrate.mjs && next build",
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["sin1"]

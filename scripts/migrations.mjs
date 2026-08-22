@@ -3728,5 +3728,213 @@ export const MIGRATION_STATEMENTS = [
     ALTER TABLE "site_settings_menu_menu_items_sub_items"
       ADD CONSTRAINT "site_settings_menu_menu_items_sub_items_parent_fk"
       FOREIGN KEY ("_parent_id") REFERENCES "site_settings_menu_menu_items" ("id") ON DELETE cascade ON UPDATE no action;
-  END $$;`
+  END $$;`,
+
+  // ==================================================
+  // BATCH: HTX Rau Tuy Loan - Products Table
+  // ==================================================
+  `CREATE TABLE IF NOT EXISTS "products" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "name" varchar NOT NULL,
+    "slug" varchar NOT NULL,
+    "category" varchar NOT NULL DEFAULT 'rau-an-la',
+    "standard" varchar NOT NULL DEFAULT 'vietgap',
+    "price" numeric NOT NULL,
+    "original_price" numeric,
+    "unit" varchar NOT NULL DEFAULT 'Túi 500g',
+    "status" varchar DEFAULT 'in_stock',
+    "is_featured" boolean DEFAULT false,
+    "origin" varchar DEFAULT 'HTX rau Túy Loan',
+    "image_id" integer,
+    "content" jsonb,
+    "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+    "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  )`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS "products_slug_idx" ON "products" USING btree ("slug")`,
+  `CREATE INDEX IF NOT EXISTS "products_image_idx" ON "products" USING btree ("image_id")`,
+  `CREATE INDEX IF NOT EXISTS "products_updated_at_idx" ON "products" USING btree ("updated_at")`,
+  `CREATE INDEX IF NOT EXISTS "products_created_at_idx" ON "products" USING btree ("created_at")`,
+  `DO $$ BEGIN ALTER TABLE "products" ADD CONSTRAINT "products_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "products_gallery" (
+    "_order" integer NOT NULL,
+    "_parent_id" integer NOT NULL,
+    "id" varchar PRIMARY KEY NOT NULL,
+    "image_id" integer NOT NULL,
+    "caption" varchar
+  )`,
+  `CREATE INDEX IF NOT EXISTS "products_gallery_order_idx" ON "products_gallery" USING btree ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "products_gallery_parent_id_idx" ON "products_gallery" USING btree ("_parent_id")`,
+  `CREATE INDEX IF NOT EXISTS "products_gallery_image_idx" ON "products_gallery" USING btree ("image_id")`,
+  `DO $$ BEGIN ALTER TABLE "products_gallery" ADD CONSTRAINT "products_gallery_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "products_gallery" ADD CONSTRAINT "products_gallery_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "products_rels" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "order" integer,
+    "parent_id" integer NOT NULL,
+    "path" varchar NOT NULL,
+    "media_id" integer,
+    "users_id" integer,
+    "categories_id" integer
+  )`,
+  `CREATE INDEX IF NOT EXISTS "products_rels_order_idx" ON "products_rels" USING btree ("order")`,
+  `CREATE INDEX IF NOT EXISTS "products_rels_parent_idx" ON "products_rels" USING btree ("parent_id")`,
+  `CREATE INDEX IF NOT EXISTS "products_rels_path_idx" ON "products_rels" USING btree ("path")`,
+  `DO $$ BEGIN ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "products_rels" ADD CONSTRAINT "products_rels_media_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: HTX Rau Tuy Loan - Certificates Table
+  // ==================================================
+  `CREATE TABLE IF NOT EXISTS "certificates" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "title" varchar NOT NULL,
+    "code" varchar,
+    "issuer" varchar NOT NULL DEFAULT 'Tổ chức Chứng nhận Nông nghiệp VietGAP',
+    "issued_date" timestamp(3) with time zone,
+    "expiry_date" timestamp(3) with time zone,
+    "image_id" integer,
+    "file_id" integer,
+    "scope" varchar DEFAULT 'Sản xuất và sơ chế các loại rau, củ, quả an toàn theo tiêu chuẩn VietGAP',
+    "summary" varchar,
+    "order_num" numeric,
+    "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+    "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS "certificates_image_idx" ON "certificates" USING btree ("image_id")`,
+  `CREATE INDEX IF NOT EXISTS "certificates_file_idx" ON "certificates" USING btree ("file_id")`,
+  `CREATE INDEX IF NOT EXISTS "certificates_updated_at_idx" ON "certificates" USING btree ("updated_at")`,
+  `CREATE INDEX IF NOT EXISTS "certificates_created_at_idx" ON "certificates" USING btree ("created_at")`,
+  `DO $$ BEGIN ALTER TABLE "certificates" ADD CONSTRAINT "certificates_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "certificates" ADD CONSTRAINT "certificates_file_id_media_id_fk" FOREIGN KEY ("file_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "certificates_rels" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "order" integer,
+    "parent_id" integer NOT NULL,
+    "path" varchar NOT NULL,
+    "media_id" integer
+  )`,
+  `CREATE INDEX IF NOT EXISTS "certificates_rels_order_idx" ON "certificates_rels" USING btree ("order")`,
+  `CREATE INDEX IF NOT EXISTS "certificates_rels_parent_idx" ON "certificates_rels" USING btree ("parent_id")`,
+  `CREATE INDEX IF NOT EXISTS "certificates_rels_path_idx" ON "certificates_rels" USING btree ("path")`,
+  `DO $$ BEGIN ALTER TABLE "certificates_rels" ADD CONSTRAINT "certificates_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."certificates"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "certificates_rels" ADD CONSTRAINT "certificates_rels_media_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: HTX Rau Tuy Loan - Orders Table
+  // ==================================================
+  `CREATE TABLE IF NOT EXISTS "orders" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "order_code" varchar,
+    "status" varchar NOT NULL DEFAULT 'new',
+    "source" varchar DEFAULT 'website',
+    "payment_method" varchar DEFAULT 'cod',
+    "customer_name" varchar NOT NULL,
+    "customer_phone" varchar NOT NULL,
+    "customer_address" varchar,
+    "total_note" varchar,
+    "requested_delivery_date" timestamp(3) with time zone,
+    "total_amount" numeric,
+    "assigned_to_id" integer,
+    "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+    "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS "orders_order_code_idx" ON "orders" USING btree ("order_code")`,
+  `CREATE INDEX IF NOT EXISTS "orders_status_idx" ON "orders" USING btree ("status")`,
+  `CREATE INDEX IF NOT EXISTS "orders_assigned_to_idx" ON "orders" USING btree ("assigned_to_id")`,
+  `CREATE INDEX IF NOT EXISTS "orders_updated_at_idx" ON "orders" USING btree ("updated_at")`,
+  `CREATE INDEX IF NOT EXISTS "orders_created_at_idx" ON "orders" USING btree ("created_at")`,
+  `DO $$ BEGIN ALTER TABLE "orders" ADD CONSTRAINT "orders_assigned_to_id_users_id_fk" FOREIGN KEY ("assigned_to_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "orders_items" (
+    "_order" integer NOT NULL,
+    "_parent_id" integer NOT NULL,
+    "id" varchar PRIMARY KEY NOT NULL,
+    "product_id" integer,
+    "product_name" varchar,
+    "quantity" numeric NOT NULL DEFAULT 1,
+    "unit" varchar NOT NULL DEFAULT 'kg',
+    "unit_price" numeric,
+    "item_note" varchar
+  )`,
+  `CREATE INDEX IF NOT EXISTS "orders_items_order_idx" ON "orders_items" USING btree ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "orders_items_parent_id_idx" ON "orders_items" USING btree ("_parent_id")`,
+  `CREATE INDEX IF NOT EXISTS "orders_items_product_id_idx" ON "orders_items" USING btree ("product_id")`,
+  `DO $$ BEGIN ALTER TABLE "orders_items" ADD CONSTRAINT "orders_items_product_id_products_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."products"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "orders_items" ADD CONSTRAINT "orders_items_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "orders_rels" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "order" integer,
+    "parent_id" integer NOT NULL,
+    "path" varchar NOT NULL,
+    "users_id" integer,
+    "products_id" integer
+  )`,
+  `CREATE INDEX IF NOT EXISTS "orders_rels_order_idx" ON "orders_rels" USING btree ("order")`,
+  `CREATE INDEX IF NOT EXISTS "orders_rels_parent_idx" ON "orders_rels" USING btree ("parent_id")`,
+  `CREATE INDEX IF NOT EXISTS "orders_rels_path_idx" ON "orders_rels" USING btree ("path")`,
+  `DO $$ BEGIN ALTER TABLE "orders_rels" ADD CONSTRAINT "orders_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."orders"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  // ==================================================
+  // BATCH: HTX Rau Tuy Loan - Site Settings Columns & Blocks
+  // ==================================================
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "telegram_bot_token" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "telegram_chat_id" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "smtp_host" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "smtp_port" integer DEFAULT 587; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "smtp_secure" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "smtp_user" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "smtp_pass" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "sender_email" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "receiver_email" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "bank_name" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "bank_account" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "bank_owner" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "qr_image_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings" ADD CONSTRAINT "site_settings_qr_image_id_media_id_fk" FOREIGN KEY ("qr_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "site_settings_blocks_product_section" (
+    "_order" integer NOT NULL,
+    "_parent_id" integer NOT NULL,
+    "_path" text NOT NULL,
+    "id" varchar PRIMARY KEY NOT NULL,
+    "title" varchar DEFAULT 'Rau Củ Tươi Sạch Hôm Nay',
+    "subtitle" varchar,
+    "category_filter" varchar DEFAULT 'all',
+    "limit" integer DEFAULT 8,
+    "block_name" varchar
+  )`,
+  `CREATE INDEX IF NOT EXISTS "site_settings_blocks_product_section_order_idx" ON "site_settings_blocks_product_section" ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "site_settings_blocks_product_section_parent_id_idx" ON "site_settings_blocks_product_section" ("_parent_id")`,
+  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_product_section" ADD CONSTRAINT "ssb_prod_parent_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."site_settings"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "site_settings_blocks_process_steps_section" (
+    "_order" integer NOT NULL,
+    "_parent_id" integer NOT NULL,
+    "_path" text NOT NULL,
+    "id" varchar PRIMARY KEY NOT NULL,
+    "title" varchar DEFAULT 'Quy Trình Canh Tác 6 Bước VietGAP',
+    "subtitle" varchar,
+    "block_name" varchar
+  )`,
+  `CREATE INDEX IF NOT EXISTS "site_settings_blocks_process_steps_section_order_idx" ON "site_settings_blocks_process_steps_section" ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "site_settings_blocks_process_steps_section_parent_id_idx" ON "site_settings_blocks_process_steps_section" ("_parent_id")`,
+  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_process_steps_section" ADD CONSTRAINT "ssb_proc_parent_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."site_settings"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  `CREATE TABLE IF NOT EXISTS "site_settings_blocks_certificates_section" (
+    "_order" integer NOT NULL,
+    "_parent_id" integer NOT NULL,
+    "_path" text NOT NULL,
+    "id" varchar PRIMARY KEY NOT NULL,
+    "title" varchar DEFAULT 'Chứng Nhận Chất Lượng & OCOP',
+    "subtitle" varchar,
+    "limit" integer DEFAULT 6,
+    "block_name" varchar
+  )`,
+  `CREATE INDEX IF NOT EXISTS "site_settings_blocks_certificates_section_order_idx" ON "site_settings_blocks_certificates_section" ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "site_settings_blocks_certificates_section_parent_id_idx" ON "site_settings_blocks_certificates_section" ("_parent_id")`,
+  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_certificates_section" ADD CONSTRAINT "ssb_cert_parent_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."site_settings"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`
 ];
