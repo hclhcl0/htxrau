@@ -5,6 +5,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 import pg from 'pg';
 const { Pool } = pg;
 import { MIGRATION_STATEMENTS } from './scripts/migrations.mjs';
+import { ALL_TABLE_CREATES, ALL_COLUMN_ALTERS } from './scripts/complete-schema.mjs';
 import { ALTER_STATEMENTS, SEED_STATEMENTS } from './scripts/seed-data.mjs';
 import { execSync } from 'child_process';
 
@@ -36,7 +37,7 @@ async function run() {
   try {
     let ok = 0, skipped = 0;
 
-    // 1. Run migrations & schema tables
+    // 1. Run core migrations
     for (let i = 0; i < MIGRATION_STATEMENTS.length; i++) {
       const statement = MIGRATION_STATEMENTS[i];
       try {
@@ -47,11 +48,31 @@ async function run() {
       }
     }
 
+    // 1b. Run all complete table creates (ensures 100% of tables like pages_rels, articles_rels exist)
+    if (Array.isArray(ALL_TABLE_CREATES)) {
+      for (let i = 0; i < ALL_TABLE_CREATES.length; i++) {
+        try {
+          await client.query(ALL_TABLE_CREATES[i]);
+          ok++;
+        } catch (err) {
+          skipped++;
+        }
+      }
+    }
+
     console.log(`\n✅ Migration hoàn tất: ${ok} applied, ${skipped} skipped`);
 
-    // 2. Run column alters
+    // 2. Run all column alters
     console.log('🔧 Đang đồng bộ và bổ sung tất cả các cột của bảng...');
     let alterOk = 0;
+    if (Array.isArray(ALL_COLUMN_ALTERS)) {
+      for (let i = 0; i < ALL_COLUMN_ALTERS.length; i++) {
+        try {
+          await client.query(ALL_COLUMN_ALTERS[i]);
+          alterOk++;
+        } catch (err) {}
+      }
+    }
     if (Array.isArray(ALTER_STATEMENTS)) {
       for (let i = 0; i < ALTER_STATEMENTS.length; i++) {
         try {

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev -H 127.0.0.1",
-    "build": "npx tsx scripts/sync-schema.mjs && node migrate.mjs && next build",
-    "start": "npx tsx scripts/sync-schema.mjs && node migrate.mjs && next start",
+    "build": "node migrate.mjs && next build",
+    "start": "node migrate.mjs && next start",
     "lint": "eslint",
     "payload": "payload",
     "generate:types": "payload generate:types"

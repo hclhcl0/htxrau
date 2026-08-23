@@ -43,10 +43,26 @@ export async function generateStaticParams() {
   }
 }
 
+function isReservedSlug(slug: string, slugArray?: string[]): boolean {
+  if (!slug) return true;
+  if (slugArray && (slugArray[0] === 'media' || slugArray[0] === 'api' || slugArray[0] === 'admin' || slugArray[0] === '_next')) {
+    return true;
+  }
+  if (slug.startsWith('media/') || slug.startsWith('api/') || slug.startsWith('admin/')) {
+    return true;
+  }
+  // File extensions
+  if (/\.(webp|jpg|jpeg|png|gif|svg|ico|css|js|map|json|txt|pdf|woff|woff2|ttf)$/i.test(slug)) {
+    return true;
+  }
+  return false;
+}
+
 // ─────────────────────────────────────────────
 // Data fetcher
 // ─────────────────────────────────────────────
 async function getCategoryBySlug(slug: string) {
+  if (isReservedSlug(slug)) return null;
   try {
     const payload = await getPayload({ config: configPromise });
     const slugParts = slug.split('/');
@@ -65,6 +81,7 @@ async function getCategoryBySlug(slug: string) {
 }
 // ─────────────────────────────────────────────
 async function getPageBySlug(slug: string) {
+  if (isReservedSlug(slug)) return null;
   try {
     const payload = await getPayload({ config: configPromise });
     const { docs } = await payload.find({
@@ -91,12 +108,16 @@ export async function generateMetadata({
   const { slug: slugArray } = await params;
   const slug = slugArray.join('/');
 
+  if (isReservedSlug(slug, slugArray)) {
+    return { title: 'Không tìm thấy trang' };
+  }
+
   const page = await getPageBySlug(slug);
   if (!page) {
     const category = await getCategoryBySlug(slug);
     if (category) {
       return {
-        title: `${category.name} | Rau Sạch VietGAP`,
+        title: `${category.name} | HTX Rau Túy Loan`,
         description: category.description || '',
       };
     }
@@ -109,10 +130,10 @@ export async function generateMetadata({
   const ogImageUrl = seo.ogImage?.url || '';
 
   return {
-    title: `${seoTitle} | CDC Đà Nẵng`,
+    title: `${seoTitle} | HTX Rau An Toàn Túy Loan`,
     description: seoDesc,
     openGraph: {
-      title: `${seoTitle} | CDC Đà Nẵng`,
+      title: `${seoTitle} | HTX Rau An Toàn Túy Loan`,
       description: seoDesc,
       images: ogImageUrl ? [{ url: ogImageUrl }] : [],
       type: 'website',
@@ -204,6 +225,10 @@ export default async function DynamicPage({
   const sp = await searchParams;
   const pageNumber = typeof sp.page === 'string' ? parseInt(sp.page) : 1;
   const slug = slugArray.join('/');
+
+  if (isReservedSlug(slug, slugArray)) {
+    notFound();
+  }
 
   const page = await getPageBySlug(slug);
 
