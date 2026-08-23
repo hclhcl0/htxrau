@@ -86,7 +86,9 @@ function buildAllowedOrigins(): string[] {
 }
 
 export default buildConfig({
-  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 
+             (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 
+             (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://htxrau.vercel.app')),
   sharp,
   cors: '*',
   csrf: buildAllowedOrigins(),
