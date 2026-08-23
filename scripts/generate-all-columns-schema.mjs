@@ -87,17 +87,23 @@ function escapePgValue(val, colName, boolCols) {
   if (typeof val === 'boolean') return val ? 'TRUE' : 'FALSE';
   if (typeof val === 'number') return String(val);
   if (typeof val === 'string') {
+    // Fix media file URLs: /api/media/file/X → /media/X (served as static from public/media/)
+    let fixedVal = val;
+    if (fixedVal.startsWith('/api/media/file/')) {
+      fixedVal = fixedVal.replace('/api/media/file/', '/media/');
+    }
+
     // Detect JSON (jsonb)
     if (
-      (val.startsWith('{') && val.endsWith('}')) ||
-      (val.startsWith('[') && val.endsWith(']'))
+      (fixedVal.startsWith('{') && fixedVal.endsWith('}')) ||
+      (fixedVal.startsWith('[') && fixedVal.endsWith(']'))
     ) {
       try {
-        JSON.parse(val);
-        return `'${val.replace(/'/g, "''")}'::jsonb`;
+        JSON.parse(fixedVal);
+        return `'${fixedVal.replace(/'/g, "''")}'::jsonb`;
       } catch (_) {}
     }
-    return `'${val.replace(/'/g, "''")}'`;
+    return `'${fixedVal.replace(/'/g, "''")}'`;
   }
   if (typeof val === 'object') {
     return `'${JSON.stringify(val).replace(/'/g, "''")}'::jsonb`;
