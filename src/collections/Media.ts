@@ -23,7 +23,7 @@ export const Media: CollectionConfig = {
     delete: ({ req: { user } }) => ['admin', 'editor'].includes(user?.role as string),
   },
   upload: {
-    staticDir: 'media',
+    staticDir: 'public/media',
     formatOptions: {
       format: 'webp',
       options: { quality: 80 },
