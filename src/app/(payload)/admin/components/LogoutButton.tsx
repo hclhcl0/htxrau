@@ -1,28 +1,14 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@payloadcms/ui'
 
 export const LogoutButtonCustom: React.FC = () => {
-  const { logOut } = useAuth()
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
 
-  const handleLogout = async () => {
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault()
     setLoading(true)
-    try {
-      await logOut()
-    } catch {
-      // fallback: gọi API trực tiếp
-      await fetch('/api/users/logout', {
-        method: 'POST',
-        credentials: 'include',
-      }).catch(() => {})
-    } finally {
-      // Hard navigate để clear mọi trạng thái React
-      window.location.href = '/admin'
-    }
+    window.location.href = '/api/admin-logout'
   }
 
   return (

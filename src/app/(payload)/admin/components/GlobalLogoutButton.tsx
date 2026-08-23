@@ -2,26 +2,15 @@
 
 import React, { useState } from 'react'
 import { LogOut } from 'lucide-react'
-import { useAuth } from '@payloadcms/ui'
 
 export const GlobalLogoutButton = ({ children }: { children: React.ReactNode }) => {
-  const { logOut } = useAuth()
   const [loading, setLoading] = useState(false)
 
-  const handleLogout = async (e: React.MouseEvent) => {
+  const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault()
     setLoading(true)
-    try {
-      if (typeof logOut === 'function') {
-        await logOut()
-      } else {
-        await fetch('/api/users/logout', { method: 'POST', credentials: 'include' })
-      }
-    } catch {
-      // fallback
-    } finally {
-      window.location.href = '/admin'
-    }
+    // Direct server-side redirect that clears cookies via Set-Cookie headers
+    window.location.href = '/api/admin-logout'
   }
 
   return (
