@@ -32,6 +32,8 @@ import { AdminLogo as AdminLogo_0ec271e8bfb19d99b0e35d61da772365 } from '@/app/(
 import { default as default_dba050a67c75dfc8bf48ee1410f2a2d2 } from '@/components/Admin/GuideNavLink.tsx'
 import { default as default_459aafd36f902eafa44c6f9d2a340370 } from '@/components/Admin/BulkUploadLink.tsx'
 import { AuthorWelcome as AuthorWelcome_59589bfc5409bc24cf137e45629d787e } from '@/app/(payload)/admin/components/AuthorWelcome.tsx'
+import { QuickAccessDashboard as QuickAccessDashboard_custom } from '@/components/Admin/QuickAccessDashboard.tsx'
+import { LogoutButtonCustom as LogoutButtonCustom_custom } from '@/app/(payload)/admin/components/LogoutButton.tsx'
 import { default as default_1aa2999a49364743565bf91f3348acdc } from '@/components/Admin/UserGuideView.tsx'
 import { default as default_11bea0dfd321d7b114d61c03fc2ce164 } from '@/components/Admin/BulkUploadView.tsx'
 import { S3ClientUploadHandler as S3ClientUploadHandler_s3 } from '@payloadcms/storage-s3/client'
@@ -76,6 +78,8 @@ export const importMap = {
   "@/components/Admin/GuideNavLink.tsx#default": default_dba050a67c75dfc8bf48ee1410f2a2d2,
   "@/components/Admin/BulkUploadLink.tsx#default": default_459aafd36f902eafa44c6f9d2a340370,
   "@/app/(payload)/admin/components/AuthorWelcome.tsx#AuthorWelcome": AuthorWelcome_59589bfc5409bc24cf137e45629d787e,
+  "@/components/Admin/QuickAccessDashboard.tsx#QuickAccessDashboard": QuickAccessDashboard_custom,
+  "@/app/(payload)/admin/components/LogoutButton.tsx#LogoutButtonCustom": LogoutButtonCustom_custom,
   "@/components/Admin/UserGuideView.tsx#default": default_1aa2999a49364743565bf91f3348acdc,
   "@/components/Admin/BulkUploadView.tsx#default": default_11bea0dfd321d7b114d61c03fc2ce164,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

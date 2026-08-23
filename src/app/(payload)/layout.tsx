@@ -25,7 +25,9 @@ const serverFunction = async function (args: any) {
 const Layout = ({ children }: Args) => {
   return (
     <RootLayout config={configPromise} importMap={importMap} serverFunction={serverFunction}>
-      {children}
+      <GlobalLogoutButton>
+        {children}
+      </GlobalLogoutButton>
     </RootLayout>
   )
 }
