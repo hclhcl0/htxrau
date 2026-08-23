@@ -5,7 +5,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 import pg from 'pg';
 const { Pool } = pg;
 import { MIGRATION_STATEMENTS } from './scripts/migrations.mjs';
-import { SEED_STATEMENTS } from './scripts/seed-data.mjs';
+import { ALTER_STATEMENTS, SEED_STATEMENTS } from './scripts/seed-data.mjs';
 import { execSync } from 'child_process';
 
 const dbUrl = process.env.DATABASE_URI || process.env.POSTGRES_URL || process.env.DATABASE_URL;
@@ -49,7 +49,20 @@ async function run() {
 
     console.log(`\n✅ Migration hoàn tất: ${ok} applied, ${skipped} skipped`);
 
-    // 2. Run seed data
+    // 2. Run column alters
+    console.log('🔧 Đang đồng bộ và bổ sung tất cả các cột của bảng...');
+    let alterOk = 0;
+    if (Array.isArray(ALTER_STATEMENTS)) {
+      for (let i = 0; i < ALTER_STATEMENTS.length; i++) {
+        try {
+          await client.query(ALTER_STATEMENTS[i]);
+          alterOk++;
+        } catch (err) {}
+      }
+    }
+    console.log(`✅ Bổ sung ${alterOk} cột thành công.`);
+
+    // 3. Run seed data
     console.log('🌱 Đang đồng bộ và nạp (seed) toàn bộ dữ liệu từ local lên PostgreSQL...');
     let seedOk = 0, seedSkipped = 0;
     for (let i = 0; i < SEED_STATEMENTS.length; i++) {
@@ -58,6 +71,7 @@ async function run() {
         await client.query(stmt);
         seedOk++;
       } catch (err) {
+        console.error(`⚠️ Lỗi khi nạp câu lệnh ${i}:`, err.message);
         seedSkipped++;
       }
     }
