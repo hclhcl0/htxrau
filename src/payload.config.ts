@@ -97,7 +97,7 @@ export default buildConfig({
     // Khởi chạy Cronjob đồng bộ Video
     if (process.env.NODE_ENV !== 'development') { // Tránh chạy nhiều lần khi dev hot-reload
       const { initVideoSyncCron } = await import('./cron/videoSync.ts');
-      initVideoSyncCron();
+      initVideoSyncCron(payload);
     }
   },
   admin: {
@@ -209,6 +209,42 @@ export default buildConfig({
         },
         push: false,
       }),
+  endpoints: [
+    {
+      path: '/setup-admin',
+      method: 'get',
+      handler: async (req: any) => {
+        const { payload } = req;
+        const existing = await payload.find({
+          collection: 'users',
+          where: { email: { equals: 'admin@test.com' } },
+        });
+
+        if (existing.docs.length > 0) {
+          await payload.update({
+            collection: 'users',
+            id: existing.docs[0].id,
+            data: {
+              password: 'admin',
+              role: 'admin',
+            },
+          });
+          return Response.json({ success: true, message: 'Đã cập nhật mật khẩu admin@test.com thành admin' });
+        } else {
+          await payload.create({
+            collection: 'users',
+            data: {
+              email: 'admin@test.com',
+              password: 'admin',
+              name: 'Super Admin',
+              role: 'admin',
+            },
+          });
+          return Response.json({ success: true, message: 'Đã tạo tài khoản admin@test.com với mật khẩu admin' });
+        }
+      },
+    },
+  ],
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
