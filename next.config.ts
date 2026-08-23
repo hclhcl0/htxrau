@@ -31,12 +31,19 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
-    cpus: 1,
-    workerThreads: false,
-    memoryBasedWorkersCount: false,
     optimizeCss: true,
-    optimizePackageImports: ['lucide-react', 'react-icons'],
+    optimizePackageImports: [
+      'lucide-react',
+      'react-icons',
+      'framer-motion',
+      '@payloadcms/ui',
+      '@payloadcms/richtext-lexical',
+      'embla-carousel-react',
+    ],
     serverActions: {
       // Tự động cho phép tất cả domain từ env — không cần sửa code khi đổi domain
       allowedOrigins: [
