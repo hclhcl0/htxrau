@@ -27,6 +27,26 @@ const tables = [
   'site_settings_menu_menu_items'
 ];
 
+const booleanColumns = new Set([
+  'auto_zalo_broadcast',
+  'is_pinned',
+  'is_featured',
+  'featured',
+  'is_a_i_generated',
+  'active',
+  'is_active',
+  'open_in_new_tab',
+  'show_price',
+  'show_in_menu',
+  'published'
+]);
+
+function isBoolCol(colName) {
+  if (booleanColumns.has(colName)) return true;
+  if (colName.startsWith('is_') || colName.startsWith('auto_') || colName.startsWith('has_') || colName.endsWith('_tab')) return true;
+  return false;
+}
+
 let alterSqls = [];
 
 for (const table of tables) {
@@ -42,13 +62,15 @@ for (const table of tables) {
     // determine type roughly
     const val = row[col];
     let type = 'varchar';
-    if (typeof val === 'number') {
-      type = Number.isInteger(val) ? 'numeric' : 'numeric';
+    if (isBoolCol(col)) {
+      type = 'boolean';
+    } else if (typeof val === 'number') {
+      type = 'numeric';
     } else if (typeof val === 'boolean') {
       type = 'boolean';
-    } else if (col === 'content' || col === 'description' || col === 'items' || col.includes('json')) {
+    } else if (col === 'content' || col === 'home_content' || col === 'items' || (typeof val === 'string' && val.startsWith('{"root"'))) {
       type = 'jsonb';
-    } else if (col.includes('_at') || col.includes('date')) {
+    } else if (col.includes('_at') || col.includes('date') || col === 'lock_until') {
       type = 'timestamp(3) with time zone';
     }
 
@@ -85,18 +107,22 @@ const tablesToExport = [
 
 function escapePgValue(val, colName) {
   if (val === null || val === undefined) return 'NULL';
-  if (typeof val === 'number') return val;
+
+  if (isBoolCol(colName)) {
+    if (val === 1 || val === '1' || val === true || val === 'true') return 'TRUE';
+    if (val === 0 || val === '0' || val === false || val === 'false') return 'FALSE';
+    return 'FALSE';
+  }
+
   if (typeof val === 'boolean') return val ? 'TRUE' : 'FALSE';
+  if (typeof val === 'number') return val;
   if (typeof val === 'string') {
-    // If it looks like JSON
-    if ((val.startsWith('{') && val.endsWith('}')) || (val.startsWith('[') && val.endsWith(']'))) {
+    if (colName === 'content' || colName === 'home_content' || colName === 'items' || (val.startsWith('{"root"') && val.endsWith('}'))) {
       try {
         JSON.parse(val);
         const jsonEscaped = val.replace(/'/g, "''");
         return `'${jsonEscaped}'::jsonb`;
-      } catch (e) {
-        // regular string
-      }
+      } catch (e) {}
     }
     const escaped = val.replace(/'/g, "''");
     return `'${escaped}'`;
