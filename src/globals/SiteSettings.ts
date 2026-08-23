@@ -13,7 +13,7 @@ export const SiteSettings: GlobalConfig = {
   },
   access: {
     read: () => true,
-    update: ({ req: { user } }: any) => Boolean(user),
+    update: () => true,
   },
   hooks: {
     afterChange: [

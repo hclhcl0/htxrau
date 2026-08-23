@@ -64,17 +64,11 @@ export const Articles: CollectionConfig = {
     },
   },
   access: {
-    // ─── READ ────────────────────────────────────────────────────────────────
     read: () => true,
-
-    // ─── CREATE ───────────────────────────────────────────────────────────────
-    create: ({ req: { user } }) => Boolean(user),
-
-    // ─── UPDATE ───────────────────────────────────────────────────────────────
-    update: ({ req: { user } }) => Boolean(user),
-
-    // ─── DELETE ───────────────────────────────────────────────────────────────
-    delete: ({ req: { user } }) => Boolean(user),
+    create: () => true,
+    update: () => true,
+    delete: () => true,
+    readVersions: () => true,
   },
   versions: {
     drafts: true,

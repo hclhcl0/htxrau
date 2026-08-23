@@ -24,11 +24,11 @@ export const Users: CollectionConfig = {
     tokenExpiration: 28800, // 8 tiếng
   },
   access: {
-    admin: ({ req: { user } }) => Boolean(user),
-    read: ({ req: { user } }) => Boolean(user),
-    create: ({ req: { user } }) => Boolean(user),
-    update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => Boolean(user),
+    admin: () => true,
+    read: () => true,
+    create: () => true,
+    update: () => true,
+    delete: () => true,
   },
   fields: [
     {
@@ -45,7 +45,7 @@ export const Users: CollectionConfig = {
         { label: 'Người dùng (User)', value: 'user' },
       ],
       access: {
-        update: ({ req: { user } }) => Boolean(user),
+        update: () => true,
       },
       admin: {
         position: 'sidebar',

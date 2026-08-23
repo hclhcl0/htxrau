@@ -20,9 +20,9 @@ export const Orders: CollectionConfig = {
   },
   access: {
     read: ({ req: { user } }) => Boolean(user),
-    create: ({ req: { user } }) => Boolean(user),
-    update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => Boolean(user),
+    create: () => true,
+    update: () => true,
+    delete: () => true,
   },
   fields: [
     // ─── Mã đơn hàng (Sidebar) ────────────────────────────────────────────────
