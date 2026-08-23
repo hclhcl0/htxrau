@@ -198,13 +198,13 @@ export default buildConfig({
             return { rejectUnauthorized: false };
           })(),
         },
-        push: true,
+        push: false,
       })
     : sqliteAdapter({
         client: {
           url: process.env.SQLITE_URL || 'file:./payload-data.db',
         },
-        push: true,
+        push: false,
       }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

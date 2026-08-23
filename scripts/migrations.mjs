@@ -223,7 +223,7 @@ export const MIGRATION_STATEMENTS = [
       "version_created_at" timestamp(3) with time zone DEFAULT now(),
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
       "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-      "latest" integer DEFAULT 1
+      "latest" boolean DEFAULT true
     );
 
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "parent_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
@@ -243,7 +243,7 @@ export const MIGRATION_STATEMENTS = [
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version__status" varchar DEFAULT 'published'; EXCEPTION WHEN duplicate_column THEN null; END $$;
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_updated_at" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_created_at" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;
-    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "latest" integer DEFAULT 1; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "latest" boolean DEFAULT true; EXCEPTION WHEN duplicate_column THEN null; END $$;
 
     CREATE TABLE IF NOT EXISTS "_articles_v_rels" (
       "id" serial PRIMARY KEY NOT NULL,
