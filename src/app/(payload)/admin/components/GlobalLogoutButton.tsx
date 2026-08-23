@@ -2,24 +2,24 @@
 
 import React, { useState } from 'react'
 import { LogOut } from 'lucide-react'
+import { useAuth } from '@payloadcms/ui'
 
 export const GlobalLogoutButton = ({ children }: { children: React.ReactNode }) => {
+  const { logOut } = useAuth()
   const [loading, setLoading] = useState(false)
 
   const handleLogout = async (e: React.MouseEvent) => {
     e.preventDefault()
     setLoading(true)
     try {
-      // Gọi Payload API để xóa session cookie phía server
-      await fetch('/api/users/logout', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-      })
+      if (typeof logOut === 'function') {
+        await logOut()
+      } else {
+        await fetch('/api/users/logout', { method: 'POST', credentials: 'include' })
+      }
     } catch {
-      // Kể cả lỗi vẫn redirect để tránh bị kẹt
+      // fallback
     } finally {
-      // Hard redirect về trang đăng nhập sau khi xóa cookie
       window.location.href = '/admin'
     }
   }
