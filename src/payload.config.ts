@@ -122,6 +122,9 @@ export default buildConfig({
         '@/components/Admin/GuideNavLink.tsx',
         '@/components/Admin/BulkUploadLink.tsx',
       ],
+      logout: {
+        Button: '@/app/(payload)/admin/components/LogoutButton.tsx#LogoutButtonCustom',
+      },
       beforeDashboard: [
         '@/components/Admin/QuickAccessDashboard.tsx#QuickAccessDashboard',
       ]
