@@ -4601,5 +4601,56 @@ export const MIGRATION_STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS "site_settings_blocks_certificates_section_order_idx" ON "site_settings_blocks_certificates_section" ("_order")`,
   `CREATE INDEX IF NOT EXISTS "site_settings_blocks_certificates_section_parent_id_idx" ON "site_settings_blocks_certificates_section" ("_parent_id")`,
-  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_certificates_section" ADD CONSTRAINT "ssb_cert_parent_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."site_settings"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`
+  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_certificates_section" ADD CONSTRAINT "ssb_cert_parent_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."site_settings"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  // ====================================================
+  // BATCH: video_channels missing columns (platform, channel_url, etc.)
+  // ====================================================
+  `DO $$ BEGIN ALTER TABLE "video_channels" ADD COLUMN "platform" varchar DEFAULT 'youtube'; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "video_channels" ADD COLUMN "slug" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "video_channels" ADD COLUMN "channel_url" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "video_channels" ADD COLUMN "channel_id" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "video_channels" ADD COLUMN "tiktok_handle" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "video_channels" ADD COLUMN "avatar_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "video_channels" ADD CONSTRAINT "video_channels_avatar_id_media_id_fk" FOREIGN KEY ("avatar_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  // products missing columns
+  `DO $$ BEGIN ALTER TABLE "products" ADD COLUMN "original_price" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "products" ADD COLUMN "harvest_cycle_days" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "products" ADD COLUMN "brand" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "products" ADD COLUMN "producer" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // products_season_availability table (if not exists)
+  `CREATE TABLE IF NOT EXISTS "products_season_availability" (
+    "_order" integer NOT NULL,
+    "parent_id" integer NOT NULL,
+    "value" varchar,
+    "id" serial PRIMARY KEY NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS "products_season_availability_order_idx" ON "products_season_availability" ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "products_season_availability_parent_id_idx" ON "products_season_availability" ("parent_id")`,
+  `DO $$ BEGIN ALTER TABLE "products_season_availability" ADD CONSTRAINT "products_season_availability_parent_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+
+  // articles missing columns
+  `DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "auto_zalo_broadcast" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "is_pinned" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "read_time" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "tags" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // site_settings_blocks_latest_news_section missing ad_slider columns
+  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_latest_news_section" ADD COLUMN "ad_slider_enabled" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_latest_news_section" ADD COLUMN "ad_slider_title" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "site_settings_blocks_latest_news_section" ADD COLUMN "ad_slider_autoplay_interval" numeric DEFAULT 5; EXCEPTION WHEN duplicate_column THEN null; END $$`,
+
+  // products_gallery table
+  `CREATE TABLE IF NOT EXISTS "products_gallery" (
+    "_order" integer NOT NULL,
+    "_parent_id" integer NOT NULL,
+    "id" serial PRIMARY KEY NOT NULL,
+    "image_id" integer
+  )`,
+  `CREATE INDEX IF NOT EXISTS "products_gallery_order_idx" ON "products_gallery" ("_order")`,
+  `CREATE INDEX IF NOT EXISTS "products_gallery_parent_id_idx" ON "products_gallery" ("_parent_id")`,
+  `DO $$ BEGIN ALTER TABLE "products_gallery" ADD CONSTRAINT "products_gallery_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`,
+  `DO $$ BEGIN ALTER TABLE "products_gallery" ADD CONSTRAINT "products_gallery_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN null; END $$`
 ];
