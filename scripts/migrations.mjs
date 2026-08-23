@@ -206,7 +206,7 @@ export const MIGRATION_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS "_articles_v" (
       "id" serial PRIMARY KEY NOT NULL,
       "parent_id" integer,
-      "version_is_pinned" integer DEFAULT 0,
+      "version_is_pinned" boolean DEFAULT false,
       "version_title" varchar,
       "version_published_at" timestamp(3) with time zone DEFAULT now(),
       "version_slug" varchar,
@@ -227,7 +227,7 @@ export const MIGRATION_STATEMENTS = [
     );
 
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "parent_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
-    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_is_pinned" integer DEFAULT 0; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_is_pinned" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$;
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_title" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_published_at" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;
     DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_slug" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
