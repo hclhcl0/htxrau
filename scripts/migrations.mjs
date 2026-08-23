@@ -255,8 +255,33 @@ export const MIGRATION_STATEMENTS = [
       "order" integer,
       "parent_id" integer NOT NULL,
       "path" varchar NOT NULL,
-      "users_id" integer
+      "users_id" integer,
+      "media_folders_id" integer,
+      "media_id" integer,
+      "products_id" integer,
+      "certificates_id" integer,
+      "orders_id" integer,
+      "categories_id" integer,
+      "tags_id" integer,
+      "articles_id" integer,
+      "pages_id" integer,
+      "videos_id" integer,
+      "video_channels_id" integer,
+      "banners_id" integer
     );
+
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "media_folders_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "media_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "products_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "certificates_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "orders_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "categories_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "tags_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "articles_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "pages_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "videos_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "video_channels_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "banners_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
 
     CREATE TABLE IF NOT EXISTS "payload_preferences" (
       "id" serial PRIMARY KEY NOT NULL,
