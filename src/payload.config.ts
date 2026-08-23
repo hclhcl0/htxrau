@@ -173,7 +173,16 @@ export default buildConfig({
       ? [
           s3Storage({
             collections: {
-              media: true,
+              media: {
+                // Nếu có S3_PUBLIC_URL (R2 public domain): trả trực tiếp
+                // Nếu không: proxy qua /api/r2-proxy để fetch từ private R2
+                generateFileURL: ({ filename }: { filename: string }) => {
+                  const pubURL = process.env.S3_PUBLIC_URL;
+                  if (pubURL) return `${pubURL}/${filename}`;
+                  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'https://htxrau.vercel.app';
+                  return `${serverURL}/api/r2-proxy?key=${encodeURIComponent(filename)}`;
+                },
+              },
             },
             bucket: process.env.S3_BUCKET,
             config: {
