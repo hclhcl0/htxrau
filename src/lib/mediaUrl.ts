@@ -1,6 +1,6 @@
 /**
  * Safely extracts and normalizes media URLs from Payload CMS Media objects or strings.
- * Ensures localhost/127.0.0.1 URLs are converted to relative paths (/media/...)
+ * Ensures localhost/127.0.0.1 URLs are converted to relative paths (/api/media/file/...)
  * to avoid Mixed Content errors and Next.js Image SSRF restriction blocks.
  */
 export function getMediaUrl(image: any, fallback = '/placeholder-vegetable.svg'): string {
@@ -10,7 +10,7 @@ export function getMediaUrl(image: any, fallback = '/placeholder-vegetable.svg')
   if (typeof image === 'string') {
     url = image;
   } else if (typeof image === 'object') {
-    url = image.url || image.sizes?.card?.url || image.sizes?.thumbnail?.url || (image.filename ? `/media/${image.filename}` : '');
+    url = image.url || image.sizes?.card?.url || image.sizes?.thumbnail?.url || (image.filename ? `/api/media/file/${image.filename}` : '');
   }
 
   if (!url) return fallback;
@@ -23,11 +23,6 @@ export function getMediaUrl(image: any, fallback = '/placeholder-vegetable.svg')
     } catch {
       url = url.replace(/^https?:\/\/[^\/]+/, '');
     }
-  }
-
-  // Rewrite /api/media/file/ to /media/ for static fast CDN serving
-  if (url.startsWith('/api/media/file/')) {
-    url = url.replace('/api/media/file/', '/media/');
   }
 
   return url;
