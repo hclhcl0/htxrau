@@ -7,6 +7,7 @@ import configPromise from '@payload-config';
 import { unstable_cache } from 'next/cache';
 import { HeaderClient } from './HeaderClient';
 import styles from './Header.module.css';
+import { DEFAULT_HEADER, DEFAULT_MENU } from '@/lib/defaults';
 
 // Cache site-settings 60 giây — giảm DB query từ mỗi request → 1 lần/phút
 const getCachedSettings = unstable_cache(
@@ -19,69 +20,82 @@ const getCachedSettings = unstable_cache(
 );
 
 export const Header = async () => {
-  let menuItems: any[] = [];
-  let menuPosition = 'right';
+  // ── Fallback mặc định từ dữ liệu local ────────────────────────────────────
+  const lc = DEFAULT_HEADER.logoCustomization;
+  let menuItems: any[] = DEFAULT_MENU.menuItems;
+  let menuPosition = DEFAULT_MENU.menuPosition;
+  let navStyle: 'white' | 'primary' | 'gradient' = DEFAULT_MENU.navStyle as any;
   let logoConfig = {
-    height: 52, position: 'left', showSiteName: true,
-    line1: 'TRANG TRẠI NÔNG SẢN SẠCH', line2: 'RAU AN TOÀN VIETGAP',
-    tagline: 'Tươi Sạch Từ Nông Trại Đến Bàn Ăn', bannerImageUrl: '', mobileLogoUrl: '',
-    mobileHeight: 52, mobileShowSiteName: false, hoverEffect: 'scale-tilt',
+    height: lc.logoHeight,
+    position: lc.logoPosition,
+    showSiteName: lc.showSiteName,
+    line1: lc.siteNameLine1,
+    line2: lc.siteNameLine2,
+    tagline: lc.siteTagline,
+    bannerImageUrl: '',
+    mobileLogoUrl: '',
+    mobileHeight: lc.mobileLogoHeight,
+    mobileShowSiteName: lc.mobileShowSiteName,
+    hoverEffect: lc.logoHoverEffect,
   };
-  let searchConfig = { position: 'hotline', style: 'inline', width: 250 };
+  let searchConfig = {
+    position: DEFAULT_HEADER.searchCustomization.position,
+    style: DEFAULT_HEADER.searchCustomization.style,
+    width: DEFAULT_HEADER.searchCustomization.width,
+  };
   let fb: any, tw: any, yt: any, ig: any, zalo: any;
-  let phone = '0905 123 456';
-  let actionLink = '/contact';
-  let hotlinePosition = 'below-nav';
-  let logoUrl = '/logo.png';
-  let siteName = 'Rau An Toàn VietGAP';
-  let navStyle: 'white' | 'primary' | 'gradient' = 'white';
+  let phone = DEFAULT_HEADER.hotline.phone;
+  let actionLink = DEFAULT_HEADER.hotline.actionLink;
+  let hotlinePosition = DEFAULT_HEADER.hotline.position;
+  let logoUrl = DEFAULT_HEADER.logo.url;
+  let siteName = DEFAULT_HEADER.siteName;
 
+  // ── Ghi đè bằng dữ liệu DB nếu có ────────────────────────────────────────
   try {
     const s = await getCachedSettings() as any;
     const headerData = s?.header || {};
     const menuData = s?.menu || {};
-    menuItems = menuData?.menuItems || [];
-    menuPosition = menuData?.menuPosition || 'right';
-    navStyle = menuData?.navStyle || 'white';
-    const lc = headerData.logoCustomization || {};
+
+    const dbMenuItems = menuData?.menuItems;
+    if (dbMenuItems && dbMenuItems.length > 0) {
+      menuItems = dbMenuItems;
+    }
+    menuPosition = menuData?.menuPosition || menuPosition;
+    navStyle = menuData?.navStyle || navStyle;
+
+    const dbLc = headerData.logoCustomization || {};
     logoConfig = {
-      height: lc.logoHeight || 52,
-      position: lc.logoPosition || 'left',
-      showSiteName: lc.showSiteName !== false,
-      line1: lc.siteNameLine1 || 'TRANG TRẠI NÔNG SẢN SẠCH',
-      line2: lc.siteNameLine2 || 'RAU AN TOÀN VIETGAP',
-      tagline: lc.siteTagline || '',
-      bannerImageUrl: (lc.logoBannerImage as any)?.url || '',
-      mobileLogoUrl: (lc.mobileLogo as any)?.url || '',
-      mobileHeight: lc.mobileLogoHeight || 52,
-      mobileShowSiteName: lc.mobileShowSiteName === true,
-      hoverEffect: lc.logoHoverEffect || 'scale-tilt',
+      height: dbLc.logoHeight || logoConfig.height,
+      position: dbLc.logoPosition || logoConfig.position,
+      showSiteName: dbLc.showSiteName !== undefined ? dbLc.showSiteName : logoConfig.showSiteName,
+      line1: dbLc.siteNameLine1 || logoConfig.line1,
+      line2: dbLc.siteNameLine2 || logoConfig.line2,
+      tagline: dbLc.siteTagline !== undefined ? dbLc.siteTagline : logoConfig.tagline,
+      bannerImageUrl: (dbLc.logoBannerImage as any)?.url || logoConfig.bannerImageUrl,
+      mobileLogoUrl: (dbLc.mobileLogo as any)?.url || logoConfig.mobileLogoUrl,
+      mobileHeight: dbLc.mobileLogoHeight || logoConfig.mobileHeight,
+      mobileShowSiteName: dbLc.mobileShowSiteName === true,
+      hoverEffect: dbLc.logoHoverEffect || logoConfig.hoverEffect,
     };
     const sc = headerData.searchCustomization || {};
-    searchConfig = { position: sc.position || 'hotline', style: sc.style || 'inline', width: sc.width || 250 };
+    searchConfig = {
+      position: sc.position || searchConfig.position,
+      style: sc.style || searchConfig.style,
+      width: sc.width || searchConfig.width,
+    };
     fb = headerData.socialLinks?.facebook;
     tw = headerData.socialLinks?.twitter;
     yt = headerData.socialLinks?.youtube;
     ig = headerData.socialLinks?.instagram;
     zalo = headerData.socialLinks?.zalo;
-    phone = headerData.hotline?.phone || '0909 408 895';
-    actionLink = headerData.hotline?.actionLink || '#';
-    hotlinePosition = headerData.hotline?.position || 'below-nav';
-    logoUrl = (headerData.logo as any)?.url || '/logo.png';
-    siteName = headerData.siteName || 'Rau An Toàn VietGAP';
-
-    if (!menuItems || menuItems.length === 0) {
-      menuItems = [
-        { label: 'Trang chủ', linkType: 'custom', url: '/' },
-        { label: 'Sản phẩm rau sạch', linkType: 'custom', url: '/san-pham' },
-        { label: '🛒 Đặt Hàng', linkType: 'custom', url: '/dat-hang' },
-        { label: 'Tin tức & Kiến thức', linkType: 'custom', url: '/bai-viet' },
-        { label: 'Video nông trại', linkType: 'custom', url: '/video' },
-        { label: 'Liên hệ', linkType: 'custom', url: '/contact' },
-      ];
-    }
+    phone = headerData.hotline?.phone || phone;
+    actionLink = headerData.hotline?.actionLink || actionLink;
+    hotlinePosition = headerData.hotline?.position || hotlinePosition;
+    logoUrl = (headerData.logo as any)?.url || logoUrl;
+    siteName = headerData.siteName || siteName;
   } catch (e) {
-    console.error('Header: error fetching global header data:', e);
+    // DB unavailable — dùng fallback mặc định đã set ở trên
+    console.warn('Header: using default fallback data');
   }
 
   return (

@@ -6,36 +6,52 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import styles from './Footer.module.css';
 import { VisitorCounter } from '@/components/VisitorCounter';
+import { DEFAULT_FOOTER } from '@/lib/defaults';
 
 export const Footer = async () => {
-  let aboutText = 'Trang trại Nông sản Sạch & Rau An Toàn VietGAP';
-  let addressMain = 'Khu Nông Nghiệp Công Nghệ Cao, Hòa Vang, TP. Đà Nẵng';
-  let addressSub = 'Cửa hàng phân phối: 120 Nguyễn Văn Linh, Hải Châu, TP. Đà Nẵng';
-  let phone = '0905 123 456';
-  let email = 'nongsanrausach@gmail.com';
-  let copyrightText = `© Bản quyền thuộc về TRANG TRẠI NÔNG SẢN SẠCH & RAU AN TOÀN VIETGAP`;
-  let designerCredit = 'Tươi Sạch Từ Nông Trại Đến Bàn Ăn';
-  let globalFooter: any = {};
+  // ── Fallback mặc định từ dữ liệu local ────────────────────────────────────
+  let aboutText = DEFAULT_FOOTER.aboutText;
+  let addressMain = DEFAULT_FOOTER.addressMain;
+  let addressSub = DEFAULT_FOOTER.addressSub;
+  let phone = DEFAULT_FOOTER.phone;
+  let email = DEFAULT_FOOTER.email;
+  let copyrightText = DEFAULT_FOOTER.copyrightText;
+  let designerCredit = DEFAULT_FOOTER.designerCredit;
+  let globalFooter: any = {
+    quickLinks: DEFAULT_FOOTER.quickLinks,
+    socialLinks: DEFAULT_FOOTER.socialLinks,
+  };
 
+  // ── Ghi đè bằng dữ liệu DB nếu có ────────────────────────────────────────
   try {
     const payload = await getPayload({ config: configPromise });
     const s = await payload.findGlobal({ slug: 'site-settings' }) as any;
-    globalFooter = s?.footer || {};
-    aboutText = globalFooter.aboutText || aboutText;
-    addressMain = globalFooter.addressMain || addressMain;
-    addressSub = globalFooter.addressSub || '';
-    phone = globalFooter.phone || phone;
-    email = globalFooter.email || email;
+    const dbFooter = s?.footer || {};
+
+    if (dbFooter.aboutText) aboutText = dbFooter.aboutText;
+    if (dbFooter.addressMain) addressMain = dbFooter.addressMain;
+    addressSub = dbFooter.addressSub || '';
+    if (dbFooter.phone) phone = dbFooter.phone;
+    if (dbFooter.email) email = dbFooter.email;
+
     const currentYear = new Date().getFullYear().toString();
-    const rawCopyright = globalFooter.copyrightText && !globalFooter.copyrightText.includes('TRUNG TÂM KIỂM SOÁT')
-      ? globalFooter.copyrightText
-      : copyrightText;
-    copyrightText = rawCopyright.replace('{year}', currentYear);
-    designerCredit = globalFooter.designerCredit && !globalFooter.designerCredit.includes('CDC Đà Nẵng')
-      ? globalFooter.designerCredit
-      : designerCredit;
+    if (dbFooter.copyrightText) {
+      copyrightText = dbFooter.copyrightText.replace('{year}', currentYear);
+    }
+    if (dbFooter.designerCredit) {
+      designerCredit = dbFooter.designerCredit;
+    }
+
+    // Merge quickLinks & socialLinks từ DB nếu có
+    if (dbFooter.quickLinks && dbFooter.quickLinks.length > 0) {
+      globalFooter.quickLinks = dbFooter.quickLinks;
+    }
+    if (dbFooter.socialLinks && dbFooter.socialLinks.length > 0) {
+      globalFooter.socialLinks = dbFooter.socialLinks;
+    }
   } catch (e) {
-    console.error('Footer: error fetching global footer data:', e);
+    // DB unavailable — dùng fallback mặc định
+    console.warn('Footer: using default fallback data');
   }
 
   return (
@@ -77,19 +93,11 @@ export const Footer = async () => {
           <div className={styles.col}>
             <h3>Liên kết nhanh</h3>
             <ul className={styles.quickLinks}>
-              {globalFooter.quickLinks && (globalFooter.quickLinks as any[]).length > 0 ? (
-                (globalFooter.quickLinks as any[]).map((link: any) => (
-                  <li key={link.id}><Link href={link.url}>{link.label}</Link></li>
-                ))
-              ) : (
-                <>
-                  <li><Link href="/">Trang chủ</Link></li>
-                  <li><Link href="/san-pham">Sản phẩm rau sạch</Link></li>
-                  <li><Link href="/bai-viet">Tin tức & Kiến thức</Link></li>
-                  <li><Link href="/video">Video nông trại</Link></li>
-                  <li><Link href="/contact">Liên hệ & Báo giá sỉ</Link></li>
-                </>
-              )}
+              {(globalFooter.quickLinks as any[]).map((link: any) => (
+                <li key={link.id || link.url}>
+                  <Link href={link.url}>{link.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -103,7 +111,7 @@ export const Footer = async () => {
                   if (link.platform === 'facebook') Icon = FaFacebook;
                   else if (link.platform === 'youtube') Icon = FaYoutube;
                   else if (link.platform === 'tiktok') Icon = FaTiktok;
-                  
+
                   return (
                     <Link key={link.id || link.url} href={link.url} target="_blank" rel="noopener noreferrer" className={styles.socialItem}>
                       <span className={styles.socialItemIcon}>
