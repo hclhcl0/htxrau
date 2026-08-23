@@ -197,18 +197,37 @@ export const MIGRATION_STATEMENTS = [
 
     CREATE TABLE IF NOT EXISTS "videos" (
       "id" serial PRIMARY KEY NOT NULL,
-      "title" varchar NOT NULL,
-      "slug" varchar,
-      "url" varchar,
-      "youtube_id" varchar,
+      "title" varchar,
+      "platform" varchar DEFAULT 'youtube',
       "channel_id" integer,
+      "video_url" varchar,
+      "embed_code" varchar,
       "thumbnail_id" integer,
       "description" varchar,
-      "is_featured" boolean DEFAULT false,
-      "views" numeric DEFAULT 0,
+      "published_date" timestamp(3) with time zone DEFAULT now(),
+      "featured" boolean DEFAULT false,
+      "is_a_i_generated" boolean DEFAULT false,
       "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS "videos_rels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order" integer,
+      "parent_id" integer NOT NULL,
+      "path" varchar NOT NULL,
+      "products_id" integer
+    );
+
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "platform" varchar DEFAULT 'youtube'; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "channel_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "video_url" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "embed_code" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "thumbnail_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "description" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "published_date" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "featured" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "videos" ADD COLUMN "is_a_i_generated" boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN null; END $$;
 
     CREATE TABLE IF NOT EXISTS "video_channels" (
       "id" serial PRIMARY KEY NOT NULL,
@@ -222,16 +241,24 @@ export const MIGRATION_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS "banners" (
       "id" serial PRIMARY KEY NOT NULL,
       "title" varchar NOT NULL,
-      "position" varchar DEFAULT 'hero',
+      "position" varchar DEFAULT 'home_slider',
       "image_id" integer,
       "mobile_image_id" integer,
-      "url" varchar,
+      "link" varchar,
       "open_in_new_tab" boolean DEFAULT false,
-      "active" boolean DEFAULT true,
-      "order_num" numeric DEFAULT 0,
+      "is_active" boolean DEFAULT true,
+      "order" numeric DEFAULT 0,
+      "size" varchar DEFAULT 'medium',
+      "custom_height" numeric,
       "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     );
+
+    DO $$ BEGIN ALTER TABLE "banners" ADD COLUMN "is_active" boolean DEFAULT true; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "banners" ADD COLUMN "link" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "banners" ADD COLUMN "order" numeric DEFAULT 0; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "banners" ADD COLUMN "size" varchar DEFAULT 'medium'; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "banners" ADD COLUMN "custom_height" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$;
 
     CREATE TABLE IF NOT EXISTS "site_stats" (
       "id" serial PRIMARY KEY NOT NULL,
