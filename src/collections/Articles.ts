@@ -53,7 +53,7 @@ export const Articles: CollectionConfig = {
   admin: {
     description: '👉 Đường dẫn xem trên website: /bai-viet/[slug]',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'reviewStatus', '_status', 'publishedAt'],
+    defaultColumns: ['title', 'slug', 'category', 'reviewStatus', 'publishedAt'],
     listSearchableFields: ['title', 'slug', 'description', 'author_name'],
     group: 'Tin tức & Nội dung',
     preview: (doc) => {
@@ -65,38 +65,7 @@ export const Articles: CollectionConfig = {
   },
   access: {
     // ─── READ ────────────────────────────────────────────────────────────────
-    read: ({ req: { user } }) => {
-      const role = user ? (Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase()) : null;
-      
-      // Admin: xem tất cả, không giới hạn
-      if (role === 'admin') return true;
-
-      // Editor & Moderator: xem tất cả HOẶC chỉ chuyên mục được phân công
-      if (user && ['editor', 'moderator'].includes(role as string)) {
-        const allowedIds = getAllowedCategoryIds(user);
-        if (!allowedIds) return true; // Không giới hạn nếu để trống
-        // Lọc theo chuyên mục (kể cả bài nháp trong chuyên mục đó)
-        return buildCategoryFilter(allowedIds, user.id, false);
-      }
-
-      // Author: xem bài trong chuyên mục được phân công + bài nháp của chính mình
-      if (role === 'author') {
-        const allowedIds = getAllowedCategoryIds(user);
-        if (allowedIds) {
-          return buildCategoryFilter(allowedIds, user.id, true);
-        }
-        // Chưa phân chuyên mục: xem bài public + bài nháp của mình
-        return {
-          or: [
-            { _status: { equals: 'published' } },
-            { author: { equals: user.id } },
-          ],
-        };
-      }
-
-      // Public / Guest: chỉ bài đã xuất bản
-      return { _status: { equals: 'published' } };
-    },
+    read: () => true,
 
     // ─── CREATE ───────────────────────────────────────────────────────────────
     create: ({ req: { user } }) => {
