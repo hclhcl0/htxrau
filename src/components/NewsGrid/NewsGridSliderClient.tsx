@@ -7,6 +7,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { Eye, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './NewsGrid.module.css';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface NewsGridSliderClientProps {
   articles: any[];
@@ -17,7 +18,7 @@ interface NewsGridSliderClientProps {
 // Helper: kiểm tra URL nội bộ (relative) hay bên ngoài
 function isInternalUrl(url: string) {
   if (!url) return false;
-  return url.startsWith('/') || url.startsWith('./') || url.includes('ecdc.vnos.org');
+  return url.startsWith('/') || url.startsWith('./') || url.includes('htxrau.vercel.app');
 }
 
 export const NewsGridSliderClient = ({ articles, desktopCols, mobileCols }: NewsGridSliderClientProps) => {
@@ -46,7 +47,7 @@ export const NewsGridSliderClient = ({ articles, desktopCols, mobileCols }: News
       >
         <div className={styles.emblaContainer}>
           {articles.map((article: any) => {
-            const mediaUrl = article.image?.url || '/logo.png';
+            const mediaUrl = getMediaUrl(article.image, '/placeholder-vegetable.svg');
             const catName = article.category?.name || 'Tin tức';
 
             return (

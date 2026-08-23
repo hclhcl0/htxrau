@@ -6,9 +6,10 @@ import { Calendar, ChevronRight, Eye } from 'lucide-react';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { Pagination } from '@/components/Pagination';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 export const metadata = {
-  title: 'Tất cả bài viết | CDC Đà Nẵng',
+  title: 'Tất cả bài viết | HTX Rau Túy Loan',
 };
 
 interface PageParams {
@@ -57,7 +58,7 @@ export default async function AllArticlesPage({ searchParams }: PageParams) {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {articles.map((item: any) => {
-               const mediaUrl = item.image?.url || '/placeholder-vegetable.svg';
+               const mediaUrl = getMediaUrl(item.image, '/placeholder-vegetable.svg');
                const catName = typeof item.category === 'object' && item.category ? (item.category as any).name : 'Tin tức';
                const catSlug = typeof item.category === 'object' && item.category ? (item.category as any).slug : '';
                

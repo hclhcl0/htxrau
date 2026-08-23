@@ -1,9 +1,10 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { Award, CheckCircle2, ArrowRight, FileCheck } from 'lucide-react';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface CertificatesSectionProps {
   title?: string;
@@ -57,7 +58,7 @@ export async function CertificatesSection({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {certs.map((c) => {
-            const imgUrl = typeof c.image === 'object' && c.image?.url ? c.image.url : '/placeholder-cert.jpg';
+            const imgUrl = getMediaUrl(c.image, '/placeholder-cert.jpg');
 
             return (
               <div

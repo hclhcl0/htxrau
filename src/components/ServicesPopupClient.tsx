@@ -5,19 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRight, X } from 'lucide-react';
 
-// Resolve URL ảnh từ Payload CMS (có thể là relative path)
-function resolveMediaUrl(url: string): string {
-  if (!url) return '';
-  if (url.startsWith('http')) return url;
-  // Relative path — ghép với NEXT_PUBLIC_SERVER_URL hoặc origin
-  const base = process.env.NEXT_PUBLIC_SERVER_URL || '';
-  return `${base}${url}`;
-}
+import { getMediaUrl, resolveMediaUrl } from '@/lib/mediaUrl';
 
 export interface ServiceItem {
   id?: string;
   icon?: string;
-  iconImage?: { url: string; alt?: string } | null;
+  iconImage?: any;
   title: string;
   description?: string;
   linkUrl?: string;
@@ -163,8 +156,8 @@ export function ServicesPopupClient({
                         background: 'linear-gradient(135deg, rgba(0,169,157,0.12) 0%, rgba(0,201,184,0.08) 100%)',
                         fontSize: '22px',
                       }}>
-                        {item.iconImage?.url ? (
-                          <Image src={item.iconImage.url} alt={item.iconImage.alt || item.title} width={36} height={36} className="object-contain" />
+                        {item.iconImage ? (
+                          <Image src={getMediaUrl(item.iconImage)} alt={item.iconImage.alt || item.title} width={36} height={36} className="object-contain" />
                         ) : (
                           <span>{item.icon || '🏥'}</span>
                         )}

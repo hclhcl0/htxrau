@@ -4,12 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || '';
-function resolveMediaUrl(url: string): string {
-  if (!url) return '';
-  if (url.startsWith('http')) return url;
-  return `${SERVER_URL}${url}`;
-}
+import { getMediaUrl, resolveMediaUrl } from '@/lib/mediaUrl';
 
 export function SitePopupClient({
   displayTitle,
@@ -174,10 +169,10 @@ export function SitePopupClient({
               )}
 
               {/* Ảnh */}
-              {!displayVideoUrl && displayImage?.url && (
+              {!displayVideoUrl && displayImage && (
                 <div style={{ position: 'relative', width: '100%', height: 200, background: '#f0f9f8' }}>
                   <Image
-                    src={displayImage.url}
+                    src={getMediaUrl(displayImage)}
                     alt={displayImage.alt || displayTitle || 'Thông báo'}
                     fill
                     className="object-cover"

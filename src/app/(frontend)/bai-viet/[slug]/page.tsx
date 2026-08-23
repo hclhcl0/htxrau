@@ -14,6 +14,7 @@ import type { ReaderToolsConfig } from '@/components/ArticleReaderTools';
 import { SidebarRenderer } from '@/components/SidebarRenderer';
 import { NewsGrid } from '@/components/NewsGrid';
 import { ArticleViewTracker } from '@/components/ArticleViewTracker';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface PageParams {
   params: Promise<{
@@ -292,8 +293,8 @@ export default async function ArticlePage({ params, searchParams }: PageParams) 
               <div className="prose prose-base md:prose-lg max-w-none break-words prose-p:!my-2 md:prose-p:!my-3 prose-headings:!my-4 md:prose-headings:!my-5 prose-ul:!my-2 prose-li:!my-1 prose-img:!my-4 prose-headings:text-emerald-900 prose-a:text-emerald-700 hover:prose-a:text-emerald-900 prose-img:rounded-2xl w-full min-w-0 overflow-hidden">
                  {/* Ảnh Thumbnail / Bìa chính của bài viết */}
                  {(() => {
-                   const featuredImgUrl = ((article as any).image?.url && !(article as any).image?.url?.includes('logo.webp'))
-                     ? (article as any).image.url
+                   const featuredImgUrl = ((article as any).image && !(article as any).image?.url?.includes('logo.webp'))
+                     ? getMediaUrl((article as any).image, (article.slug ? `/images/articles/${article.slug}.svg` : null))
                      : (article.slug ? `/images/articles/${article.slug}.svg` : null);
                    
                    return featuredImgUrl ? (

@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Calendar, Eye, Sprout } from 'lucide-react';
 import Image from 'next/image';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface ArticleCardProps {
   article: any;
@@ -11,12 +12,12 @@ interface ArticleCardProps {
 // Helper: kiểm tra URL nội bộ
 function isInternalUrl(url: string) {
   if (!url) return false;
-  return url.startsWith('/') || url.startsWith('./') || url.includes('ecdc.vnos.org');
+  return url.startsWith('/') || url.startsWith('./') || url.includes('htxrau.vercel.app');
 }
 
 export function ArticleCard({ article, featured = false }: ArticleCardProps) {
-  const imgUrl = (article.image?.url && !article.image?.url?.includes('logo.webp'))
-    ? article.image.url
+  const imgUrl = (article.image && !article.image?.url?.includes('logo.webp'))
+    ? getMediaUrl(article.image, article.slug ? `/images/articles/${article.slug}.svg` : null)
     : (article.slug ? `/images/articles/${article.slug}.svg` : null);
   const date = new Date(article.publishedAt || article.createdAt).toLocaleDateString('vi-VN');
   const catName = article.category?.name || '';

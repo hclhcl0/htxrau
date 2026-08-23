@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { BookOpen, Download, X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
+import { getMediaUrl } from '@/lib/mediaUrl';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -72,7 +73,7 @@ export const MagazineClient: React.FC<MagazineClientProps> = ({
             <div className="absolute -left-2 top-0 bottom-0 w-4 bg-gray-300 dark:bg-zinc-600 rounded-l-md shadow-inner transform -skew-y-[20deg]"></div>
             
             <div className="relative z-10 w-[240px] h-[340px] md:w-[280px] md:h-[396px] rounded-r-md shadow-2xl overflow-hidden bg-gray-200 dark:bg-zinc-700 border-l border-white/20">
-              <img src={coverImage?.url || ''} alt={coverImage?.alt || title} className="w-full h-full object-cover" />
+              <img src={getMediaUrl(coverImage, '')} alt={coverImage?.alt || title} className="w-full h-full object-cover" />
               
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 {hasPages ? (
@@ -180,7 +181,7 @@ export const MagazineClient: React.FC<MagazineClientProps> = ({
                     <div className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-2 md:p-8" key={page.id || index}>
                       <div className="relative w-full h-full flex items-center justify-center">
                         <img 
-                          src={page.pageImage?.url || ''} 
+                          src={getMediaUrl(page.pageImage, '')} 
                           alt={page.pageImage?.alt || `Trang ${index + 1}`}
                           className="max-w-full max-h-full object-contain rounded-sm shadow-2xl" 
                         />

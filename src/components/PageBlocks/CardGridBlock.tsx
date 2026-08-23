@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface Card {
   id?: string;
   icon?: string;
-  image?: { url?: string; alt?: string };
+  image?: any;
   title: string;
   description?: string;
   linkUrl?: string;
@@ -42,15 +43,16 @@ export function CardGridBlock({ columns = '3', cardStyle = 'shadow', cards }: Pr
         const highlightClass = isHighlight
           ? 'ring-2 ring-[var(--primary)] ring-offset-2 shadow-md'
           : '';
+        const imgUrl = getMediaUrl(card.image, '');
 
         return (
           <div key={card.id || i} className={`${baseCard} ${cardStyleClass} ${highlightClass}`}>
             {/* Image */}
-            {card.image?.url && (
+            {imgUrl && (
               <div className="aspect-[4/3] w-full overflow-hidden flex-shrink-0">
                 <img
-                  src={card.image.url}
-                  alt={card.image.alt || card.title}
+                  src={imgUrl}
+                  alt={card.image?.alt || card.title}
                   className="w-full h-full object-cover"
                 />
               </div>

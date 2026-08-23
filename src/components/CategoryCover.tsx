@@ -1,8 +1,9 @@
 import React from 'react';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 export function CategoryCover({ category }: { category: any }) {
   if (!category) return null;
-  const coverUrl = category.coverImage?.url || null;
+  const coverUrl = getMediaUrl(category.coverImage, '');
   
   if (!coverUrl) return null;
 

@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './HeroCarousel.module.css';
 
+import { getMediaUrl } from '@/lib/mediaUrl';
+
 interface Props {
   banners: any[];
   globalSize: string;
@@ -19,7 +21,7 @@ interface Props {
 // Helper: kiểm tra URL nội bộ
 function isInternalUrl(url: string) {
   if (!url) return false;
-  return url.startsWith('/') || url.startsWith('./') || url.includes('ecdc.vnos.org');
+  return url.startsWith('/') || url.startsWith('./') || url.includes('htxrau.vercel.app');
 }
 
 export const HeroCarouselClient = ({ banners, globalSize, globalCustomHeight, globalEffect, globalAutoplay, globalAutoplayDelay }: Props) => {
@@ -89,8 +91,8 @@ export const HeroCarouselClient = ({ banners, globalSize, globalCustomHeight, gl
           >
             <div className={`${styles.embla__container} ${isFade || isZoom || isFlip ? styles.effectContainer : ''} h-full`}>
               {banners.map((banner, index) => {
-                const imageUrl = banner.image?.url || '/placeholder-vegetable.svg';
-                const mobileUrl = banner.mobileImage?.url;
+                const imageUrl = getMediaUrl(banner.image, '/placeholder-vegetable.svg');
+                const mobileUrl = banner.mobileImage ? getMediaUrl(banner.mobileImage) : '';
                 const target = banner.openInNewTab ? '_blank' : '_self';
                 const isActive = index === selectedIndex;
 
@@ -117,7 +119,7 @@ export const HeroCarouselClient = ({ banners, globalSize, globalCustomHeight, gl
                         {/* Phase 2 Fix: Sử dụng Image của Next.js để có WebP và sizes tối ưu */}
                         <Image
                           src={imageUrl}
-                          alt={banner.title || `Banner CDC Đà Nẵng số ${index + 1}`}
+                          alt={banner.title || `Banner HTX Rau Túy Loan số ${index + 1}`}
                           className="w-full h-full object-cover"
                           style={heightStyle}
                           width={1200}

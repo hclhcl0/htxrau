@@ -116,7 +116,8 @@ export function SidebarRenderer({ widgets, latestArticles, categories }: Sidebar
 
           // 5. Render Banner Quảng cáo
           case 'bannerWidget':
-            if (!widget.image?.url) return null;
+            const bannerUrl = getMediaUrl(widget.image);
+            if (!bannerUrl) return null;
             return (
               <div key={key} className="bg-slate-50 rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
                 {widget.title && (
@@ -130,7 +131,7 @@ export function SidebarRenderer({ widgets, latestArticles, categories }: Sidebar
                   className="block hover:opacity-95 transition-opacity p-[5px]"
                 >
                   <img 
-                    src={widget.image?.url} 
+                    src={bannerUrl} 
                     alt={widget.title || "Banner"} 
                     className="w-full h-auto block rounded-xl"
                     loading="lazy"

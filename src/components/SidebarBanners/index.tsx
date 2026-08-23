@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 
+import { getMediaUrl } from '@/lib/mediaUrl';
+
 export async function SidebarBanners() {
   try {
     const payload = await getPayload({ config: configPromise });
@@ -20,7 +22,7 @@ export async function SidebarBanners() {
     return (
       <div className="hidden lg:flex flex-col gap-4 mt-6">
         {banners.map((item: any, idx: number) => {
-          const imgUrl = typeof item.image === 'object' ? item.image?.url : null;
+          const imgUrl = getMediaUrl(item.image, '');
           const imgAlt = typeof item.image === 'object' ? item.image?.alt : '';
           
           if (!imgUrl) return null;

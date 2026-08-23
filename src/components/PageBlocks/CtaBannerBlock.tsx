@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface Button {
   label?: string;
@@ -11,7 +12,7 @@ interface Props {
   title: string;
   description?: string;
   style?: 'primary' | 'gradient' | 'dark' | 'light' | 'image';
-  backgroundImage?: { url?: string };
+  backgroundImage?: any;
   primaryButton?: Button;
   secondaryButton?: Button;
 }
@@ -34,13 +35,14 @@ export function CtaBannerBlock({
 
   const textColor = style === 'light' ? 'text-gray-900' : 'text-white';
   const subTextColor = style === 'light' ? 'text-gray-600' : 'text-white/80';
+  const bgImgUrl = getMediaUrl(backgroundImage, '');
 
   return (
     <div className={`my-8 rounded-2xl ${bgStyles[style]} ${textColor}`}>
-      {style === 'image' && backgroundImage?.url && (
+      {style === 'image' && bgImgUrl && (
         <div
           className="absolute inset-0 bg-cover bg-center rounded-2xl"
-          style={{ backgroundImage: `url(${backgroundImage.url})` }}
+          style={{ backgroundImage: `url(${bgImgUrl})` }}
         >
           <div className="absolute inset-0 bg-black/60 rounded-2xl" />
         </div>

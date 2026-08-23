@@ -7,6 +7,7 @@ import configPromise from '@payload-config';
 import { Eye, Calendar } from 'lucide-react';
 import styles from './NewsGrid.module.css';
 import { NewsGridSliderClient } from './NewsGridSliderClient';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface NewsGridProps {
   categoryId?: string | number;
@@ -69,7 +70,7 @@ async function getNewsSettings() {
 // Helper: kiểm tra URL nội bộ
 function isInternalUrl(url: string) {
   if (!url) return false;
-  return url.startsWith('/') || url.startsWith('./') || url.includes('ecdc.vnos.org');
+  return url.startsWith('/') || url.startsWith('./') || url.includes('htxrau.vercel.app');
 }
 
 export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOverride, layoutOverride, excludeId, disableContainer, preloadedArticles }: NewsGridProps) => {
@@ -123,7 +124,7 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
         ) : layout === 'list' ? (
           <div className={styles.listContainer}>
             {articles.map((article: any) => {
-              const mediaUrl = article.image?.url || '/logo.png';
+              const mediaUrl = getMediaUrl(article.image, '/placeholder-vegetable.svg');
               const catName = article.category?.name || 'Tin tức';
               return (
                 <article key={article.id} className={styles.listItem}>
@@ -177,9 +178,9 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
           </div>
         ) : layout === 'list-small' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-            {articles.map((article: any) => {
-              const sideMediaUrl = article.image?.url || '/logo.png';
-              const sideCatName = article.category?.name || 'Tin tức';
+            {articles.slice(1).map((article: any) => {
+              const sideMediaUrl = getMediaUrl(article.image, '/placeholder-vegetable.svg');
+              const catName = article.category?.name || 'Tin tức';
 
               return (
                 <article key={article.id} className={styles.sideItem}>
@@ -213,8 +214,7 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
         ) : layout === 'featured' ? (
           (() => {
             const featuredArticle = articles[0];
-            const sideArticles = articles.slice(1);
-            const featuredMediaUrl = featuredArticle.image?.url || '/logo.png';
+            const featuredMediaUrl = getMediaUrl(featuredArticle.image, '/placeholder-vegetable.svg');
             const featuredCatName = featuredArticle.category?.name || 'Tin tức';
 
             return (
@@ -252,8 +252,8 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
 
                 {/* Right side: List of side articles */}
                 <div className={styles.sideList}>
-                  {sideArticles.map((article: any) => {
-                    const sideMediaUrl = article.image?.url || '/logo.png';
+                  {articles.slice(1, 5).map((article: any) => {
+                    const sideMediaUrl = getMediaUrl(article.image, '/placeholder-vegetable.svg');
                     const sideCatName = article.category?.name || 'Tin tức';
 
                     return (
@@ -292,7 +292,7 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
           (() => {
             const featuredArticle = articles[0];
             const listArticles = articles.slice(1);
-            const featuredMediaUrl = featuredArticle.image?.url || '/logo.png';
+            const featuredMediaUrl = getMediaUrl(featuredArticle.image, '/placeholder-vegetable.svg');
             return (
               <div>
                 {/* ── Ảnh lớn bài tiêu điểm ── */}
@@ -326,8 +326,8 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
 
                 {/* ── Danh sách tin nhỏ bên dưới (dạng list) ── */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  {listArticles.map((article: any) => {
-                    const smallUrl = article.image?.url || '/logo.png';
+                  {articles.slice(1, 5).map((article: any) => {
+                    const smallUrl = getMediaUrl(article.image, '/placeholder-vegetable.svg');
                     return (
                       <article
                         key={article.id}
@@ -394,7 +394,7 @@ export const NewsGrid = async ({ categoryId, categoryName, categorySlug, limitOv
             } as React.CSSProperties}
           >
             {articles.map((article: any) => {
-              const mediaUrl = article.image?.url || '/logo.png';
+              const mediaUrl = getMediaUrl(article.image, '/placeholder-vegetable.svg');
               const catName = article.category?.name || 'Tin tức';
               
               return (

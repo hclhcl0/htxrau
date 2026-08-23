@@ -6,6 +6,7 @@ import configPromise from '@payload-config';
 import { Calendar, Eye } from 'lucide-react';
 import styles from './NewsSidebarLayout.module.css';
 import { TikTokSidebarSlot } from './TikTokSidebarSlot';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface NewsSidebarLayoutProps {
   categoryId?: string | number;
@@ -92,7 +93,7 @@ export const NewsSidebarLayout = async ({
                   <article className={styles.featuredCard}>
                     <Link href={`/bai-viet/${articles[0].slug || articles[0].id}`} className={styles.featuredImg}>
                       <img
-                        src={articles[0].image?.url || '/placeholder-vegetable.svg'}
+                        src={getMediaUrl(articles[0].image, '/placeholder-vegetable.svg')}
                         alt={articles[0].title}
                       />
                     </Link>
@@ -116,7 +117,7 @@ export const NewsSidebarLayout = async ({
                     <article key={article.id} className={styles.smallCard}>
                       <Link href={`/bai-viet/${article.slug || article.id}`} className={styles.smallImg}>
                         <img
-                          src={article.image?.url || '/logo.png'}
+                          src={getMediaUrl(article.image, '/placeholder-vegetable.svg')}
                           alt={article.title}
                         />
                       </Link>
@@ -145,7 +146,7 @@ export const NewsSidebarLayout = async ({
                 handle={(tiktokChannel as any).tiktokHandle}
                 channelName={tiktokChannel.name}
                 channelUrl={(tiktokChannel as any).channelUrl}
-                avatarUrl={(tiktokChannel as any).avatar?.url}
+                avatarUrl={getMediaUrl((tiktokChannel as any).avatar, '')}
               />
             </aside>
           )}

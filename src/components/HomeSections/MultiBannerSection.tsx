@@ -1,15 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface BannerItem {
   id: string;
-  image: {
-    url: string;
-    alt?: string;
-    width?: number;
-    height?: number;
-  };
+  image: any;
   linkUrl?: string;
   openInNewTab?: boolean;
 }
@@ -24,7 +20,7 @@ interface MultiBannerSectionProps {
 // Helper: kiểm tra URL nội bộ
 function isInternalUrl(url: string) {
   if (!url) return false;
-  return url.startsWith('/') || url.startsWith('./') || url.includes('ecdc.vnos.org');
+  return url.startsWith('/') || url.startsWith('./') || url.includes('htxrau.vercel.app');
 }
 
 export function MultiBannerSection({ title, columns = 4, bannerHeight, banners }: MultiBannerSectionProps) {
@@ -59,7 +55,7 @@ export function MultiBannerSection({ title, columns = 4, bannerHeight, banners }
 
           <div className={`grid gap-1 ${gridColsClass}`}>
           {banners.map((item, index) => {
-            const imageUrl = item.image?.url;
+            const imageUrl = getMediaUrl(item.image, '');
             if (!imageUrl) return null;
 
             const target = item.openInNewTab ? '_blank' : '_self';

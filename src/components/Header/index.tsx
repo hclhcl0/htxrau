@@ -9,6 +9,8 @@ import { HeaderClient } from './HeaderClient';
 import styles from './Header.module.css';
 import { DEFAULT_HEADER, DEFAULT_MENU } from '@/lib/defaults';
 
+import { getMediaUrl } from '@/lib/mediaUrl';
+
 // Cache site-settings 60 giây — giảm DB query từ mỗi request → 1 lần/phút
 const getCachedSettings = unstable_cache(
   async () => {
@@ -71,8 +73,8 @@ export const Header = async () => {
       line1: dbLc.siteNameLine1 || logoConfig.line1,
       line2: dbLc.siteNameLine2 || logoConfig.line2,
       tagline: dbLc.siteTagline !== undefined ? dbLc.siteTagline : logoConfig.tagline,
-      bannerImageUrl: (dbLc.logoBannerImage as any)?.url || logoConfig.bannerImageUrl,
-      mobileLogoUrl: (dbLc.mobileLogo as any)?.url || logoConfig.mobileLogoUrl,
+      bannerImageUrl: dbLc.logoBannerImage ? getMediaUrl(dbLc.logoBannerImage) : logoConfig.bannerImageUrl,
+      mobileLogoUrl: dbLc.mobileLogo ? getMediaUrl(dbLc.mobileLogo) : logoConfig.mobileLogoUrl,
       mobileHeight: dbLc.mobileLogoHeight || logoConfig.mobileHeight,
       mobileShowSiteName: dbLc.mobileShowSiteName === true,
       hoverEffect: dbLc.logoHoverEffect || logoConfig.hoverEffect,
@@ -91,7 +93,7 @@ export const Header = async () => {
     phone = headerData.hotline?.phone || phone;
     actionLink = headerData.hotline?.actionLink || actionLink;
     hotlinePosition = headerData.hotline?.position || hotlinePosition;
-    logoUrl = (headerData.logo as any)?.url || logoUrl;
+    logoUrl = headerData.logo ? getMediaUrl(headerData.logo, logoUrl) : logoUrl;
     siteName = headerData.siteName || siteName;
   } catch (e) {
     // DB unavailable — dùng fallback mặc định đã set ở trên

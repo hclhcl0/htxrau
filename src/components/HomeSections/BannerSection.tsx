@@ -1,8 +1,7 @@
-import React from 'react';
-import Link from 'next/link';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface BannerSectionProps {
-  image: { url: string; alt?: string };
+  image: { url?: string; alt?: string; filename?: string };
   title?: string;
   subtitle?: string;
   linkUrl?: string;
@@ -11,13 +10,14 @@ interface BannerSectionProps {
 }
 
 export function BannerSection({ image, title, subtitle, linkUrl, openInNewTab, style = 'fullwidth' }: BannerSectionProps) {
-  if (!image?.url) return null;
+  const imageUrl = getMediaUrl(image, '');
+  if (!imageUrl) return null;
 
   const content = (
     <div className={`relative overflow-hidden ${style === 'card' ? 'rounded-2xl shadow-lg' : ''} w-full`}>
       <img
-        src={image.url}
-        alt={title || image.alt || ''}
+        src={imageUrl}
+        alt={title || image?.alt || ''}
         className="w-full h-auto object-cover block"
         style={{ maxHeight: style === 'fullwidth' ? '400px' : '280px', objectFit: 'cover', width: '100%' }}
       />

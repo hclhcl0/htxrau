@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 export default function HeroBannerBlock({ data }: { data: any }) {
   // data: { title, description, link, tag, image }
-  const imageUrl = data.image?.url ? data.image.url : null;
+  const imageUrl = getMediaUrl(data.image, '');
   
   return (
     <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-100 relative group overflow-hidden mb-8">

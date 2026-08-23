@@ -6,6 +6,7 @@ import configPromise from '@payload-config';
 import { Calendar, Eye } from 'lucide-react';
 import Link from 'next/link';
 import styles from '@/components/NewsGrid/NewsGrid.module.css';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface PageParams {
   searchParams: Promise<{
@@ -14,7 +15,7 @@ interface PageParams {
 }
 
 export const metadata = {
-  title: 'Tìm Kiếm | CDC Đà Nẵng',
+  title: 'Tìm Kiếm | HTX Rau Túy Loan',
 };
 
 export default async function SearchPage({ searchParams }: PageParams) {
@@ -62,7 +63,7 @@ export default async function SearchPage({ searchParams }: PageParams) {
       ) : (
         <div className={styles.grid}>
           {articles.map((article: any) => {
-            const mediaUrl = article.image?.url || '/placeholder-vegetable.svg';
+            const mediaUrl = getMediaUrl(article.image, '/placeholder-vegetable.svg');
             const date = new Date(article.createdAt).toLocaleDateString('vi-VN');
             
             return (

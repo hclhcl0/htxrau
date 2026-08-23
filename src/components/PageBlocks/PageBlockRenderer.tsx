@@ -13,6 +13,7 @@ import { CtaBannerBlock } from './CtaBannerBlock';
 import { EmbedBlock } from './EmbedBlock';
 import { DividerBlock } from './DividerBlock';
 import { MagazineBlock } from '../../blocks/MagazineBlock/Component';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 // Existing block components
 import HeroBannerBlockComp from '@/components/blocks/HeroBannerBlock';
@@ -106,11 +107,12 @@ export function PageBlockRenderer({ blocks }: Props) {
 
           case 'cardBlock': {
             const { image, title, description, linkUrl, linkLabel } = block;
+            const imgUrl = getMediaUrl(image, '');
             return (
               <div key={key} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow my-6">
-                {image?.url && (
+                {imgUrl && (
                   <div className="aspect-[4/3] w-full overflow-hidden">
-                    <img src={image.url} alt={title} className="w-full h-full object-cover" />
+                    <img src={imgUrl} alt={title} className="w-full h-full object-cover" />
                   </div>
                 )}
                 <div className="p-6 flex flex-col flex-grow">
