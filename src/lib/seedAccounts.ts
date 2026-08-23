@@ -3,11 +3,11 @@ import type { Payload } from 'payload';
 
 export const seedAccounts = async (payload: Payload) => {
   const testUsers = [
-    { email: 'admin@test.com', name: 'Test Admin', role: 'admin' },
-    { email: 'moderator@test.com', name: 'Test Moderator', role: 'moderator' },
-    { email: 'editor@test.com', name: 'Test Editor', role: 'editor' },
-    { email: 'author@test.com', name: 'Test Author', role: 'author' },
-    { email: 'user@test.com', name: 'Test User', role: 'user' },
+    { email: 'admin@test.com', name: 'Test Admin', role: 'admin', password: 'admin123' },
+    { email: 'moderator@test.com', name: 'Test Moderator', role: 'moderator', password: 'admin123' },
+    { email: 'editor@test.com', name: 'Test Editor', role: 'editor', password: 'admin123' },
+    { email: 'author@test.com', name: 'Test Author', role: 'author', password: 'admin123' },
+    { email: 'user@test.com', name: 'Test User', role: 'user', password: 'admin123' },
   ];
 
   for (const u of testUsers) {
@@ -22,15 +22,26 @@ export const seedAccounts = async (payload: Payload) => {
           collection: 'users',
           data: {
             email: u.email,
-            password: 'password', // Default simple password for testing
+            password: u.password,
             name: u.name,
             role: u.role,
           },
         });
         payload.logger.info(`[Seed] Created ${u.role} account: ${u.email}`);
+      } else {
+        // Luôn đảm bảo tài khoản admin được hash đúng secret trên môi trường chạy
+        await payload.update({
+          collection: 'users',
+          id: existing.docs[0].id,
+          data: {
+            password: u.password,
+            role: u.role,
+          },
+        });
+        payload.logger.info(`[Seed] Updated ${u.role} account password: ${u.email}`);
       }
     } catch (error: any) {
-      payload.logger.error(`[Seed] Error creating ${u.email}: ${error.message}`);
+      payload.logger.error(`[Seed] Error managing ${u.email}: ${error.message}`);
     }
   }
 };
