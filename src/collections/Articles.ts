@@ -82,43 +82,13 @@ export const Articles: CollectionConfig = {
   hooks: {
 
     beforeChange: [
-      ({ req: { user }, data, operation }) => {
+      ({ data, operation }) => {
         // Tự động điền publishedAt cho các bài viết mới nếu chưa có
         if (operation === 'create' && !data.publishedAt) {
           data.publishedAt = new Date().toISOString();
         }
         if (operation === 'update' && data._status === 'published' && !data.publishedAt) {
           data.publishedAt = new Date().toISOString();
-        }
-
-        // Author không được tự xuất bản (publish)
-        if (user && user.role === 'author') {
-          if (data._status === 'published') {
-            data._status = 'draft';
-          }
-          // Author chỉ được đặt reviewStatus là draft hoặc pending_review
-          if (data.reviewStatus && !['draft', 'pending_review'].includes(data.reviewStatus)) {
-            data.reviewStatus = 'draft';
-          }
-        }
-        return data;
-      },
-      // Validate chuyên mục được phép cho Author
-      async ({ req, data, operation }) => {
-        if (req.user?.role === 'author') {
-          const allowedCategories = (req.user as any)?.allowedCategories;
-          if (allowedCategories && allowedCategories.length > 0) {
-            const allowedIds = allowedCategories.map((c: any) =>
-              typeof c === 'string' ? c : c?.id
-            );
-            
-            if (data.category) {
-              const categoryId = typeof data.category === 'string' ? data.category : (data.category as any)?.id;
-              if (categoryId && !allowedIds.includes(categoryId)) {
-                throw new Error('Bạn chỉ được phép viết bài trong các chuyên mục đã được phân công. Vui lòng chọn đúng chuyên mục.');
-              }
-            }
-          }
         }
         return data;
       },

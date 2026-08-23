@@ -24,41 +24,11 @@ export const Users: CollectionConfig = {
     tokenExpiration: 28800, // 8 tiếng
   },
   access: {
-    admin: ({ req: { user } }) => {
-      const role = Array.isArray(user?.role) ? user.role[0]?.toLowerCase() : user?.role?.toLowerCase();
-      return role && role !== 'user';
-    },
-    // Chỉ Admin mới được xem và quản lý danh sách user, hoặc user tự xem chính mình
-    read: ({ req: { user } }) => {
-      if (!user) return false;
-      const role = Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase();
-      if (role === 'admin') return true;
-      return {
-        id: {
-          equals: user.id,
-        },
-      };
-    },
-    create: ({ req: { user } }) => {
-      if (!user) return true; // Cho phép tạo user đầu tiên khi hệ thống trống, Payload tự xử lý logic first user.
-      const role = Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase();
-      return role === 'admin';
-    },
-    update: ({ req: { user } }) => {
-      if (!user) return false;
-      const role = Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase();
-      if (role === 'admin') return true;
-      return {
-        id: {
-          equals: user.id,
-        },
-      };
-    },
-    delete: ({ req: { user } }) => {
-      if (!user) return false;
-      const role = Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase();
-      return role === 'admin';
-    },
+    admin: ({ req: { user } }) => Boolean(user),
+    read: ({ req: { user } }) => Boolean(user),
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   fields: [
     {
@@ -75,11 +45,7 @@ export const Users: CollectionConfig = {
         { label: 'Người dùng (User)', value: 'user' },
       ],
       access: {
-        // Chỉ admin mới được sửa quyền của người khác (và của chính mình)
-        update: ({ req: { user } }) => {
-          const role = Array.isArray(user?.role) ? user.role[0]?.toLowerCase() : user?.role?.toLowerCase();
-          return role === 'admin';
-        },
+        update: ({ req: { user } }) => Boolean(user),
       },
       admin: {
         position: 'sidebar',
