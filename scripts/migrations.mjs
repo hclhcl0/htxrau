@@ -163,8 +163,12 @@ export const MIGRATION_STATEMENTS = [
       "slug" varchar,
       "category_id" integer,
       "image_id" integer,
+      "description" varchar,
       "summary" varchar,
       "content" jsonb,
+      "is_pinned" integer DEFAULT 0,
+      "review_status" varchar DEFAULT 'draft',
+      "author_name" varchar,
       "views" numeric DEFAULT 0,
       "is_featured" boolean DEFAULT false,
       "published_at" timestamp(3) with time zone DEFAULT now(),
@@ -174,7 +178,74 @@ export const MIGRATION_STATEMENTS = [
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     );
 
+    DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "description" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "is_pinned" integer DEFAULT 0; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "review_status" varchar DEFAULT 'draft'; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "author_name" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "views" numeric DEFAULT 0; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles" ADD COLUMN "_status" varchar DEFAULT 'published'; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN UPDATE "articles" SET "_status" = 'published' WHERE "_status" IS NULL; EXCEPTION WHEN others THEN null; END $$;
+
     CREATE TABLE IF NOT EXISTS "articles_rels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order" integer,
+      "parent_id" integer NOT NULL,
+      "path" varchar NOT NULL,
+      "categories_id" integer,
+      "tags_id" integer,
+      "media_id" integer,
+      "users_id" integer,
+      "articles_id" integer
+    );
+
+    DO $$ BEGIN ALTER TABLE "articles_rels" ADD COLUMN "tags_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles_rels" ADD COLUMN "categories_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles_rels" ADD COLUMN "users_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "articles_rels" ADD COLUMN "media_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+
+    CREATE TABLE IF NOT EXISTS "_articles_v" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "parent_id" integer,
+      "version_is_pinned" integer DEFAULT 0,
+      "version_title" varchar,
+      "version_published_at" timestamp(3) with time zone DEFAULT now(),
+      "version_slug" varchar,
+      "version_category_id" integer,
+      "version_description" varchar,
+      "version_image_id" integer,
+      "version_author_id" integer,
+      "version_review_status" varchar DEFAULT 'draft',
+      "version_content" jsonb,
+      "version_author_name" varchar,
+      "version_views" numeric DEFAULT 0,
+      "version__status" varchar DEFAULT 'published',
+      "version_updated_at" timestamp(3) with time zone DEFAULT now(),
+      "version_created_at" timestamp(3) with time zone DEFAULT now(),
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "latest" integer DEFAULT 1
+    );
+
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "parent_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_is_pinned" integer DEFAULT 0; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_title" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_published_at" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_slug" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_category_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_description" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_image_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_author_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_review_status" varchar DEFAULT 'draft'; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_content" jsonb; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ALTER COLUMN "version_content" TYPE jsonb USING "version_content"::jsonb; EXCEPTION WHEN others THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_author_name" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_views" numeric DEFAULT 0; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version__status" varchar DEFAULT 'published'; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_updated_at" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "version_created_at" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v" ADD COLUMN "latest" integer DEFAULT 1; EXCEPTION WHEN duplicate_column THEN null; END $$;
+
+    CREATE TABLE IF NOT EXISTS "_articles_v_rels" (
       "id" serial PRIMARY KEY NOT NULL,
       "order" integer,
       "parent_id" integer NOT NULL,
@@ -184,6 +255,11 @@ export const MIGRATION_STATEMENTS = [
       "media_id" integer,
       "users_id" integer
     );
+
+    DO $$ BEGIN ALTER TABLE "_articles_v_rels" ADD COLUMN "tags_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v_rels" ADD COLUMN "categories_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v_rels" ADD COLUMN "users_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
+    DO $$ BEGIN ALTER TABLE "_articles_v_rels" ADD COLUMN "media_id" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;
 
     CREATE TABLE IF NOT EXISTS "pages" (
       "id" serial PRIMARY KEY NOT NULL,

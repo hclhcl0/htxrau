@@ -1,18 +1,18 @@
 import type { CollectionConfig } from 'payload';
 import { lexicalEditor, FixedToolbarFeature, HeadingFeature, AlignFeature, HTMLConverterFeature, BlocksFeature } from '@payloadcms/richtext-lexical';
-import { VideoBlock } from '../blocks/VideoBlock.ts';
-import { TikTokBlock } from '../blocks/TikTokBlock.ts';
-import { PDFBlock } from '../blocks/PDFBlock.ts';
-import { GalleryBlock } from '../blocks/GalleryBlock.ts';
-import { CalloutBlock } from '../blocks/CalloutBlock.ts';
-import { ButtonBlock } from '../blocks/ButtonBlock.ts';
-import { ImageLinkBlock } from '../blocks/ImageLinkBlock.ts';
-import { RelatedArticlesBlock } from '../blocks/RelatedArticlesBlock.ts';
-import { ColumnsBlock } from '../blocks/ColumnsBlock.ts';
-import { EmbedBlock } from '../blocks/EmbedBlock.ts';
-import { FileDownloadsBlock } from '../blocks/FileDownloadsBlock.ts';
-import { SliderBlock } from '../blocks/SliderBlock.ts';
-import { CardBlock } from '../blocks/CardBlock.ts';
+import { VideoBlock } from '../blocks/VideoBlock';
+import { TikTokBlock } from '../blocks/TikTokBlock';
+import { PDFBlock } from '../blocks/PDFBlock';
+import { GalleryBlock } from '../blocks/GalleryBlock';
+import { CalloutBlock } from '../blocks/CalloutBlock';
+import { ButtonBlock } from '../blocks/ButtonBlock';
+import { ImageLinkBlock } from '../blocks/ImageLinkBlock';
+import { RelatedArticlesBlock } from '../blocks/RelatedArticlesBlock';
+import { ColumnsBlock } from '../blocks/ColumnsBlock';
+import { EmbedBlock } from '../blocks/EmbedBlock';
+import { FileDownloadsBlock } from '../blocks/FileDownloadsBlock';
+import { SliderBlock } from '../blocks/SliderBlock';
+import { CardBlock } from '../blocks/CardBlock';
 
 /**
  * Trích xuất danh sách ID chuyên mục được phân công của user.

@@ -1,24 +1,24 @@
 import type { CollectionConfig } from 'payload';
-import { HeroBannerBlock } from '../blocks/HeroBanner.ts';
-import { CategoryNewsBlock } from '../blocks/CategoryNews.ts';
-import { ColumnsBlock } from '../blocks/ColumnsBlock.ts';
-import { CalloutBlock } from '../blocks/CalloutBlock.ts';
-import { ButtonBlock } from '../blocks/ButtonBlock.ts';
-import { VideoBlock } from '../blocks/VideoBlock.ts';
-import { TikTokBlock } from '../blocks/TikTokBlock.ts';
-import { PDFBlock } from '../blocks/PDFBlock.ts';
-import { GalleryBlock } from '../blocks/GalleryBlock.ts';
-import { CardBlock } from '../blocks/CardBlock.ts';
-import { RelatedArticlesBlock } from '../blocks/RelatedArticlesBlock.ts';
-import { RichTextBlock } from '../blocks/RichTextBlock.ts';
-import { SectionTitleBlock } from '../blocks/SectionTitleBlock.ts';
-import { CardGridBlock } from '../blocks/CardGridBlock.ts';
-import { StepsBlock } from '../blocks/StepsBlock.ts';
-import { DividerBlock } from '../blocks/DividerBlock.ts';
-import { CtaBannerBlock } from '../blocks/CtaBannerBlock.ts';
-import { EmbedBlock } from '../blocks/EmbedBlock.ts';
-import { FileDownloadsBlock } from '../blocks/FileDownloadsBlock.ts';
-import { SliderBlock } from '../blocks/SliderBlock.ts';
+import { HeroBannerBlock } from '../blocks/HeroBanner';
+import { CategoryNewsBlock } from '../blocks/CategoryNews';
+import { ColumnsBlock } from '../blocks/ColumnsBlock';
+import { CalloutBlock } from '../blocks/CalloutBlock';
+import { ButtonBlock } from '../blocks/ButtonBlock';
+import { VideoBlock } from '../blocks/VideoBlock';
+import { TikTokBlock } from '../blocks/TikTokBlock';
+import { PDFBlock } from '../blocks/PDFBlock';
+import { GalleryBlock } from '../blocks/GalleryBlock';
+import { CardBlock } from '../blocks/CardBlock';
+import { RelatedArticlesBlock } from '../blocks/RelatedArticlesBlock';
+import { RichTextBlock } from '../blocks/RichTextBlock';
+import { SectionTitleBlock } from '../blocks/SectionTitleBlock';
+import { CardGridBlock } from '../blocks/CardGridBlock';
+import { StepsBlock } from '../blocks/StepsBlock';
+import { DividerBlock } from '../blocks/DividerBlock';
+import { CtaBannerBlock } from '../blocks/CtaBannerBlock';
+import { EmbedBlock } from '../blocks/EmbedBlock';
+import { FileDownloadsBlock } from '../blocks/FileDownloadsBlock';
+import { SliderBlock } from '../blocks/SliderBlock';
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
