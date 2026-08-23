@@ -22,6 +22,357 @@
 export const MIGRATION_STATEMENTS = [
 
   // ====================================================
+  // BATCH: Core site_settings and its related tables
+  // ====================================================
+  `
+    CREATE TABLE IF NOT EXISTS "site_settings" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "home_news_limit" numeric DEFAULT 2,
+      "home_news_layout" varchar DEFAULT 'grid',
+      "banner_hero_slider_size" varchar DEFAULT 'medium',
+      "banner_hero_slider_custom_height" numeric,
+      "banner_hero_slider_effect" varchar DEFAULT 'slide',
+      "banner_hero_slider_autoplay_delay" numeric DEFAULT 5000,
+      "home_content" jsonb,
+      "header_site_name" varchar DEFAULT 'Trung tâm Kiểm soát Bệnh tật Thành phố Đà Nẵng',
+      "header_logo_id" integer,
+      "header_logo_customization_logo_height" numeric DEFAULT 80,
+      "header_logo_customization_logo_position" varchar DEFAULT 'left',
+      "header_logo_customization_show_site_name" boolean DEFAULT true,
+      "header_logo_customization_site_name_line1" varchar DEFAULT 'TRUNG TÂM KIỂM SOÁT BỆNH TẬT',
+      "header_logo_customization_site_name_line2" varchar DEFAULT 'THÀNH PHỐ ĐÀ NẴNG',
+      "header_logo_customization_site_tagline" varchar DEFAULT 'Phòng bệnh chủ động-vươn rộng tương lai',
+      "header_logo_customization_logo_banner_image_id" integer,
+      "header_logo_customization_mobile_logo_id" integer,
+      "header_logo_customization_mobile_logo_height" numeric DEFAULT 40,
+      "header_logo_customization_logo_hover_effect" varchar DEFAULT 'bounce',
+      "header_logo_customization_mobile_show_site_name" boolean DEFAULT false,
+      "header_search_customization_position" varchar DEFAULT 'navbar',
+      "header_search_customization_style" varchar DEFAULT 'popup',
+      "header_search_customization_width" numeric DEFAULT 250,
+      "header_hotline_phone" varchar DEFAULT '0236 3890 407',
+      "header_hotline_action_link" varchar DEFAULT '#',
+      "header_hotline_position" varchar,
+      "header_social_links_facebook" varchar,
+      "header_social_links_youtube" varchar,
+      "header_social_links_twitter" varchar,
+      "header_social_links_instagram" varchar,
+      "header_social_links_zalo" varchar,
+      "footer_about_text" varchar,
+      "footer_address_main" varchar,
+      "footer_address_sub" varchar,
+      "footer_phone" varchar,
+      "footer_email" varchar,
+      "footer_copyright_text" varchar,
+      "footer_designer_credit" varchar,
+      "menu_menu_position" varchar DEFAULT 'top',
+      "menu_nav_style" varchar,
+      "theme_org_layout" varchar,
+      "theme_org_colors_ban_lanh_dao" varchar,
+      "theme_org_colors_phong" varchar,
+      "theme_org_colors_khoa" varchar,
+      "theme_org_colors_khac" varchar,
+      "sidebar_width_ratio" varchar,
+      "sidebar_gap_size" varchar,
+      "article_reader_tools_show_font_size" boolean,
+      "article_reader_tools_show_t_t_s" boolean,
+      "article_reader_tools_show_read_progress" boolean,
+      "article_reader_tools_show_share_f_b" boolean,
+      "article_reader_tools_show_share_zalo" boolean,
+      "article_reader_tools_show_copy_link" boolean,
+      "article_reader_tools_show_print" boolean,
+      "theme_config_primary_color" varchar,
+      "theme_config_primary_dark_color" varchar,
+      "theme_config_secondary_color" varchar,
+      "theme_config_font_family" varchar DEFAULT 'Inter',
+      "popup_enabled" boolean,
+      "popup_type" varchar,
+      "popup_services_title" varchar,
+      "popup_services_subtitle" varchar,
+      "popup_services_mascot_id" integer,
+      "popup_services_header_color" varchar,
+      "popup_transparent_background" boolean,
+      "popup_article_id" integer,
+      "popup_title" varchar,
+      "popup_image_id" integer,
+      "popup_video_url" varchar,
+      "popup_content" jsonb,
+      "popup_link_url" varchar,
+      "popup_delay_seconds" numeric,
+      "popup_show_once" boolean,
+      "payment_payment_bank_name" varchar,
+      "payment_payment_bank_account" varchar,
+      "payment_payment_bank_owner" varchar,
+      "payment_payment_qr_image_url" varchar,
+      "payment_notifications_telegram_bot_token" varchar,
+      "payment_notifications_telegram_chat_id" varchar,
+      "payment_notifications_smtp_host" varchar,
+      "payment_notifications_smtp_port" numeric,
+      "payment_notifications_smtp_secure" boolean,
+      "payment_notifications_smtp_user" varchar,
+      "payment_notifications_smtp_pass" varchar,
+      "payment_notifications_admin_email" varchar,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_banner_sidebar_banners" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "image_id" integer,
+      "url" varchar,
+      "open_in_new_tab" boolean DEFAULT true
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_commitment_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "enabled" boolean DEFAULT true,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_product_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "subtitle" varchar,
+      "category_filter" varchar DEFAULT 'all',
+      "limit" numeric DEFAULT 8,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_process_steps_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_certificates_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "subtitle" varchar,
+      "limit" numeric DEFAULT 6,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_latest_news_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "limit" numeric DEFAULT 6,
+      "layout" varchar DEFAULT 'grid',
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_news_category_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "category_id" integer,
+      "limit" numeric DEFAULT 6,
+      "layout" varchar DEFAULT 'grid',
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_banner_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "image_id" integer,
+      "title" varchar,
+      "subtitle" varchar,
+      "link_url" varchar,
+      "open_in_new_tab" boolean DEFAULT false,
+      "style" varchar DEFAULT 'default',
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_multi_banner_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "columns" numeric DEFAULT 3,
+      "banner_height" integer,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_multi_banner_section_banners" (
+      "_order" integer NOT NULL,
+      "_parent_id" varchar NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "image_id" integer,
+      "link_url" varchar,
+      "open_in_new_tab" boolean DEFAULT false
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_video_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "source_type" varchar DEFAULT 'all',
+      "limit" numeric DEFAULT 4,
+      "layout" varchar DEFAULT 'grid',
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_stats_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "background_color" varchar DEFAULT '#f8fafc',
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_stats_section_stats" (
+      "_order" integer NOT NULL,
+      "_parent_id" varchar NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "icon" varchar,
+      "value" varchar,
+      "label" varchar,
+      "suffix" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_quick_links_section" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_quick_links_section_links" (
+      "_order" integer NOT NULL,
+      "_parent_id" varchar NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "icon" varchar,
+      "label" varchar,
+      "url" varchar,
+      "open_in_new_tab" boolean DEFAULT false,
+      "color" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_footer_quick_links" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "label" varchar,
+      "url" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_footer_social_links" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "platform" varchar,
+      "label" varchar,
+      "url" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_menu_menu_items" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "label" varchar,
+      "preset_url" varchar,
+      "url" varchar,
+      "open_in_new_tab" boolean DEFAULT false
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_menu_menu_items_sub_items" (
+      "_order" integer NOT NULL,
+      "_parent_id" varchar NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "label" varchar,
+      "preset_url" varchar,
+      "url" varchar,
+      "open_in_new_tab" boolean DEFAULT false
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_category_news" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "category_info_id" integer,
+      "limit" numeric DEFAULT 6,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_categories_widget" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "limit" numeric DEFAULT 10,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_recent_articles_widget" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "limit" numeric DEFAULT 5,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_banner_widget" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "image_id" integer,
+      "link_url" varchar,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_blocks_custom_html_widget" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "_path" text NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "html_content" text,
+      "block_name" varchar
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_settings_popup_services_items" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "icon" varchar,
+      "icon_image_id" integer,
+      "title" varchar,
+      "description" text,
+      "link_url" varchar
+    );
+  `,
+
+  // ====================================================
   // BATCH: Add bannerHeight to multiBannerSection
   // ====================================================
   `
