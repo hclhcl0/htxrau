@@ -1,7 +1,7 @@
 'use client'
 
-import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext'
-import { PASTE_COMMAND, COMMAND_PRIORITY_LOW } from '@payloadcms/richtext-lexical/lexical'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { PASTE_COMMAND, COMMAND_PRIORITY_LOW } from 'lexical'
 import { useEffect, useRef } from 'react'
 
 /**
