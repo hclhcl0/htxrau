@@ -1,0 +1,5 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#4ade80"/>
+  <text x="400" y="300" font-family="Arial" font-size="40" fill="#064e3b" text-anchor="middle" font-weight="bold">Rau Sach 8</text>
+  <text x="400" y="360" font-family="Arial" font-size="24" fill="#065f46" text-anchor="middle">Tuoi ngon moi ngay</text>
+</svg>
