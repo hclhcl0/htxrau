@@ -22,6 +22,268 @@
 export const MIGRATION_STATEMENTS = [
 
   // ====================================================
+  // BATCH: All Core Payload CMS Collections (users, media, articles, categories, products...)
+  // ====================================================
+  `
+    CREATE TABLE IF NOT EXISTS "users" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "role" varchar DEFAULT 'editor',
+      "name" varchar,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "email" varchar NOT NULL,
+      "reset_password_token" varchar,
+      "reset_password_expiration" timestamp(3) with time zone,
+      "salt" varchar,
+      "hash" varchar,
+      "login_attempts" numeric DEFAULT 0,
+      "lock_until" timestamp(3) with time zone
+    );
+
+    CREATE TABLE IF NOT EXISTS "users_sessions" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL,
+      "id" varchar PRIMARY KEY NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "expires_at" timestamp(3) with time zone NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "users_rels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order" integer,
+      "parent_id" integer NOT NULL,
+      "path" varchar NOT NULL,
+      "categories_id" integer
+    );
+
+    CREATE TABLE IF NOT EXISTS "categories" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "name" varchar NOT NULL,
+      "slug" varchar,
+      "description" varchar,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "tags" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "name" varchar NOT NULL,
+      "slug" varchar,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "media_folders" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "name" varchar NOT NULL,
+      "slug" varchar,
+      "description" varchar,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "media" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "alt" varchar,
+      "caption" jsonb,
+      "folder_id" integer,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "url" varchar,
+      "thumbnail_u_r_l" varchar,
+      "filename" varchar,
+      "mime_type" varchar,
+      "filesize" numeric,
+      "width" numeric,
+      "height" numeric,
+      "focal_x" numeric,
+      "focal_y" numeric
+    );
+
+    CREATE TABLE IF NOT EXISTS "products" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "name" varchar NOT NULL,
+      "slug" varchar,
+      "price" numeric,
+      "unit" varchar DEFAULT 'Kg',
+      "summary" varchar,
+      "description" jsonb,
+      "category" varchar DEFAULT 'rau-an-la',
+      "standard" varchar DEFAULT 'vietgap',
+      "status" varchar DEFAULT 'in_stock',
+      "is_featured" boolean DEFAULT false,
+      "order_num" numeric DEFAULT 0,
+      "image_id" integer,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "products_rels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order" integer,
+      "parent_id" integer NOT NULL,
+      "path" varchar NOT NULL,
+      "media_id" integer
+    );
+
+    CREATE TABLE IF NOT EXISTS "certificates" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "title" varchar NOT NULL,
+      "organization" varchar,
+      "issue_date" timestamp(3) with time zone,
+      "expiry_date" timestamp(3) with time zone,
+      "cert_number" varchar,
+      "image_id" integer,
+      "order_num" numeric DEFAULT 0,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "orders" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order_code" varchar NOT NULL,
+      "customer_name" varchar NOT NULL,
+      "customer_phone" varchar NOT NULL,
+      "customer_email" varchar,
+      "customer_address" varchar NOT NULL,
+      "notes" varchar,
+      "delivery_time" varchar,
+      "payment_method" varchar DEFAULT 'cod',
+      "payment_status" varchar DEFAULT 'pending',
+      "total_amount" numeric DEFAULT 0,
+      "status" varchar DEFAULT 'pending',
+      "items" jsonb,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "articles" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "title" varchar NOT NULL,
+      "slug" varchar,
+      "category_id" integer,
+      "image_id" integer,
+      "summary" varchar,
+      "content" jsonb,
+      "views" numeric DEFAULT 0,
+      "is_featured" boolean DEFAULT false,
+      "published_at" timestamp(3) with time zone DEFAULT now(),
+      "author_id" integer,
+      "_status" varchar DEFAULT 'published',
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "articles_rels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order" integer,
+      "parent_id" integer NOT NULL,
+      "path" varchar NOT NULL,
+      "categories_id" integer,
+      "tags_id" integer,
+      "media_id" integer,
+      "users_id" integer
+    );
+
+    CREATE TABLE IF NOT EXISTS "pages" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "title" varchar NOT NULL,
+      "slug" varchar,
+      "content" jsonb,
+      "_status" varchar DEFAULT 'published',
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "videos" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "title" varchar NOT NULL,
+      "slug" varchar,
+      "url" varchar,
+      "youtube_id" varchar,
+      "channel_id" integer,
+      "thumbnail_id" integer,
+      "description" varchar,
+      "is_featured" boolean DEFAULT false,
+      "views" numeric DEFAULT 0,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "video_channels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "name" varchar NOT NULL,
+      "slug" varchar,
+      "description" varchar,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "banners" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "title" varchar NOT NULL,
+      "position" varchar DEFAULT 'hero',
+      "image_id" integer,
+      "mobile_image_id" integer,
+      "url" varchar,
+      "open_in_new_tab" boolean DEFAULT false,
+      "active" boolean DEFAULT true,
+      "order_num" numeric DEFAULT 0,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "site_stats" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "title" varchar,
+      "value" varchar,
+      "icon" varchar,
+      "order_num" numeric DEFAULT 0,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "payload_locked_documents" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "global_slug" varchar,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "payload_locked_documents_rels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order" integer,
+      "parent_id" integer NOT NULL,
+      "path" varchar NOT NULL,
+      "users_id" integer
+    );
+
+    CREATE TABLE IF NOT EXISTS "payload_preferences" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "key" varchar,
+      "value" jsonb,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS "payload_preferences_rels" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "order" integer,
+      "parent_id" integer NOT NULL,
+      "path" varchar NOT NULL,
+      "users_id" integer
+    );
+
+    CREATE TABLE IF NOT EXISTS "payload_migrations" (
+      "id" serial PRIMARY KEY NOT NULL,
+      "name" varchar,
+      "batch" numeric,
+      "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+      "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    );
+  `,
+
+  // ====================================================
   // BATCH: Core site_settings and its related tables
   // ====================================================
   `

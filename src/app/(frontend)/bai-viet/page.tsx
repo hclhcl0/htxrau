@@ -20,15 +20,28 @@ export default async function AllArticlesPage({ searchParams }: PageParams) {
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
   const payload = await getPayload({ config: configPromise });
 
-  const result = await payload.find({
-    collection: 'articles',
-    sort: '-publishedAt',
-    limit: 12,
-    page: page,
-    depth: 1,
-  });
+  let articles: any[] = [];
+  let totalPages = 1;
+  let currentPage = 1;
+  let hasPrevPage = false;
+  let hasNextPage = false;
 
-  const { docs: articles, totalPages, page: currentPage, hasPrevPage, hasNextPage } = result;
+  try {
+    const result = await payload.find({
+      collection: 'articles',
+      sort: '-publishedAt',
+      limit: 12,
+      page: page,
+      depth: 1,
+    });
+    articles = result.docs;
+    totalPages = result.totalPages;
+    currentPage = result.page || 1;
+    hasPrevPage = result.hasPrevPage;
+    hasNextPage = result.hasNextPage;
+  } catch (err) {
+    console.error('Error fetching articles:', err);
+  }
 
   return (
     <div className="container mx-auto px-4 pt-2 md:pt-4 pb-6 md:pb-10 max-w-7xl">
