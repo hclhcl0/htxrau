@@ -225,7 +225,7 @@ export default buildConfig({
             collection: 'users',
             id: existing.docs[0].id,
             data: {
-              password: 'admin',
+              password: 'admin123',
               role: 'admin',
             },
           });
@@ -235,7 +235,7 @@ export default buildConfig({
             collection: 'users',
             data: {
               email: 'admin@test.com',
-              password: 'admin',
+              password: 'admin123',
               name: 'Super Admin',
               role: 'admin',
             },
