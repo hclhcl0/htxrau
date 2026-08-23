@@ -18,9 +18,9 @@ export const Media: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => Boolean(user), // Mọi user đăng nhập đều được upload
-    update: ({ req: { user } }) => ['admin', 'editor'].includes(user?.role as string),
-    delete: ({ req: { user } }) => ['admin', 'editor'].includes(user?.role as string),
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   upload: {
     staticDir: 'public/media',

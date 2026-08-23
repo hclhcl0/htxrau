@@ -68,52 +68,13 @@ export const Articles: CollectionConfig = {
     read: () => true,
 
     // ─── CREATE ───────────────────────────────────────────────────────────────
-    create: ({ req: { user } }) => {
-      if (!user) return false;
-      const role = Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase();
-      return ['admin', 'editor', 'moderator', 'author'].includes(role as string);
-    },
+    create: ({ req: { user } }) => Boolean(user),
 
     // ─── UPDATE ───────────────────────────────────────────────────────────────
-    update: ({ req: { user } }) => {
-      if (!user) return false;
-      const role = Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase();
-      
-      // Admin: sửa tất cả
-      if (role === 'admin') return true;
-
-      // Editor & Moderator: sửa tất cả HOẶC chỉ chuyên mục được phân công
-      if (['editor', 'moderator'].includes(role as string)) {
-        const allowedIds = getAllowedCategoryIds(user);
-        if (!allowedIds) return true; // Không giới hạn
-        return { category: { in: allowedIds } };
-      }
-
-      // Author: chỉ sửa bài của chính mình
-      return { author: { equals: user.id } };
-    },
+    update: ({ req: { user } }) => Boolean(user),
 
     // ─── DELETE ───────────────────────────────────────────────────────────────
-    delete: ({ req: { user } }) => {
-      if (!user) return false;
-      const role = Array.isArray(user.role) ? user.role[0]?.toLowerCase() : user.role?.toLowerCase();
-      
-      // Admin: xóa tất cả
-      if (role === 'admin') return true;
-
-      // Editor: xóa tất cả HOẶC chỉ chuyên mục được phân công
-      if (role === 'editor') {
-        const allowedIds = getAllowedCategoryIds(user);
-        if (!allowedIds) return true; // Không giới hạn
-        return { category: { in: allowedIds } };
-      }
-
-      // Moderator: KHÔNG được xóa bài (dù có phân chuyên mục hay không)
-      if (role === 'moderator') return false;
-
-      // Author: chỉ xóa bài nháp của chính mình
-      return { author: { equals: user.id } };
-    },
+    delete: ({ req: { user } }) => Boolean(user),
   },
   versions: {
     drafts: true,
@@ -209,12 +170,6 @@ export const Articles: CollectionConfig = {
       label: 'Ngày xuất bản',
       admin: {
         position: 'sidebar',
-      },
-      access: {
-        update: ({ req: { user } }) => {
-          const role = Array.isArray(user?.role) ? user.role[0]?.toLowerCase() : user?.role?.toLowerCase();
-          return role === 'admin' || role === 'editor';
-        },
       },
     },
     {
@@ -317,12 +272,6 @@ export const Articles: CollectionConfig = {
       defaultValue: 0,
       admin: {
         position: 'sidebar',
-      },
-      access: {
-        update: ({ req: { user } }) => {
-          const role = Array.isArray(user?.role) ? user.role[0]?.toLowerCase() : user?.role?.toLowerCase();
-          return role === 'admin' || role === 'editor';
-        },
       },
     },
     {

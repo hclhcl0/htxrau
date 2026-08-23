@@ -12,9 +12,9 @@ export const Tags: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => ['admin', 'editor', 'moderator', 'author'].includes(user?.role as string),
-    update: ({ req: { user } }) => (Array.isArray(user?.role) ? user.role.includes('admin') : user?.role === 'admin') || (Array.isArray(user?.role) ? user.role.includes('editor') : user?.role === 'editor'),
-    delete: ({ req: { user } }) => (Array.isArray(user?.role) ? user.role.includes('admin') : user?.role === 'admin') || (Array.isArray(user?.role) ? user.role.includes('editor') : user?.role === 'editor'),
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   fields: [
     {
