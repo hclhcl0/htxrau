@@ -123,7 +123,7 @@ export default buildConfig({
         '@/components/Admin/BulkUploadLink.tsx',
       ],
       beforeDashboard: [
-        '@/app/(payload)/admin/components/AuthorWelcome.tsx#AuthorWelcome',
+        '@/components/Admin/QuickAccessDashboard.tsx#QuickAccessDashboard',
       ]
     }
   },
