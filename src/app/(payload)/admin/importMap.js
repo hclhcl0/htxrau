@@ -34,11 +34,13 @@ import { default as default_459aafd36f902eafa44c6f9d2a340370 } from '@/component
 import { AuthorWelcome as AuthorWelcome_59589bfc5409bc24cf137e45629d787e } from '@/app/(payload)/admin/components/AuthorWelcome.tsx'
 import { default as default_1aa2999a49364743565bf91f3348acdc } from '@/components/Admin/UserGuideView.tsx'
 import { default as default_11bea0dfd321d7b114d61c03fc2ce164 } from '@/components/Admin/BulkUploadView.tsx'
+import { S3ClientUploadHandler as S3ClientUploadHandler_s3 } from '@payloadcms/storage-s3/client'
 import { ExportDeliveryButton as ExportDeliveryButton_orders } from '@/collections/components/ExportDeliveryButton'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_s3,
   "@/collections/components/ExportDeliveryButton#ExportDeliveryButton": ExportDeliveryButton_orders,
   "@/components/Admin/UserPermissionsNote.tsx#UserPermissionsNote": UserPermissionsNote_4784da27a43493924eba2534787a9e85,
   "@/components/Admin/MediaFolderFilter#default": default_e356d357aaf402fb839ceb5a13023ed8,
