@@ -39,6 +39,9 @@ import { default as default_11bea0dfd321d7b114d61c03fc2ce164 } from '@/component
 import { S3ClientUploadHandler as S3ClientUploadHandler_s3 } from '@payloadcms/storage-s3/client'
 import { ExportDeliveryButton as ExportDeliveryButton_orders } from '@/collections/components/ExportDeliveryButton'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { PasteImageFeatureClient as PasteImageFeatureClient_custom } from '@/features/PasteImage/feature.client'
+import { PasteImagePlugin as PasteImagePlugin_custom } from '@/features/PasteImage/PasteImagePlugin'
+
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -82,5 +85,7 @@ export const importMap = {
   "@/app/(payload)/admin/components/LogoutButton.tsx#LogoutButtonCustom": LogoutButtonCustom_custom,
   "@/components/Admin/UserGuideView.tsx#default": default_1aa2999a49364743565bf91f3348acdc,
   "@/components/Admin/BulkUploadView.tsx#default": default_11bea0dfd321d7b114d61c03fc2ce164,
+  "@/features/PasteImage/feature.client#PasteImageFeatureClient": PasteImageFeatureClient_custom,
+  "@/features/PasteImage/PasteImagePlugin#PasteImagePlugin": PasteImagePlugin_custom,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

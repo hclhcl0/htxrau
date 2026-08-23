@@ -1,14 +1,13 @@
 // @ts-nocheck
 import cron from 'node-cron';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
+import type { Payload } from 'payload';
 
-export function initVideoSyncCron() {
+export function initVideoSyncCron(payload?: Payload) {
   // Chạy lúc 2h sáng mỗi ngày (0 2 * * *)
   cron.schedule('0 2 * * *', async () => {
     console.log('[CRON] Bắt đầu đồng bộ Video YouTube tự động...');
     try {
-      const payload = await getPayload({ config: configPromise });
+      if (!payload) return;
       
       const channelsResult = await payload.find({
         collection: 'video-channels' as any,
