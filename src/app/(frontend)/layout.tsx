@@ -17,27 +17,30 @@ const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(serverUrl),
-  title: "TRANG TRẠI NÔNG SẢN SẠCH & RAU AN TOÀN VIETGAP",
-  description: "Chuyên cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Túy Loan, thu hoạch trong ngày và giao tận nơi cho gia đình, nhà hàng, bếp ăn tập thể.",
+  title: {
+    template: "%s | HTX RAU AN TOÀN TÚY LOAN",
+    default: "HTX RAU AN TOÀN TÚY LOAN - Vùng Chuyên Canh Rau Sạch VietGAP Đà Nẵng",
+  },
+  description: "Hợp tác xã Dịch vụ Sản xuất & Tiêu thụ Rau an toàn Túy Loan. Cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Đà Nẵng, thu hoạch mỗi sớm và giao tận nơi.",
   openGraph: {
     type: "website",
     locale: "vi_VN",
     url: "/",
-    siteName: "Rau An Toàn VietGAP",
-    title: "Trang Trại Nông Sản Sạch & Rau An Toàn VietGAP",
-    description: "Chuyên cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Túy Loan, thu hoạch trong ngày và giao tận nơi.",
+    siteName: "HTX Rau An Toàn Túy Loan",
+    title: "HTX RAU AN TOÀN TÚY LOAN - Nông Sản Sạch Chuẩn VietGAP",
+    description: "Chuyên cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Túy Loan, thu hoạch trong ngày và giao tận nơi cho gia đình, nhà hàng, bếp ăn tập thể.",
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Rau An Toàn VietGAP - Nông Sản Sạch Tươi Ngon",
+        alt: "HTX Rau An Toàn Túy Loan - Nông Sản Sạch VietGAP",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trang Trại Nông Sản Sạch & Rau An Toàn VietGAP",
+    title: "HTX RAU AN TOÀN TÚY LOAN - Nông Sản Sạch VietGAP",
     description: "Chuyên cung cấp rau củ quả tươi sạch an toàn chuẩn VietGAP & OCOP Túy Loan.",
     images: ["/logo.png"],
   },

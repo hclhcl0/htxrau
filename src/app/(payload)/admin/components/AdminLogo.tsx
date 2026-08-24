@@ -7,7 +7,7 @@ export const AdminLogo = () => {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1rem 0' }}>
       <img 
         src="/logo.png" 
-        alt="Trang Trại Nông Sản Sạch & Rau An Toàn VietGAP" 
+        alt="HTX Rau An Toàn Túy Loan" 
         style={{ width: '90px', height: '90px', objectFit: 'contain' }}
         onError={(e) => {
           // Ẩn ảnh nếu file logo.png bị lỗi 404

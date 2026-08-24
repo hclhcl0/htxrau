@@ -938,7 +938,7 @@ export const SiteSettings: GlobalConfig = {
                       name: 'copyrightText',
                       type: 'text',
                       label: 'Dòng bản quyền (Copyright)',
-                      defaultValue: '© {year} Bản quyền thuộc về TRANG TRẠI NÔNG SẢN SẠCH & RAU AN TOÀN VIETGAP',
+                      defaultValue: '© {year} Bản quyền thuộc về HTX SẢN XUẤT VÀ TIÊU THỤ RAU AN TOÀN TÚY LOAN',
                       admin: {
                         description: 'Sử dụng {year} để tự động hiển thị năm hiện tại.',
                       },
