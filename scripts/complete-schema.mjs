@@ -105,7 +105,9 @@ export const ALL_TABLE_CREATES = [
   "CREATE TABLE IF NOT EXISTS \"orders\" (\n  \"id\" serial PRIMARY KEY NOT NULL,\n  \"order_code\" varchar,\n  \"status\" varchar NOT NULL,\n  \"source\" varchar,\n  \"customer_name\" varchar NOT NULL,\n  \"customer_phone\" varchar NOT NULL,\n  \"customer_address\" varchar,\n  \"total_note\" varchar,\n  \"requested_delivery_date\" timestamp(3) with time zone DEFAULT now(),\n  \"total_amount\" numeric,\n  \"assigned_to_id\" integer,\n  \"updated_at\" timestamp(3) with time zone DEFAULT now() NOT NULL,\n  \"created_at\" timestamp(3) with time zone DEFAULT now() NOT NULL,\n  \"payment_method\" varchar\n);",
   "CREATE TABLE IF NOT EXISTS \"payload_locked_documents\" (\n  \"id\" serial PRIMARY KEY NOT NULL,\n  \"global_slug\" varchar,\n  \"updated_at\" timestamp(3) with time zone DEFAULT now() NOT NULL,\n  \"created_at\" timestamp(3) with time zone DEFAULT now() NOT NULL\n);",
   "CREATE TABLE IF NOT EXISTS \"payload_locked_documents_rels\" (\n  \"id\" serial PRIMARY KEY NOT NULL,\n  \"order\" integer,\n  \"parent_id\" integer NOT NULL,\n  \"path\" varchar NOT NULL,\n  \"users_id\" integer,\n  \"media_folders_id\" integer,\n  \"media_id\" integer,\n  \"products_id\" integer,\n  \"certificates_id\" integer,\n  \"orders_id\" integer,\n  \"categories_id\" integer,\n  \"tags_id\" integer,\n  \"articles_id\" integer,\n  \"pages_id\" integer,\n  \"videos_id\" integer,\n  \"video_channels_id\" integer,\n  \"banners_id\" integer\n);",
-  "CREATE TABLE IF NOT EXISTS \"articles_rels\" (\n  \"id\" serial PRIMARY KEY NOT NULL,\n  \"order\" integer,\n  \"parent_id\" integer NOT NULL,\n  \"path\" varchar NOT NULL,\n  \"tags_id\" integer\n);"
+  "CREATE TABLE IF NOT EXISTS \"articles_rels\" (\n  \"id\" serial PRIMARY KEY NOT NULL,\n  \"order\" integer,\n  \"parent_id\" integer NOT NULL,\n  \"path\" varchar NOT NULL,\n  \"tags_id\" integer\n);",
+  "CREATE TABLE IF NOT EXISTS \"orders_rels\" (\n  \"id\" serial PRIMARY KEY NOT NULL,\n  \"order\" integer,\n  \"parent_id\" integer NOT NULL,\n  \"path\" varchar NOT NULL,\n  \"products_id\" integer,\n  \"users_id\" integer\n);",
+  "CREATE TABLE IF NOT EXISTS \"payload_migrations\" (\n  \"id\" serial PRIMARY KEY NOT NULL,\n  \"name\" varchar,\n  \"batch\" numeric,\n  \"updated_at\" timestamp(3) with time zone DEFAULT now() NOT NULL,\n  \"created_at\" timestamp(3) with time zone DEFAULT now() NOT NULL\n);"
 ];
 export const ALL_COLUMN_ALTERS = [
   "DO $$ BEGIN ALTER TABLE \"users_sessions\" ADD COLUMN \"_order\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
@@ -1090,5 +1092,31 @@ export const ALL_COLUMN_ALTERS = [
   "DO $$ BEGIN ALTER TABLE \"site_settings\" ADD COLUMN \"contact_page_map_embed_url\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
   "DO $$ BEGIN ALTER TABLE \"site_settings_contact_page_policies\" ADD COLUMN \"_order\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
   "DO $$ BEGIN ALTER TABLE \"site_settings_contact_page_policies\" ADD COLUMN \"_parent_id\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
-  "DO $$ BEGIN ALTER TABLE \"site_settings_contact_page_policies\" ADD COLUMN \"text\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;"
+  "DO $$ BEGIN ALTER TABLE \"site_settings_contact_page_policies\" ADD COLUMN \"text\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"order_code\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"status\" varchar DEFAULT 'new'; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"source\" varchar DEFAULT 'website'; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"customer_name\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"customer_phone\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"customer_address\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"total_note\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"requested_delivery_date\" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"total_amount\" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"assigned_to_id\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"payment_method\" varchar DEFAULT 'cod'; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"updated_at\" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders\" ADD COLUMN \"created_at\" timestamp(3) with time zone DEFAULT now(); EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"_order\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"_parent_id\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"product_id\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"product_name\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"quantity\" integer DEFAULT 1; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"unit\" varchar DEFAULT 'kg'; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"unit_price\" numeric; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_items\" ADD COLUMN \"item_note\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_rels\" ADD COLUMN \"order\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_rels\" ADD COLUMN \"parent_id\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_rels\" ADD COLUMN \"path\" varchar; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_rels\" ADD COLUMN \"products_id\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;",
+  "DO $$ BEGIN ALTER TABLE \"orders_rels\" ADD COLUMN \"users_id\" integer; EXCEPTION WHEN duplicate_column THEN null; END $$;"
 ];

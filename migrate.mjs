@@ -28,7 +28,7 @@ pool.on('error', (err) => {
   console.error('⚠️ [Postgres Pool Error]:', err.message);
 });
 
-const SCHEMA_VERSION = 'v2026_08_24_contact_page_v2';
+const SCHEMA_VERSION = 'v2026_08_24_full_schema_v3';
 
 async function run() {
   const client = await pool.connect();
