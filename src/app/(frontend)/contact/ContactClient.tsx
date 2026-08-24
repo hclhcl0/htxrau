@@ -82,11 +82,11 @@ export function ContactClient({ data }: { data: ContactPageData }) {
   const bannerTitle = data?.bannerTitle || 'Liên Hệ Đặt Hàng & Nhận Báo Giá Sỉ';
   const bannerSubtitle = data?.bannerSubtitle || 'Cung cấp rau an toàn chuẩn VietGAP cho hộ gia đình, trường học, bếp ăn tập thể, nhà hàng và siêu thị với chính sách chiết khấu tốt nhất.';
   const orgName = data?.orgName || 'HỢP TÁC XÃ DỊCH VỤ SẢN XUẤT & TIÊU THỤ RAU AN TOÀN TÚY LOAN';
-  const address = data?.address || 'Thôn Túy Loan Tây, xã Hòa Phong, huyện Hòa Vang, TP. Đà Nẵng';
-  const representative = data?.representative || 'Ông Bùi Dũng - Giám đốc Hợp tác xã';
+  const address = data?.address || 'Thôn Túy Loan Tây, xã Hòa Vang, TP. Đà Nẵng';
+  const representative = data?.representative || 'Đặng Thị Yến Khanh - Giám đốc Hợp tác xã';
   const phone1 = data?.phone1 || '0905 559 206';
   const phone2 = data?.phone2 || '0236 3890 407';
-  const email = data?.email || 'htxtuyloan@gmail.com';
+  const email = data?.email || 'rauantoantuyloan@gmail.com';
   const policyTitle = data?.policyTitle || 'Chính Sách Cung Ứng & Giao Hàng:';
 
   // Format policies list

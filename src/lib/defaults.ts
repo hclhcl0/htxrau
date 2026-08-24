@@ -60,10 +60,10 @@ export const DEFAULT_SITE_SETTINGS = {
   footer: {
     aboutText:
       'Hợp tác xã Dịch vụ Sản xuất và Tiêu thụ Rau an toàn Túy Loan - Vùng chuyên canh 8 ha rau sạch bên dòng sông Túy Loan, đạt chuẩn VietGAP và OCOP 3 sao TP. Đà Nẵng.',
-    addressMain: 'Thôn Túy Loan Tây, xã Hòa Phong, huyện Hòa Vang, TP. Đà Nẵng',
+    addressMain: 'Thôn Túy Loan Tây, xã Hòa Vang, TP. Đà Nẵng',
     addressSub: '',
-    phone: '0905546207 - 0903596767',
-    email: 'htxtuyloan@gmail.com',
+    phone: '0905 559 206 - 0236 3890 407',
+    email: 'rauantoantuyloan@gmail.com',
     copyrightText: `© ${new Date().getFullYear()} Bản quyền thuộc về HTX SẢN XUẤT VÀ TIÊU THỤ RAU AN TOÀN TÚY LOAN`,
     designerCredit: 'Rau an toàn Đà Nẵng - OCOP 3 sao',
     quickLinks: [

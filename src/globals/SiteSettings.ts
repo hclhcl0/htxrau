@@ -1778,13 +1778,13 @@ export const SiteSettings: GlobalConfig = {
               name: 'address',
               type: 'text',
               label: 'Trụ sở & Vùng sản xuất',
-              defaultValue: 'Thôn Túy Loan Tây, xã Hòa Phong, huyện Hòa Vang, TP. Đà Nẵng',
+              defaultValue: 'Thôn Túy Loan Tây, xã Hòa Vang, TP. Đà Nẵng',
             },
             {
               name: 'representative',
               type: 'text',
               label: 'Người đại diện',
-              defaultValue: 'Ông Bùi Dũng - Giám đốc Hợp tác xã',
+              defaultValue: 'Đặng Thị Yến Khanh - Giám đốc Hợp tác xã',
             },
             {
               type: 'row',
@@ -1807,7 +1807,7 @@ export const SiteSettings: GlobalConfig = {
               name: 'email',
               type: 'text',
               label: 'Email liên hệ',
-              defaultValue: 'htxtuyloan@gmail.com',
+              defaultValue: 'rauantoantuyloan@gmail.com',
             },
             {
               name: 'policyTitle',
