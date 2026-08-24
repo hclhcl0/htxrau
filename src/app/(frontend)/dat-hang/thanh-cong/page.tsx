@@ -66,10 +66,10 @@ export default async function ThanhCongPage({ searchParams }: Props) {
               <div>
                 <p className="font-bold text-gray-800 text-sm">Cần hỗ trợ? Gọi ngay hotline</p>
                 <a
-                  href="tel:0905559206"
+                  href="tel:0905546207"
                   className="text-emerald-600 font-black text-base hover:text-emerald-700 transition-colors"
                 >
-                  0905 559 206
+                  0905 546 207 - 0903 596 767
                 </a>
               </div>
             </div>

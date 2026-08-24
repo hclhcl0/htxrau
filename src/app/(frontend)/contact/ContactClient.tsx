@@ -84,8 +84,8 @@ export function ContactClient({ data }: { data: ContactPageData }) {
   const orgName = data?.orgName || 'HỢP TÁC XÃ DỊCH VỤ SẢN XUẤT & TIÊU THỤ RAU AN TOÀN TÚY LOAN';
   const address = data?.address || 'Thôn Túy Loan Tây, xã Hòa Vang, TP. Đà Nẵng';
   const representative = data?.representative || 'Đặng Thị Yến Khanh - Giám đốc Hợp tác xã';
-  const phone1 = data?.phone1 || '0905 559 206';
-  const phone2 = data?.phone2 || '0236 3890 407';
+  const phone1 = data?.phone1 || '0905 546 207';
+  const phone2 = data?.phone2 || '0903 596 767';
   const email = data?.email || 'rauantoantuyloan@gmail.com';
   const policyTitle = data?.policyTitle || 'Chính Sách Cung Ứng & Giao Hàng:';
 

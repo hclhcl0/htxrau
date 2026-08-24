@@ -43,7 +43,7 @@ const getSiteSettings = unstable_cache(
       const payload = await getPayload({ config: configPromise });
       const s = (await payload.findGlobal({ slug: 'site-settings', depth: 0 })) as any;
       return {
-        phone: s?.header?.hotline?.phone || '0905 559 206',
+        phone: s?.header?.hotline?.phone || '0905 546 207',
         bankName: s?.payment?.bankName || '',
         bankAccount: s?.payment?.bankAccount || '',
         bankOwner: s?.payment?.bankOwner || '',
@@ -52,7 +52,7 @@ const getSiteSettings = unstable_cache(
     } catch (e) {
       console.warn('Failed to fetch site-settings for order page, using default fallback.');
       return {
-        phone: '0905 559 206',
+        phone: '0905 546 207',
         bankName: '',
         bankAccount: '',
         bankOwner: '',

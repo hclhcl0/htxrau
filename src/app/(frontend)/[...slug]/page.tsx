@@ -179,15 +179,15 @@ function ContactPageTemplate({ page }: { page: any }) {
             <ul className="space-y-4">
               <li className="flex gap-3 items-start">
                 <MapPin size={18} className="mt-0.5 flex-shrink-0 text-white/80" />
-                <span className="text-white/90 text-sm">Thôn Túy Loan Đông, Xã Hòa Phong, H. Hòa Vang, TP. Đà Nẵng</span>
+                <span className="text-white/90 text-sm">Thôn Túy Loan Tây, xã Hòa Vang, TP. Đà Nẵng</span>
               </li>
               <li className="flex gap-3 items-center">
                 <Phone size={18} className="flex-shrink-0 text-white/80" />
-                <a href="tel:0905559206" className="text-white/90 text-sm hover:text-white transition-colors">0905 559 206</a>
+                <a href="tel:0905546207" className="text-white/90 text-sm hover:text-white transition-colors">0905 546 207 - 0903 596 767</a>
               </li>
               <li className="flex gap-3 items-center">
                 <Mail size={18} className="flex-shrink-0 text-white/80" />
-                <a href="mailto:contact@rautuyloan.vn" className="text-white/90 text-sm hover:text-white transition-colors break-all">contact@rautuyloan.vn</a>
+                <a href="mailto:rauantoantuyloan@gmail.com" className="text-white/90 text-sm hover:text-white transition-colors break-all">rauantoantuyloan@gmail.com</a>
               </li>
               <li className="flex gap-3 items-start">
                 <Clock size={18} className="mt-0.5 flex-shrink-0 text-white/80" />

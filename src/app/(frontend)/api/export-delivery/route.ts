@@ -226,7 +226,7 @@ export async function GET(req: NextRequest) {
     ${orderCards}
 
     <div style="margin-top:24px;border-top:1px solid #e5e7eb;padding-top:16px;font-size:11px;color:#9ca3af;text-align:center">
-      HTX Rau An Toàn Túy Loan · VietGAP · Điện thoại: 0905 559 206 · Túy Loan, Hòa Phong, Hòa Vang, Đà Nẵng
+      HTX Rau An Toàn Túy Loan · VietGAP · Điện thoại: 0905 546 207 - 0903 596 767 · Thôn Túy Loan Tây, xã Hòa Vang, Đà Nẵng
     </div>
   </div>
 </body>

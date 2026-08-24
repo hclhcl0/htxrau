@@ -28,7 +28,7 @@ export function QuickOrderModal({
   isOpen, onClose,
   productId, productName,
   productPrice, productUnit = 'kg',
-  hotline = '0905 559 206',
+  hotline = '0905 546 207',
 }: QuickOrderModalProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -171,7 +171,7 @@ export function QuickOrderModal({
               </div>
               <div className={styles.formGroup}>
                 <label className={styles.label}>SĐT <span className={styles.req}>*</span></label>
-                <input className={styles.input} type="tel" placeholder="0905 559 206" value={phone} onChange={e => setPhone(e.target.value)} />
+                <input className={styles.input} type="tel" placeholder="0905 546 207" value={phone} onChange={e => setPhone(e.target.value)} />
               </div>
             </div>
 

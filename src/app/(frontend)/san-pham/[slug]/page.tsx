@@ -31,7 +31,7 @@ const getHotline = unstable_cache(
   async () => {
     const payload = await getPayload({ config: configPromise });
     const s = (await payload.findGlobal({ slug: 'site-settings', depth: 0 })) as any;
-    return s?.header?.hotline?.phone || '0905 559 206';
+    return s?.header?.hotline?.phone || '0905 546 207';
   },
   ['hotline-product-page'],
   { revalidate: 300, tags: ['site-settings'] },
