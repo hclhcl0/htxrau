@@ -258,6 +258,19 @@ export const Orders: CollectionConfig = {
           const rand = Math.floor(Math.random() * 9000) + 1000;
           data.orderCode = `DH-${y}${m}${d}-${rand}`;
         }
+        // Tự động tính tổng tiền từ items (chỉ khi admin chưa nhập thủ công)
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          const autoTotal = data.items.reduce((sum: number, item: { quantity?: number; unitPrice?: number }) => {
+            const qty = Number(item.quantity) || 0;
+            const price = Number(item.unitPrice) || 0;
+            return sum + qty * price;
+          }, 0);
+          // Chỉ ghi đè nếu tổng tính được > 0 và admin chưa nhập tổng tiền thủ công
+          // (hoặc nếu tổng tiền trước đó bằng 0)
+          if (autoTotal > 0 && !data.totalAmount) {
+            data.totalAmount = autoTotal;
+          }
+        }
         return data;
       },
     ],
