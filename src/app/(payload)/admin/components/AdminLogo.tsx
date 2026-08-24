@@ -17,13 +17,13 @@ export const AdminLogo = () => {
       <div style={{ textAlign: 'center' }}>
         <h2 style={{ 
           margin: 0, 
-          fontSize: '1.25rem', 
+          fontSize: '1.15rem', 
           fontWeight: 700, 
           color: 'var(--theme-elevation-800)', 
           letterSpacing: '0.02em',
           textTransform: 'uppercase'
         }}>
-          Nông Sản & Rau Sạch
+          HTX RAU AN TOÀN TÚY LOAN
         </h2>
         <p style={{ 
           margin: '0.25rem 0 0 0', 

@@ -5,6 +5,7 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { ShoppingBag, CheckCircle2, Filter, Sparkles, Sprout } from 'lucide-react';
 import { getMediaUrl } from '@/lib/mediaUrl';
+import { QuickPriceButton } from '@/components/QuickPriceEditor/QuickPriceButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -197,8 +198,19 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 
                     <div className="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
                       <div>
-                        <div className="text-emerald-700 font-extrabold text-base md:text-lg">
-                          {p.price ? `${Number(p.price).toLocaleString('vi-VN')} đ` : 'Liên hệ'}
+                        <div className="flex items-center gap-1.5">
+                          <div className="text-emerald-700 font-extrabold text-base md:text-lg">
+                            {p.price ? `${Number(p.price).toLocaleString('vi-VN')} đ` : 'Liên hệ'}
+                          </div>
+                          <QuickPriceButton
+                            productId={p.id}
+                            productName={p.name}
+                            initialPrice={p.price}
+                            initialOriginalPrice={p.originalPrice}
+                            initialUnit={p.unit || 'Kg'}
+                            initialStatus={p.status || 'in_stock'}
+                            variant="icon"
+                          />
                         </div>
                         <div className="text-[10px] text-gray-400">/ {p.unit || 'Kg'}</div>
                       </div>

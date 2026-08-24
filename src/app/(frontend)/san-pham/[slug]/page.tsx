@@ -19,6 +19,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react';
 import { getJsxConverters } from '@/components/LexicalConverters';
 import { unstable_cache } from 'next/cache';
 import { ProductOrderButtons } from './ProductOrderButtons';
+import { QuickPriceButton } from '@/components/QuickPriceEditor/QuickPriceButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -160,16 +161,28 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               {product.name}
             </h1>
 
-            <div className="bg-emerald-50/60 rounded-2xl p-4 border border-emerald-100 mb-6 flex items-baseline gap-3">
-              <div className="text-3xl font-black text-emerald-700">
-                {product.price ? `${Number(product.price).toLocaleString('vi-VN')} đ` : 'Liên hệ'}
-              </div>
-              {product.originalPrice && (
-                <div className="text-base text-gray-400 line-through">
-                  {Number(product.originalPrice).toLocaleString('vi-VN')} đ
+            <div className="bg-emerald-50/60 rounded-2xl p-4 border border-emerald-100 mb-6 flex flex-wrap items-baseline justify-between gap-3">
+              <div className="flex items-baseline gap-3">
+                <div className="text-3xl font-black text-emerald-700">
+                  {product.price ? `${Number(product.price).toLocaleString('vi-VN')} đ` : 'Liên hệ'}
                 </div>
-              )}
-              <div className="text-sm font-semibold text-gray-600">/ {product.unit || 'Kg'}</div>
+                {product.originalPrice && (
+                  <div className="text-base text-gray-400 line-through">
+                    {Number(product.originalPrice).toLocaleString('vi-VN')} đ
+                  </div>
+                )}
+                <div className="text-sm font-semibold text-gray-600">/ {product.unit || 'Kg'}</div>
+              </div>
+
+              <QuickPriceButton
+                productId={product.id}
+                productName={product.name}
+                initialPrice={product.price}
+                initialOriginalPrice={product.originalPrice}
+                initialUnit={product.unit || 'Kg'}
+                initialStatus={product.status || 'in_stock'}
+                variant="button"
+              />
             </div>
 
             <ProductOrderButtons

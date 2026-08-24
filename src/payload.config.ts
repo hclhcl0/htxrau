@@ -104,6 +104,17 @@ export default buildConfig({
   },
   admin: {
     user: 'users',
+    meta: {
+      titleSuffix: ' - HTX RAU AN TOÀN TÚY LOAN',
+      description: 'Hệ thống quản trị HTX Rau An Toàn Túy Loan',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          url: '/logo.png',
+        },
+      ],
+    },
     css: path.resolve(dirname, 'admin.css'),
     components: {
       graphics: {

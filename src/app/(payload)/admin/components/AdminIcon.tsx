@@ -6,7 +6,7 @@ export const AdminIcon = () => {
   return (
     <img 
       src="/logo.png" 
-      alt="Logo Rau Sạch" 
+      alt="Logo HTX Rau An Toàn Túy Loan" 
       style={{ width: '32px', height: '32px', objectFit: 'contain' }}
       onError={(e) => {
         // Fallback text if image 404s

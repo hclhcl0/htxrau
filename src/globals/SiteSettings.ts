@@ -1742,6 +1742,108 @@ export const SiteSettings: GlobalConfig = {
         },
       ],
     },
+    {
+      label: 'Trang Liên hệ & Báo giá',
+      fields: [
+        {
+          type: 'group',
+          name: 'contactPage',
+          label: 'Cấu hình Trang Liên hệ & Báo giá sỉ (/contact)',
+          fields: [
+            {
+              name: 'badgeText',
+              type: 'text',
+              label: 'Huy hiệu / Danh hiệu nhỏ',
+              defaultValue: 'HTX Nông Nghiệp Tiêu Biểu Đà Nẵng',
+            },
+            {
+              name: 'bannerTitle',
+              type: 'text',
+              label: 'Tiêu đề Banner chính',
+              defaultValue: 'Liên Hệ Đặt Hàng & Nhận Báo Giá Sỉ',
+            },
+            {
+              name: 'bannerSubtitle',
+              type: 'textarea',
+              label: 'Mô tả Banner chính',
+              defaultValue: 'Cung cấp rau an toàn chuẩn VietGAP cho hộ gia đình, trường học, bếp ăn tập thể, nhà hàng và siêu thị với chính sách chiết khấu tốt nhất.',
+            },
+            {
+              name: 'orgName',
+              type: 'text',
+              label: 'Tên Hợp tác xã / Đơn vị',
+              defaultValue: 'HỢP TÁC XÃ DỊCH VỤ SẢN XUẤT & TIÊU THỤ RAU AN TOÀN TÚY LOAN',
+            },
+            {
+              name: 'address',
+              type: 'text',
+              label: 'Trụ sở & Vùng sản xuất',
+              defaultValue: 'Thôn Túy Loan Tây, xã Hòa Phong, huyện Hòa Vang, TP. Đà Nẵng',
+            },
+            {
+              name: 'representative',
+              type: 'text',
+              label: 'Người đại diện',
+              defaultValue: 'Ông Bùi Dũng - Giám đốc Hợp tác xã',
+            },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'phone1',
+                  type: 'text',
+                  label: 'Hotline 1 (Di động / Zalo)',
+                  defaultValue: '0905 559 206',
+                },
+                {
+                  name: 'phone2',
+                  type: 'text',
+                  label: 'Hotline 2 (Số bàn / Cố định)',
+                  defaultValue: '0236 3890 407',
+                },
+              ],
+            },
+            {
+              name: 'email',
+              type: 'text',
+              label: 'Email liên hệ',
+              defaultValue: 'htxtuyloan@gmail.com',
+            },
+            {
+              name: 'policyTitle',
+              type: 'text',
+              label: 'Tiêu đề khối chính sách & cam kết',
+              defaultValue: 'Chính Sách Cung Ứng & Giao Hàng:',
+            },
+            {
+              name: 'policies',
+              type: 'array',
+              label: 'Danh sách cam kết & chính sách',
+              labels: {
+                singular: 'Chính sách',
+                plural: 'Danh sách chính sách',
+              },
+              fields: [
+                {
+                  name: 'text',
+                  type: 'text',
+                  label: 'Nội dung cam kết',
+                  required: true,
+                },
+              ],
+            },
+            {
+              name: 'mapEmbedUrl',
+              type: 'textarea',
+              label: 'Mã nhúng Bản đồ Google Maps (iframe src hoặc URL chia sẻ)',
+              admin: {
+                description: 'Dán link embed Google Maps hoặc iframe để hiển thị bản đồ trực quan tại trang liên hệ.',
+              },
+            },
+          ],
+        },
+      ],
+    },
 
   ],
 },
