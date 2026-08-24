@@ -308,6 +308,7 @@ export function ContactClient({ data }: { data: ContactPageData }) {
                         <option value="Bếp ăn tập thể / Công ty">Bếp ăn tập thể / Bệnh viện / Công ty</option>
                         <option value="Nhà hàng / Khách sạn">Nhà hàng / Khách sạn</option>
                         <option value="Đại lý / Siêu thị phân phối">Đại lý / Siêu thị phân phối</option>
+                        <option value="Dịch vụ thăm quan & trải nghiệm">Dịch vụ thăm quan & trải nghiệm</option>
                       </select>
                     </div>
                   </div>
@@ -322,7 +323,7 @@ export function ContactClient({ data }: { data: ContactPageData }) {
                       value={formData.content}
                       onChange={handleChange}
                       required
-                      placeholder="VD: Cần nhận bảng báo giá sỉ hàng tuần cho bếp ăn 200 suất / Muốn đặt Combo giỏ rau gia đình 5kg giao định kỳ thứ 3 & thứ 6..."
+                      placeholder="VD: Cần nhận bảng báo giá sỉ hàng tuần cho bếp ăn 200 suất / Đăng ký tour thăm quan & trải nghiệm thu hoạch rau cho đoàn học sinh..."
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs"
                     />
                   </div>
