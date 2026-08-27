@@ -171,7 +171,7 @@ export function SitePopupClient({
             </button>
 
             {/* Padding top nhường chỗ capsule badge */}
-            <div style={{ paddingTop: displayTitle && !transparentBackground ? '32px' : '16px' }}>
+            <div style={{ paddingTop: displayTitle && !transparentBackground ? '32px' : (transparentBackground ? '0' : '4px') }}>
 
               {displayVideoUrl && (
                 <div className="relative w-full aspect-[4/3] sm:aspect-video bg-black flex-shrink-0 rounded-t-[18px] overflow-hidden">
@@ -191,56 +191,67 @@ export function SitePopupClient({
                 </div>
               )}
 
-              {/* Ảnh */}
+              {/* Ảnh - Giữ nguyên 100% tỷ lệ ảnh gốc (Full Aspect Ratio), không bị crop */}
               {!displayVideoUrl && displayImage && (
-                <div style={{ position: 'relative', width: '100%', height: 200, background: '#f0f9f8' }}>
-                  <Image
-                    src={getMediaUrl(displayImage)}
-                    alt={displayImage.alt || displayTitle || 'Thông báo'}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 28rem"
-                    priority
-                  />
+                <div className="relative w-full overflow-hidden flex items-center justify-center bg-transparent">
+                  {displayLinkUrl ? (
+                    <Link href={displayLinkUrl} onClick={handleClose} className="block w-full text-center">
+                      <img
+                        src={getMediaUrl(displayImage)}
+                        alt={displayImage.alt || displayTitle || 'Thông báo'}
+                        className="w-full h-auto max-h-[70vh] object-contain block mx-auto transition-transform duration-300 hover:scale-[1.01]"
+                        loading="eager"
+                      />
+                    </Link>
+                  ) : (
+                    <img
+                      src={getMediaUrl(displayImage)}
+                      alt={displayImage.alt || displayTitle || 'Thông báo'}
+                      className="w-full h-auto max-h-[70vh] object-contain block mx-auto"
+                      loading="eager"
+                    />
+                  )}
                 </div>
               )}
 
-              {/* Nội dung */}
-              <div className="px-5 md:px-7 pb-5 md:pb-6 pt-3 max-h-[45vh] overflow-y-auto custom-scrollbar">
-                {isArticle ? (
-                  <p className="text-gray-600 text-sm md:text-base text-center leading-relaxed">
-                    {articleDescription || 'Vui lòng nhấn Đọc tiếp để xem chi tiết.'}
-                  </p>
-                ) : (
-                  renderedContent && (
-                    <div className="prose prose-sm max-w-none prose-headings:text-gov-primary prose-a:text-gov-secondary prose-img:rounded-xl text-gray-700 text-center">
-                      {renderedContent}
-                    </div>
-                  )
-                )}
+              {/* Nội dung bên dưới ảnh (chỉ hiển thị nếu có nội dung hoặc nút xem thêm) */}
+              {(isArticle || renderedContent || displayLinkUrl) && (
+                <div className="px-5 md:px-7 pb-5 md:pb-6 pt-3 max-h-[40vh] overflow-y-auto custom-scrollbar">
+                  {isArticle ? (
+                    <p className="text-gray-600 text-sm md:text-base text-center leading-relaxed">
+                      {articleDescription || 'Vui lòng nhấn Đọc tiếp để xem chi tiết.'}
+                    </p>
+                  ) : (
+                    renderedContent && (
+                      <div className="prose prose-sm max-w-none prose-headings:text-gov-primary prose-a:text-gov-secondary prose-img:rounded-xl text-gray-700 text-center">
+                        {renderedContent}
+                      </div>
+                    )
+                  )}
 
-                {displayLinkUrl && (
-                  <div className="mt-4 flex justify-center">
-                    <Link
-                      href={displayLinkUrl}
-                      onClick={handleClose}
-                      style={{
-                        display: 'inline-block',
-                        padding: '10px 32px',
-                        background: `linear-gradient(135deg, ${bgColor} 0%, #00c9b8 100%)`,
-                        color: '#fff',
-                        fontWeight: 600,
-                        fontSize: '14px',
-                        borderRadius: '999px',
-                        boxShadow: '0 4px 14px rgba(0,169,157,0.4)',
-                        textDecoration: 'none',
-                      }}
-                    >
-                      Đọc tiếp
-                    </Link>
-                  </div>
-                )}
-              </div>
+                  {displayLinkUrl && (
+                    <div className="mt-4 flex justify-center">
+                      <Link
+                        href={displayLinkUrl}
+                        onClick={handleClose}
+                        style={{
+                          display: 'inline-block',
+                          padding: '10px 32px',
+                          background: `linear-gradient(135deg, ${bgColor} 0%, #16a34a 100%)`,
+                          color: '#fff',
+                          fontWeight: 600,
+                          fontSize: '14px',
+                          borderRadius: '999px',
+                          boxShadow: '0 4px 14px rgba(22,163,74,0.4)',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        Đọc tiếp
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

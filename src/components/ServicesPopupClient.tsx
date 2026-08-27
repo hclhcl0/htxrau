@@ -104,7 +104,7 @@ export function ServicesPopupClient({
             >
               <img
                 src={resolveMediaUrl(mascotImage.url)}
-                alt={mascotImage.alt || 'Bác sĩ'}
+                alt={mascotImage.alt || 'Linh vật nông trại Túy Loan'}
                 className="mascot-glow mascot-hover-scale"
                 style={{ objectFit: 'contain' }}
               />
