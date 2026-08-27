@@ -88,7 +88,7 @@ export function VideoCardPopup({
           {thumbUrl ? (
             <Image
               src={thumbUrl}
-              alt={video.title || 'Video CDC Đà Nẵng'}
+              alt={video.title || 'Video Nông Trại Rau Túy Loan'}
               className="w-full h-full object-cover scale-[1.05] group-hover:scale-110 transition-transform duration-300"
               width={variant === 'vertical' ? 300 : 480}
               height={variant === 'vertical' ? 533 : 270}

@@ -6,8 +6,8 @@ import configPromise from '@payload-config';
 import VideoLibraryClient from './VideoLibraryClient';
 
 export const metadata = {
-  title: 'Thư viện Video | CDC Đà Nẵng',
-  description: 'Kho video truyền thông, giáo dục sức khỏe của Trung tâm Kiểm soát Bệnh tật Đà Nẵng.',
+  title: 'Thư viện Video | HTX Rau An Toàn Túy Loan',
+  description: 'Kho video hoạt động sản xuất, chăm sóc nông trại và thu hoạch rau an toàn VietGAP tại Hợp tác xã Túy Loan Đà Nẵng.',
 };
 
 async function getData() {

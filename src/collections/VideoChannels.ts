@@ -24,7 +24,7 @@ export const VideoChannels: CollectionConfig = {
       required: true,
       label: 'Tên kênh',
       admin: {
-        description: 'VD: Kênh CDC Đà Nẵng chính thức, Fanpage CDC Đà Nẵng...',
+        description: 'VD: Kênh HTX Rau Túy Loan chính thức, Fanpage Rau Sạch Túy Loan...',
       },
     },
     {

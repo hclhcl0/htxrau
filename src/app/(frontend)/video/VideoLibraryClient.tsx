@@ -157,7 +157,7 @@ export default function VideoLibraryClient({ videos, channels }: { videos: any[]
       {/* Header */}
       <div className="mb-8">
         <h1 className={styles.pageTitle}>THƯ VIỆN VIDEO</h1>
-        <p className={styles.subtitle}>Video truyền thông, giáo dục sức khỏe của CDC Đà Nẵng.</p>
+        <p className={styles.subtitle}>Video hoạt động sản xuất, kỹ thuật canh tác và thu hoạch rau an toàn chuẩn VietGAP tại Túy Loan.</p>
       </div>
 
       {/* Platform filter tabs */}

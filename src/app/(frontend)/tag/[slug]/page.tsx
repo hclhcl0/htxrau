@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageParams) {
   if (docs.length === 0) return {};
   
   return {
-    title: `Từ khóa: ${docs[0].title} | CDC Đà Nẵng`,
+    title: `Từ khóa: ${docs[0].title} | HTX Rau An Toàn Túy Loan`,
   };
 }
 

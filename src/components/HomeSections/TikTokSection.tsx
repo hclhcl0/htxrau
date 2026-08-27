@@ -9,7 +9,7 @@ interface TikTokSectionProps {
   limit?: number;
 }
 
-export async function TikTokSection({ title = 'KÊNH TIKTOK CDC ĐÀ NẴNG', channel }: TikTokSectionProps) {
+export async function TikTokSection({ title = 'KÊNH TIKTOK NÔNG TRẠI RAU SẠCH TÚY LOAN', channel }: TikTokSectionProps) {
   const channelId = typeof channel === 'object' ? (channel as any).id : channel;
   if (!channelId) return null;
 
