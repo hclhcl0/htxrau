@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 import { TikTokSidebarSlot } from './NewsSidebarLayout/TikTokSidebarSlot';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 interface SidebarRendererProps {
   widgets?: any[];

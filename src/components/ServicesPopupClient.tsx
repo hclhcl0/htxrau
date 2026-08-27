@@ -36,10 +36,25 @@ export function ServicesPopupClient({
   storageKey?: string;
 }) {
   const [isVisible, setIsVisible] = useState(false);
-  const key = storageKey || 'cdc_services_popup_closed';
+  const contentKey = 'htx_services_popup_' + (title ? encodeURIComponent(title).replace(/[^a-zA-Z0-9]/g, '_').slice(0, 40) : 'default');
+  const key = storageKey || contentKey;
 
   useEffect(() => {
-    if (showOnce && localStorage.getItem(key) === 'true') return;
+    if (typeof window === 'undefined') return;
+
+    try {
+      localStorage.removeItem('cdc_services_popup_closed');
+    } catch (_) {}
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const isPreview = urlParams.get('preview_popup') === '1' || urlParams.get('test_popup') === '1';
+
+    if (!isPreview && showOnce) {
+      try {
+        if (localStorage.getItem(key) === 'true') return;
+      } catch (_) {}
+    }
+
     const delay = Math.max((delaySeconds ?? 1) * 1000, 100);
     const timer = setTimeout(() => setIsVisible(true), delay);
     return () => clearTimeout(timer);
@@ -47,7 +62,11 @@ export function ServicesPopupClient({
 
   const handleClose = () => {
     setIsVisible(false);
-    if (showOnce) localStorage.setItem(key, 'true');
+    if (showOnce && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(key, 'true');
+      } catch (_) {}
+    }
   };
 
   if (!isVisible) return null;

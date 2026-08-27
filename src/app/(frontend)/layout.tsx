@@ -81,6 +81,16 @@ function fontValueToName(value: string): string {
 }
 
 import { draftMode } from 'next/headers';
+import { unstable_cache } from 'next/cache';
+
+const getCachedSiteSettings = unstable_cache(
+  async () => {
+    const payload = await getPayload({ config: configPromise });
+    return payload.findGlobal({ slug: 'site-settings', depth: 2 });
+  },
+  ['site-settings-layout'],
+  { revalidate: 60, tags: ['site-settings'] }
+);
 
 export default async function RootLayout({
   children,
@@ -93,8 +103,7 @@ export default async function RootLayout({
   try {
     const { isEnabled } = await draftMode();
     isDraftMode = isEnabled;
-    const payload = await getPayload({ config: configPromise });
-    const settings = await payload.findGlobal({ slug: 'site-settings', depth: 2 });
+    const settings = await getCachedSiteSettings();
     themeConfig = (settings as any)?.themeConfig;
     popupConfig = (settings as any)?.popup;
   } catch (e) {

@@ -41,21 +41,21 @@ export function SitePopup({ popupConfig }: SitePopupProps) {
     const items = (popupConfig.servicesItems || []).filter(i => i.title);
     return (
       <ServicesPopupClient
-        title={popupConfig.servicesTitle || 'Dịch vụ & Thông báo CDC Đà Nẵng'}
+        title={popupConfig.servicesTitle || 'Thông Báo & Dịch Vụ - HTX Rau An Toàn Túy Loan'}
         subtitle={popupConfig.servicesSubtitle || undefined}
         mascotImage={popupConfig.servicesMascot || null}
-        headerColor={popupConfig.servicesHeaderColor || '#00a99d'}
+        headerColor={popupConfig.servicesHeaderColor || '#15803d'}
         items={items}
         delaySeconds={popupConfig.delaySeconds ?? 1}
         showOnce={popupConfig.showOnce ?? true}
-        storageKey="cdc_services_popup_closed"
+        storageKey="htx_services_popup_closed"
       />
     );
   }
 
   // ── Original popup (article / manual) ──────────────────────
   const isArticle = popupConfig.type === 'article' && popupConfig.article;
-  const displayTitle = isArticle ? popupConfig.article.title : popupConfig.title;
+  const displayTitle = isArticle ? popupConfig.article.title : (popupConfig.title || 'THÔNG BÁO TỪ HTX RAU AN TOÀN TÚY LOAN');
   const displayImage = isArticle ? popupConfig.article.image : popupConfig.image;
   const displayLinkUrl = isArticle ? `/bai-viet/${popupConfig.article.slug}` : popupConfig.linkUrl;
   const articleDescription = isArticle ? popupConfig.article.description : null;
@@ -81,7 +81,7 @@ export function SitePopup({ popupConfig }: SitePopupProps) {
       transparentBackground={transparentBackground}
       displayVideoUrl={popupConfig.videoUrl}
       mascotImage={popupConfig.servicesMascot || null}
-      headerColor={popupConfig.servicesHeaderColor || '#00a99d'}
+      headerColor={popupConfig.servicesHeaderColor || '#15803d'}
     />
   );
 }

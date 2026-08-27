@@ -20,7 +20,7 @@ export const SiteSettings: GlobalConfig = {
       async () => {
         try {
           const { revalidateTag, revalidatePath } = await import('next/cache');
-          revalidateTag('site-settings');
+          (revalidateTag as any)('site-settings');
           revalidatePath('/', 'layout');
         } catch (e) {
           // ignore in environments where next/cache is not available

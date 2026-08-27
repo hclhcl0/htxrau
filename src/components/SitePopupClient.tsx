@@ -35,16 +35,39 @@ export function SitePopupClient({
 }) {
   const [isVisible, setIsVisible] = useState(false);
 
+  // Khóa lưu trạng thái dựa trên tiêu đề nội dung để không bị chặn vĩnh viễn khi admin đổi thông báo mới
+  const storageKey = 'htx_popup_' + (displayTitle ? encodeURIComponent(displayTitle).replace(/[^a-zA-Z0-9]/g, '_').slice(0, 40) : 'default');
+
   useEffect(() => {
-    if (showOnce && localStorage.getItem('cdc_popup_closed') === 'true') return;
-    const delay = (delaySeconds || 0) * 1000;
+    if (typeof window === 'undefined') return;
+
+    // Dọn dẹp key cũ từ template trước đó
+    try {
+      localStorage.removeItem('cdc_popup_closed');
+    } catch (_) {}
+
+    // Bỏ qua kiểm tra showOnce nếu có query ?preview_popup=1 hoặc ?test_popup=1 (để admin dễ test)
+    const urlParams = new URLSearchParams(window.location.search);
+    const isPreview = urlParams.get('preview_popup') === '1' || urlParams.get('test_popup') === '1';
+
+    if (!isPreview && showOnce) {
+      try {
+        if (localStorage.getItem(storageKey) === 'true') return;
+      } catch (_) {}
+    }
+
+    const delay = Math.max((delaySeconds || 0) * 1000, 100);
     const timer = setTimeout(() => setIsVisible(true), delay);
     return () => clearTimeout(timer);
-  }, [delaySeconds, showOnce]);
+  }, [delaySeconds, showOnce, storageKey]);
 
   const handleClose = () => {
     setIsVisible(false);
-    if (showOnce) localStorage.setItem('cdc_popup_closed', 'true');
+    if (showOnce) {
+      try {
+        localStorage.setItem(storageKey, 'true');
+      } catch (_) {}
+    }
   };
 
   if (!isVisible) return null;
