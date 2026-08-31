@@ -83,6 +83,7 @@ export function QuickPriceButton({
 
       const res = await fetch('/api/admin/quick-price', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -298,13 +299,13 @@ export function QuickPriceButton({
               {/* Mật khẩu Admin xác thực nếu chưa đăng nhập */}
               <div className="pt-2 border-t border-gray-100">
                 <label className="block text-[11px] font-semibold text-gray-500 mb-1 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Mật khẩu Quản trị (Admin Password):
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Mật khẩu Quản trị (Nếu đã đăng nhập Admin thì để trống):
                 </label>
                 <input
                   type="password"
                   value={adminPass}
                   onChange={(e) => setAdminPass(e.target.value)}
-                  placeholder="Nhập mật khẩu Admin (mặc định admin123)"
+                  placeholder="Nhập mật khẩu Admin (mặc định: admin123 hoặc mật khẩu tài khoản Admin)"
                   className="w-full px-3 py-1.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs"
                 />
               </div>
