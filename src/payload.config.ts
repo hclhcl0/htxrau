@@ -110,6 +110,10 @@ function buildAllowedOrigins(): string[] {
     origins.add(`https://${vercelUrl}`);
   }
 
+  // Thêm cứng domain HTX để đảm bảo không bao giờ bị lỗi CSRF/CORS dù env có thay đổi
+  addWithVariants('https://htxrautuyloan.com');
+  addWithVariants('https://www.htxrautuyloan.com');
+
   // Thêm các domain phụ từ EXTRA_ALLOWED_ORIGINS
   const extra = process.env.EXTRA_ALLOWED_ORIGINS || '';
   extra.split(',')
@@ -120,14 +124,16 @@ function buildAllowedOrigins(): string[] {
   return Array.from(origins);
 }
 
+const allowedOriginsList = buildAllowedOrigins();
+
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 
              (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 
              (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
              (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3000'))),
   sharp,
-  cors: '*',
-  csrf: buildAllowedOrigins(),
+  cors: allowedOriginsList,
+  csrf: allowedOriginsList,
   onInit: async (payload) => {
     // Chỉ seed tài khoản mẫu khi ở chế độ development hoặc có cờ SEED_TEST_ACCOUNTS=true
     if (process.env.NODE_ENV === 'development' || process.env.SEED_TEST_ACCOUNTS === 'true') {

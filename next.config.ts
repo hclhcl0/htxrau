@@ -6,19 +6,36 @@ import { withPayload } from '@payloadcms/next/withPayload';
 import path from 'path';
 
 // Tự động build danh sách domain từ biến môi trường
-// Chỉ cần đổi NEXT_PUBLIC_SERVER_URL trên Coolify, không cần sửa code
+// Chỉ cần đổi NEXT_PUBLIC_SERVER_URL trên Coolify/Vercel, không cần sửa code
 function buildAllowedHosts(): string[] {
   const hosts = new Set<string>(['localhost', '127.0.0.1']);
-  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
-  if (serverURL) {
+  
+  const addHostVariants = (hostOrUrl: string) => {
     try {
-      hosts.add(new URL(serverURL).hostname);
+      const hostname = hostOrUrl.includes('://') ? new URL(hostOrUrl).hostname : hostOrUrl;
+      if (!hostname) return;
+      hosts.add(hostname);
+      if (hostname.startsWith('www.')) {
+        hosts.add(hostname.slice(4));
+      } else if (!hostname.includes('localhost') && !hostname.includes('127.0.0.1')) {
+        hosts.add(`www.${hostname}`);
+      }
     } catch {}
-  }
+  };
+
+  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
+  if (serverURL) addHostVariants(serverURL);
+
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) addHostVariants(process.env.VERCEL_PROJECT_PRODUCTION_URL);
+  if (process.env.VERCEL_URL) addHostVariants(process.env.VERCEL_URL);
+
   const extra = process.env.EXTRA_ALLOWED_ORIGINS || '';
-  extra.split(',').map(o => o.trim()).filter(Boolean).forEach(o => {
-    try { hosts.add(new URL(o).hostname); } catch {}
-  });
+  extra.split(',').map(o => o.trim()).filter(Boolean).forEach(o => addHostVariants(o));
+
+  // Thêm cứng domain HTX để đảm bảo không bao giờ bị lỗi CORS/Server Action
+  addHostVariants('htxrautuyloan.com');
+  addHostVariants('www.htxrautuyloan.com');
+
   return Array.from(hosts);
 }
 
