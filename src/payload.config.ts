@@ -266,10 +266,10 @@ export default buildConfig({
             if ((rawDbUrl || '').includes('localhost') || (rawDbUrl || '').includes('127.0.0.1')) return false;
             return { rejectUnauthorized: false };
           })(),
-          // Serverless-safe: giới hạn pool nhỏ, đóng kết nối nhàn rỗi nhanh
-          max: 2,
-          idleTimeoutMillis: 10000,
-          connectionTimeoutMillis: 5000,
+          // Cấu hình tối ưu cho Supabase PgBouncer trên Vercel Serverless
+          max: 10,
+          idleTimeoutMillis: 30000,
+          connectionTimeoutMillis: 25000,
         },
         push: false,
       })
