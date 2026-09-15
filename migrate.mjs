@@ -50,9 +50,23 @@ async function run() {
       `SELECT version FROM _schema_migration_lock WHERE id = 'latest_version';`
     );
 
-    if (checkRes.rows.length > 0 && checkRes.rows[0].version === SCHEMA_VERSION) {
+    // Xác minh thêm: kiểm tra bảng site_settings thực sự tồn tại
+    const tableCheckRes = await client.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables
+        WHERE table_schema = 'public'
+          AND table_name = 'site_settings'
+      ) AS exists;
+    `);
+    const siteSettingsExists = tableCheckRes.rows[0]?.exists === true;
+
+    if (checkRes.rows.length > 0 && checkRes.rows[0].version === SCHEMA_VERSION && siteSettingsExists) {
       console.log(`⚡ Schema PostgreSQL đã ở phiên bản mới nhất (${SCHEMA_VERSION}). Bỏ qua migration trong 0.1s!`);
       return;
+    }
+
+    if (!siteSettingsExists) {
+      console.log('⚠️  Bảng site_settings chưa tồn tại — buộc chạy lại toàn bộ migration dù version lock đã cũ...');
     }
 
     console.log(`🔄 Phát hiện schema mới (${SCHEMA_VERSION}). Đang tiến hành đồng bộ schema...`);
