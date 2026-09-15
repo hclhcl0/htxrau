@@ -2,15 +2,22 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 import pg from 'pg';
 const { Client } = pg;
 
-const connectionString = "postgres://postgres.vjngsodvxzqppedtkbqe:gjsS1JmLD2mkkB9T@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require";
+const dbUrl = process.env.DATABASE_URI || process.env.POSTGRES_URL || process.env.DATABASE_URL;
+if (!dbUrl) {
+  console.log('⚠️ Không tìm thấy DATABASE_URI — bỏ qua align-db-schema.');
+  process.exit(0);
+}
+
+const connectionString = dbUrl.replace(/[?&]sslmode=[^&]+/g, '').replace(/\?$/, '');
 
 async function main() {
+  const isLocal = connectionString.includes('localhost') || connectionString.includes('127.0.0.1');
   const client = new Client({
     connectionString,
-    ssl: { rejectUnauthorized: false },
+    ssl: isLocal ? false : { rejectUnauthorized: false },
   });
   await client.connect();
-  console.log('✅ Connected to Supabase PostgreSQL');
+  console.log('✅ Connected to PostgreSQL');
 
   console.log('Aligning articles and _articles_v schema...');
 

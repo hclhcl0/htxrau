@@ -1,8 +1,6 @@
 // migrate.mjs — Chạy tự động khi build trên Vercel/Coolify: node migrate.mjs && next build
 // Chạy thủ công: node migrate.mjs
-if (process.env.NODE_ENV === 'development') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 import pg from 'pg';
 const { Pool } = pg;
@@ -19,9 +17,10 @@ if (!dbUrl) {
 console.log('🚀 Bắt đầu quá trình migration schema PostgreSQL...');
 
 const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
+const cleanDbUrl = dbUrl.replace(/[?&]sslmode=[^&]+/g, '').replace(/\?$/, '');
 
 const pool = new Pool({
-  connectionString: dbUrl,
+  connectionString: cleanDbUrl,
   ssl: isLocal ? false : { rejectUnauthorized: false },
 });
 

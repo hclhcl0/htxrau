@@ -1,7 +1,5 @@
-// Allow self-signed / cloud intermediate TLS certificates only in local development
-if (process.env.NODE_ENV === 'development') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+// Allow self-signed / cloud intermediate TLS certificates (Supabase, Neon, AWS RDS poolers, etc.)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
@@ -222,7 +220,7 @@ export default buildConfig({
   db: dbUrl
     ? postgresAdapter({
         pool: {
-          connectionString: dbUrl,
+          connectionString: dbUrl.replace(/[?&]sslmode=[^&]+/g, '').replace(/\?$/, ''),
           ssl: (() => {
             if (dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1')) return false;
             return { rejectUnauthorized: false };

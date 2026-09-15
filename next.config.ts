@@ -1,3 +1,6 @@
+// Allow self-signed / cloud intermediate TLS certificates (Supabase, RDS, Neon poolers) during build & SSR
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import type { NextConfig } from "next";
 import { withPayload } from '@payloadcms/next/withPayload';
 import path from 'path';
