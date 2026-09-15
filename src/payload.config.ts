@@ -14,8 +14,13 @@ import { vi } from '@payloadcms/translations/languages/vi';
 import { withRBAC, globalsWithRBAC } from './lib/rbac.ts';
 
 // DATABASE_URI = custom Postgres URL
-// POSTGRES_URL = auto-injected by Vercel Postgres addon
-const dbUrl = process.env.DATABASE_URI || process.env.POSTGRES_URL || process.env.DATABASE_URL;
+// POSTGRES_URL_NON_POOLING = Supabase session pooler (port 5432) — compatible với Payload CMS
+// POSTGRES_URL = Supabase pgbouncer transaction pooler (port 6543) — KHÔNG tương thích với prepared statements
+// Luôn ưu tiên non-pooling (port 5432) để tránh lỗi prepared statement của pgbouncer transaction mode
+const dbUrl = process.env.DATABASE_URI
+  || process.env.POSTGRES_URL_NON_POOLING
+  || process.env.POSTGRES_URL
+  || process.env.DATABASE_URL;
 
 import { Users } from './collections/Users.ts';
 import { Media } from './collections/Media.ts';
@@ -220,7 +225,13 @@ export default buildConfig({
   db: dbUrl
     ? postgresAdapter({
         pool: {
-          connectionString: dbUrl.replace(/[?&]sslmode=[^&]+/g, '').replace(/\?$/, ''),
+          connectionString: dbUrl
+            .replace(/[?&]sslmode=[^&]+/g, '')
+            .replace(/[?&]pgbouncer=[^&]+/g, '')
+            .replace(/[?&]supa=[^&]+/g, '')
+            .replace(/[?&]uselibpqcompat=[^&]+/g, '')
+            .replace(/\?&/, '?')
+            .replace(/\?$/, ''),
           ssl: (() => {
             if (dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1')) return false;
             return { rejectUnauthorized: false };

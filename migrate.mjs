@@ -7,7 +7,10 @@ const { Pool } = pg;
 import { MIGRATION_STATEMENTS } from './scripts/migrations.mjs';
 import { ALL_TABLE_CREATES, ALL_COLUMN_ALTERS } from './scripts/complete-schema.mjs';
 
-const dbUrl = process.env.DATABASE_URI || process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const dbUrl = process.env.DATABASE_URI
+  || process.env.POSTGRES_URL_NON_POOLING
+  || process.env.POSTGRES_URL
+  || process.env.DATABASE_URL;
 
 if (!dbUrl) {
   console.log('⚠️  Không tìm thấy DATABASE_URI — bỏ qua migration (đang dùng SQLite local).');
@@ -17,7 +20,14 @@ if (!dbUrl) {
 console.log('🚀 Bắt đầu quá trình migration schema PostgreSQL...');
 
 const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
-const cleanDbUrl = dbUrl.replace(/[?&]sslmode=[^&]+/g, '').replace(/\?$/, '');
+// Loại bỏ các tham số SSL và pgbouncer không tương thích
+const cleanDbUrl = dbUrl
+  .replace(/[?&]sslmode=[^&]+/g, '')
+  .replace(/[?&]pgbouncer=[^&]+/g, '')
+  .replace(/[?&]supa=[^&]+/g, '')
+  .replace(/[?&]uselibpqcompat=[^&]+/g, '')
+  .replace(/\?&/, '?')
+  .replace(/\?$/, '');
 
 const pool = new Pool({
   connectionString: cleanDbUrl,
