@@ -15,7 +15,9 @@ export const PDFBlock: Block = {
         { label: 'Link Google Drive', value: 'gdrive' },
       ],
       defaultValue: 'upload',
-      layout: 'horizontal',
+      admin: {
+        layout: 'horizontal',
+      },
       label: 'Nguồn tài liệu',
     },
     {
@@ -62,9 +64,9 @@ export const PDFBlock: Block = {
         { label: 'Ngang (Slide 16:9)', value: 'horizontal' },
       ],
       defaultValue: 'vertical',
-      layout: 'horizontal',
       label: 'Tỷ lệ khung hình (Chỉ áp dụng khi Hiển thị trực tiếp)',
       admin: {
+        layout: 'horizontal',
         condition: (_, siblingData) => siblingData?.displayMode !== 'download',
       },
     }

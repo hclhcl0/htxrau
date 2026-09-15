@@ -49,54 +49,47 @@ export async function POST(req: Request) {
     let isAuthorized = !!user;
     let newAuthToken: string | null = null;
 
-    // 2. Fallback: If not logged in via cookie, verify via adminPass
+    // 2. Fallback: If not logged in via cookie, verify via adminPass against active admin/editor accounts
     if (!isAuthorized && adminPass && typeof adminPass === 'string' && adminPass.trim()) {
       const cleanPass = adminPass.trim();
-
-      // Check standard emergency/master passwords
-      if (
-        cleanPass === 'admin123' || 
-        cleanPass === 'admin' ||
-        cleanPass === process.env.PAYLOAD_SECRET ||
-        cleanPass === 'hocongluong'
-      ) {
-        isAuthorized = true;
-      } else {
-        // Try logging in against existing admin/editor accounts in DB
-        try {
-          const adminUsers = await payload.find({
-            collection: 'users',
-            where: {
-              role: {
-                in: ['admin', 'editor', 'moderator', 'author'],
-              },
+      try {
+        const adminUsers = await payload.find({
+          collection: 'users',
+          where: {
+            role: {
+              in: ['admin', 'editor', 'moderator'],
             },
-            limit: 10,
-          });
+          },
+          limit: 10,
+        });
 
-          for (const u of adminUsers.docs) {
-            try {
-              const loginRes = await payload.login({
-                collection: 'users',
-                data: {
-                  email: u.email,
-                  password: cleanPass,
-                },
-              });
-              if (loginRes?.token) {
-                isAuthorized = true;
-                user = loginRes.user;
-                newAuthToken = loginRes.token;
-                break;
-              }
-            } catch (_) {
-              // try next user
+        for (const u of adminUsers.docs) {
+          try {
+            const loginRes = await payload.login({
+              collection: 'users',
+              data: {
+                email: u.email,
+                password: cleanPass,
+              },
+            });
+            if (loginRes?.token) {
+              isAuthorized = true;
+              user = loginRes.user;
+              newAuthToken = loginRes.token;
+              break;
             }
+          } catch (_) {
+            // try next user
           }
-        } catch (e) {
-          console.warn('[quick-price] Password check warning:', e);
         }
+      } catch (e) {
+        console.warn('[quick-price] Password check warning:', e);
       }
+    }
+
+    // Đảm bảo user có đúng quyền
+    if (user && !['admin', 'editor', 'moderator'].includes(user.role)) {
+      isAuthorized = false;
     }
 
     if (!isAuthorized) {

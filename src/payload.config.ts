@@ -1,5 +1,7 @@
-// Allow self-signed / cloud intermediate TLS certificates
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// Allow self-signed / cloud intermediate TLS certificates only in local development
+if (process.env.NODE_ENV === 'development') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 
 import { buildConfig } from 'payload';
 import { sqliteAdapter } from '@payloadcms/db-sqlite';
@@ -88,14 +90,17 @@ function buildAllowedOrigins(): string[] {
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 
              (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 
-             (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://htxrau.vercel.app')),
+             (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+             (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3000'))),
   sharp,
   cors: '*',
   csrf: buildAllowedOrigins(),
   onInit: async (payload) => {
-    await seedAccounts(payload);
+    // Chỉ seed tài khoản mẫu khi ở chế độ development hoặc có cờ SEED_TEST_ACCOUNTS=true
+    if (process.env.NODE_ENV === 'development' || process.env.SEED_TEST_ACCOUNTS === 'true') {
+      await seedAccounts(payload);
+    }
 
-    
     // Khởi chạy Cronjob đồng bộ Video
     if (process.env.NODE_ENV !== 'development') { // Tránh chạy nhiều lần khi dev hot-reload
       const { initVideoSyncCron } = await import('./cron/videoSync.ts');
@@ -192,7 +197,7 @@ export default buildConfig({
                 generateFileURL: ({ filename }: { filename: string }) => {
                   const pubURL = process.env.S3_PUBLIC_URL;
                   if (pubURL) return `${pubURL}/${filename}`;
-                  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'https://htxrau.vercel.app';
+                  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || (process.env.PORT ? `http://localhost:${process.env.PORT}` : 'http://localhost:3000');
                   return `${serverURL}/api/r2-proxy?key=${encodeURIComponent(filename)}`;
                 },
               },
@@ -213,7 +218,12 @@ export default buildConfig({
       : []),
   ],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || 'YOUR-SUPER-SECRET-KEY',
+  secret: process.env.PAYLOAD_SECRET || (() => {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('FATAL: PAYLOAD_SECRET environment variable must be set in production!');
+    }
+    return 'DEV-ONLY-INSECURE-FALLBACK-SECRET-CHANGE-ME';
+  })(),
   db: dbUrl
     ? postgresAdapter({
         pool: {
@@ -231,42 +241,6 @@ export default buildConfig({
         },
         push: false,
       }),
-  endpoints: [
-    {
-      path: '/setup-admin',
-      method: 'get',
-      handler: async (req: any) => {
-        const { payload } = req;
-        const existing = await payload.find({
-          collection: 'users',
-          where: { email: { equals: 'admin@test.com' } },
-        });
-
-        if (existing.docs.length > 0) {
-          await payload.update({
-            collection: 'users',
-            id: existing.docs[0].id,
-            data: {
-              password: 'admin123',
-              role: 'admin',
-            },
-          });
-          return Response.json({ success: true, message: 'Đã cập nhật mật khẩu admin@test.com thành admin' });
-        } else {
-          await payload.create({
-            collection: 'users',
-            data: {
-              email: 'admin@test.com',
-              password: 'admin123',
-              name: 'Super Admin',
-              role: 'admin',
-            },
-          });
-          return Response.json({ success: true, message: 'Đã tạo tài khoản admin@test.com với mật khẩu admin' });
-        }
-      },
-    },
-  ],
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

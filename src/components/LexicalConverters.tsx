@@ -1,6 +1,5 @@
 import React from 'react';
 import { RichText } from '@payloadcms/richtext-lexical/react';
-import Script from 'next/script';
 
 import { UploadBlock } from './UploadBlock';
 import { EmbedBlock } from './PageBlocks/EmbedBlock';
@@ -8,10 +7,7 @@ import { SliderClientBlock } from './blocks/SliderClientBlock';
 import { InfographicClientBlock } from './blocks/InfographicClientBlock';
 import { ExcelTableServerBlock } from './blocks/ExcelTableServerBlock';
 import VideoBlock from './blocks/VideoBlock';
-
-console.log("LexicalConverters Imports Debug:", {
-  UploadBlock, EmbedBlock, SliderClientBlock, InfographicClientBlock, ExcelTableServerBlock, VideoBlock, RichText
-});
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 function getGDriveEmbedUrl(url: string): { embedUrl: string; directUrl: string } {
   if (url && url.includes('drive.google.com')) {
@@ -63,30 +59,33 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
     newsList: () => null,
     externalLinks: () => null,
     pdfBlock: ({ node }: any) => {
-      const { source, pdfFile, gdriveUrl, displayMode } = node.fields;
-      const url = source === 'upload' ? pdfFile?.url : gdriveUrl;
+      const { source, pdfFile, gdriveUrl, displayMode, orientation } = node.fields || {};
+      const url = source === 'upload' ? getMediaUrl(pdfFile, '') : gdriveUrl;
       if (!url) return null;
       
       const { embedUrl, directUrl } = getGDriveEmbedUrl(url);
 
       if (displayMode === 'download') {
          return (
-           <a 
-             href={directUrl} 
-             target="_blank" 
-             rel="noopener noreferrer" 
-             className="inline-block bg-gov-primary text-white px-6 py-3 font-medium rounded-lg my-3 hover:bg-gov-secondary transition-colors"
-           >
-             Tải xuống tài liệu PDF
-           </a>
+           <div className="my-3 not-prose">
+             <a 
+               href={directUrl} 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               className="inline-flex items-center gap-2 bg-gov-primary text-white px-6 py-3 font-medium rounded-lg hover:bg-gov-secondary transition-colors shadow-sm"
+             >
+               📄 Tải xuống tài liệu PDF
+             </a>
+           </div>
          );
       }
 
       const isGDrive = url.includes('drive.google.com');
+      const aspectClass = orientation === 'horizontal' ? 'aspect-video' : 'aspect-[1/1.4]';
 
       return (
-        <div className="my-3">
-          <div className="aspect-[1/1.4] w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50 relative">
+        <div className="my-4 not-prose">
+          <div className={`${aspectClass} w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50 relative shadow-sm`}>
             <iframe 
               src={embedUrl} 
               width="100%" 
@@ -102,7 +101,7 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
                 href={directUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-[var(--primary)] font-semibold hover:underline flex items-center gap-1"
+                className="text-emerald-700 font-semibold hover:underline flex items-center gap-1"
               >
                 Mở trực tiếp trong cửa sổ mới ↗
               </a>
@@ -114,45 +113,55 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
       );
     },
     galleryBlock: ({ node }: any) => {
-      const { images, caption, style } = node.fields;
+      const { images, caption, style } = node.fields || {};
       if (!images?.length) return null;
 
-      const count = images.length;
+      // Hỗ trợ cả format mới (hasMany relationship: img là media object hoặc ID)
+      // và format cũ (array: img là { image: {...}, caption: '...' })
+      const normalizeImage = (img: any) => {
+        if (!img) return null;
+        if (typeof img === 'object' && img.image) {
+          // Format cũ: img là { image: {...}, caption: '...' }
+          const url = getMediaUrl(img.image, '');
+          return url ? { url, alt: img.image?.alt || img.caption || '', caption: img.caption || null } : null;
+        }
+        // Format mới: img là media object trực tiếp hoặc ID
+        const url = getMediaUrl(img, '');
+        return url ? { url, alt: typeof img === 'object' ? (img.alt || '') : '', caption: null } : null;
+      };
+
+      const validImages = images.map(normalizeImage).filter(Boolean);
+      if (!validImages.length) return null;
+
+      if (style === 'slider') {
+        const sliderImages = validImages.map((img: any) => ({
+          image: { url: img.url, alt: img.alt },
+          caption: img.caption || caption,
+        }));
+        return <SliderClientBlock images={sliderImages} autoplay={true} />;
+      }
+
+      const count = validImages.length;
       let gridClass = 'grid-cols-1';
       if (count === 2) gridClass = 'grid-cols-1 md:grid-cols-2';
       else if (count >= 3) gridClass = 'grid-cols-2 md:grid-cols-3';
 
-      // Hỗ trợ cả format mới (hasMany relationship: img là media object)
-      // và format cũ (array: img là { image: {...}, caption: '...' })
-      const normalizeImage = (img: any) => {
-        if (img?.url) {
-          // Format mới: img là media object trực tiếp
-          return { url: img.url, alt: img.alt || '', caption: null };
-        }
-        // Format cũ: img là { image: {...}, caption: '...' }
-        return { url: img?.image?.url, alt: img?.caption || '', caption: img?.caption || null };
-      };
-
       return (
-        <div className="my-4">
+        <div className="my-4 not-prose">
           <div className={`grid ${gridClass} gap-3`}>
-            {images.map((img: any, i: number) => {
-              const { url, alt, caption: imgCaption } = normalizeImage(img);
-              if (!url) return null;
-              return (
-                <div key={i} className="overflow-hidden rounded-xl border border-gray-100">
-                  <img
-                    src={url}
-                    alt={alt}
-                    className="w-full h-auto object-cover"
-                    style={{ aspectRatio: count === 1 ? 'auto' : '4/3' }}
-                  />
-                  {imgCaption && (
-                    <p className="text-xs text-center text-gray-500 py-1.5 px-2 bg-gray-50">{imgCaption}</p>
-                  )}
-                </div>
-              );
-            })}
+            {validImages.map((img: any, i: number) => (
+              <div key={i} className="overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+                <img
+                  src={img.url}
+                  alt={img.alt || caption || 'Ảnh thư viện'}
+                  className="w-full h-auto object-cover"
+                  style={{ aspectRatio: count === 1 ? 'auto' : '4/3' }}
+                />
+                {img.caption && (
+                  <p className="text-xs text-center text-gray-500 py-1.5 px-2 bg-gray-50">{img.caption}</p>
+                )}
+              </div>
+            ))}
           </div>
           {caption && (
             <p className="text-sm text-center text-gray-500 mt-2 italic">{caption}</p>
@@ -203,12 +212,13 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
       );
     },
     cardBlock: ({ node }: any) => {
-      const { image, title, description, linkUrl, linkLabel } = node.fields;
+      const { image, title, description, linkUrl, linkLabel } = node.fields || {};
+      const imgUrl = image ? getMediaUrl(image, '') : '';
       return (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full my-3 hover:shadow-md transition-shadow">
-          {image && typeof image === 'object' && image.url && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full my-3 hover:shadow-md transition-shadow not-prose">
+          {imgUrl && (
             <div className="aspect-[4/3] w-full overflow-hidden">
-              <img src={image.url} alt={title} className="w-full h-full object-cover" />
+              <img src={imgUrl} alt={title || 'Hình ảnh'} className="w-full h-full object-cover" />
             </div>
           )}
           <div className="p-6 flex flex-col flex-grow">
@@ -225,14 +235,23 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
       );
     },
     tiktokBlock: ({ node }: any) => {
-      const { videoId, videoUrl, maxWidth, alignment } = node.fields;
-      if (!videoId) return null;
+      const { videoId, videoUrl, maxWidth, alignment } = node.fields || {};
+      
+      // Bóc tách video ID từ videoId hoặc từ videoUrl
+      let tId = videoId;
+      if (!tId && videoUrl) {
+        const match = videoUrl.match(/video\/(\d+)/);
+        if (match && match[1]) {
+          tId = match[1];
+        }
+      }
+      if (!tId) return null;
 
       // Tính toán CSS để căn lề
       const containerStyle: React.CSSProperties = {
         display: 'flex',
         width: '100%',
-        margin: '1rem 0',
+        margin: '1.5rem 0',
       };
       
       if (alignment === 'left') {
@@ -243,34 +262,35 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
         containerStyle.justifyContent = 'center';
       }
 
+      const playerUrl = `https://www.tiktok.com/player/v1/${tId}?music_info=1&description=1`;
+
       return (
-        <div style={containerStyle}>
-          <div style={{ width: '100%', maxWidth: `${maxWidth || 320}px` }}>
-            <blockquote
-              className="tiktok-embed"
-              cite={videoUrl}
-              data-video-id={videoId}
-              data-embed-type="video"
-              style={{ maxWidth: '100%', minWidth: '100%', border: 'none', margin: 0, padding: 0 }}
-            >
-              <section>
-                <a target="_blank" href={videoUrl} rel="noopener noreferrer">Xem TikTok</a>
-              </section>
-            </blockquote>
-            <Script src="https://www.tiktok.com/embed.js" strategy="lazyOnload" />
+        <div style={containerStyle} className="not-prose">
+          <div style={{ width: '100%', maxWidth: `${maxWidth || 340}px`, aspectRatio: '9/16' }}>
+            <iframe
+              className="w-full h-full rounded-2xl overflow-hidden shadow-md"
+              src={playerUrl}
+              title="TikTok video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              style={{ aspectRatio: '9/16', minHeight: '520px', border: 'none' }}
+            />
           </div>
         </div>
       );
     },
     imageLinkBlock: ({ node }: any) => {
-      const { image, linkUrl, openInNewTab } = node.fields;
-      if (!image || !image.url) return null;
+      const { image, linkUrl, openInNewTab } = node.fields || {};
+      const imgUrl = image ? getMediaUrl(image, '') : '';
+      if (!imgUrl) return null;
       return (
-        <span className="block my-6 w-full flex justify-center">
+        <span className="block my-6 w-full flex justify-center not-prose">
           <a href={linkUrl} target={openInNewTab ? '_blank' : '_self'} rel="noopener noreferrer" className="block max-w-full hover:opacity-90 transition-opacity">
             <img 
-              src={image.url} 
-              alt={image.alt || "Ảnh minh họa"} 
+              src={imgUrl} 
+              alt={(typeof image === 'object' ? image.alt : null) || "Ảnh minh họa"} 
               className="rounded-xl shadow-sm border border-gray-100" 
               style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '0 auto' }}
             />
@@ -280,12 +300,12 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
     },
     embedBlock: ({ node }: any) => <EmbedBlock {...node.fields} />,
     audioBlock: ({ node }: any) => {
-      const { title, sourceType, audioFile, audioUrl, description } = node.fields;
-      const src = sourceType === 'upload' ? audioFile?.url : audioUrl;
+      const { title, sourceType, audioFile, audioUrl, description } = node.fields || {};
+      const src = sourceType === 'upload' ? getMediaUrl(audioFile, '') : audioUrl;
       if (!src) return null;
 
       return (
-        <div className="my-6 p-5 md:p-6 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3">
+        <div className="my-6 p-5 md:p-6 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3 not-prose">
           {title && <h3 className="text-lg font-bold text-gray-900">{title}</h3>}
           {description && <p className="text-sm text-gray-600">{description}</p>}
           <audio controls className="w-full mt-2 outline-none rounded-full" preload="metadata">
@@ -296,26 +316,29 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
       );
     },
     fileDownloadsBlock: ({ node }: any) => {
-      const { title, files } = node.fields;
+      const { title, files } = node.fields || {};
       if (!files?.length) return null;
       return (
-        <div className="my-6 bg-gray-50 border border-gray-200 p-5 rounded-2xl">
+        <div className="my-6 bg-gray-50 border border-gray-200 p-5 rounded-2xl not-prose">
           <h3 className="font-bold text-lg mb-4 text-gov-primary border-b border-gray-200 pb-2">{title || 'Tài liệu đính kèm'}</h3>
           <ul className="space-y-3">
             {files.map((f: any, i: number) => {
               const file = f.file;
-              if (!file || !file.url) return null;
-              const ext = file.filename.split('.').pop()?.toUpperCase() || 'FILE';
-              const name = f.customName || file.filename;
+              if (!file) return null;
+              const fileUrl = getMediaUrl(file, '');
+              if (!fileUrl) return null;
+              const fileName = typeof file === 'object' ? file.filename : 'file';
+              const ext = fileName?.split('.').pop()?.toUpperCase() || 'FILE';
+              const name = f.customName || fileName;
               return (
                 <li key={i} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl hover:border-gov-secondary transition-colors">
                   <div className="flex items-center gap-3 overflow-hidden">
                     <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded min-w-12 text-center">{ext}</span>
-                    <a href={file.url} download target="_blank" rel="noreferrer" className="text-gray-800 font-medium hover:text-gov-secondary truncate">
+                    <a href={fileUrl} download target="_blank" rel="noreferrer" className="text-gray-800 font-medium hover:text-gov-secondary truncate">
                       {name}
                     </a>
                   </div>
-                  <a href={file.url} download target="_blank" rel="noreferrer" className="shrink-0 bg-gov-primary/10 text-gov-primary hover:bg-gov-primary hover:text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors">
+                  <a href={fileUrl} download target="_blank" rel="noreferrer" className="shrink-0 bg-gov-primary/10 text-gov-primary hover:bg-gov-primary hover:text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors">
                     Tải về
                   </a>
                 </li>
@@ -324,6 +347,26 @@ export const getJsxConverters = (fallbackAlt?: string) => ({ defaultConverters }
           </ul>
         </div>
       );
+    },
+    dividerBlock: ({ node }: any) => {
+      const { style, size } = node.fields || {};
+      const marginMap: Record<string, string> = {
+        sm: 'my-2',
+        md: 'my-4',
+        lg: 'my-8',
+        xl: 'my-16',
+      };
+      const marginClass = marginMap[size] || 'my-4';
+
+      if (style === 'space') {
+        return <div className={marginClass} aria-hidden="true" />;
+      }
+      if (style === 'gradient') {
+        return (
+          <div className={`${marginClass} h-1 w-full bg-gradient-to-r from-transparent via-emerald-600 to-transparent rounded-full opacity-60 not-prose`} />
+        );
+      }
+      return <hr className={`${marginClass} border-t border-gray-200 not-prose`} />;
     },
     excelTableBlock: ({ node }: any) => {
       return <ExcelTableServerBlock {...node.fields} />;

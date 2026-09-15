@@ -26,27 +26,22 @@ import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { ExportDeliveryButton as ExportDeliveryButton_054f327643ce69ba3bd2e4706646f0b3 } from '@/collections/components/ExportDeliveryButton'
+import { PasteImageFeatureClient as PasteImageFeatureClient_e152e514a6d6b277886753babb1ae35a } from '@/features/PasteImage/feature.client'
 import { SyncVideoButton as SyncVideoButton_dba3e9ed6d4b815a0cfa3b2087e2f91a } from '@/components/Admin/SyncVideoButton'
+import { LogoutButtonCustom as LogoutButtonCustom_a2b34cc97c6c213b3812f7c3c5921beb } from '@/app/(payload)/admin/components/LogoutButton.tsx'
 import { AdminIcon as AdminIcon_9f5eba8ffdadf3d52561f60d1de9fa24 } from '@/app/(payload)/admin/components/AdminIcon.tsx'
 import { AdminLogo as AdminLogo_0ec271e8bfb19d99b0e35d61da772365 } from '@/app/(payload)/admin/components/AdminLogo.tsx'
 import { default as default_dba050a67c75dfc8bf48ee1410f2a2d2 } from '@/components/Admin/GuideNavLink.tsx'
 import { default as default_459aafd36f902eafa44c6f9d2a340370 } from '@/components/Admin/BulkUploadLink.tsx'
-import { AuthorWelcome as AuthorWelcome_59589bfc5409bc24cf137e45629d787e } from '@/app/(payload)/admin/components/AuthorWelcome.tsx'
-import { QuickAccessDashboard as QuickAccessDashboard_custom } from '@/components/Admin/QuickAccessDashboard.tsx'
-import { LogoutButtonCustom as LogoutButtonCustom_custom } from '@/app/(payload)/admin/components/LogoutButton.tsx'
+import { QuickAccessDashboard as QuickAccessDashboard_82ea591b83648fb783ba3d0d3c59caf3 } from '@/components/Admin/QuickAccessDashboard.tsx'
+import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { default as default_1aa2999a49364743565bf91f3348acdc } from '@/components/Admin/UserGuideView.tsx'
 import { default as default_11bea0dfd321d7b114d61c03fc2ce164 } from '@/components/Admin/BulkUploadView.tsx'
-import { S3ClientUploadHandler as S3ClientUploadHandler_s3 } from '@payloadcms/storage-s3/client'
-import { ExportDeliveryButton as ExportDeliveryButton_orders } from '@/collections/components/ExportDeliveryButton'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
-import { PasteImageFeatureClient as PasteImageFeatureClient_custom } from '@/features/PasteImage/feature.client'
-import { PasteImagePlugin as PasteImagePlugin_custom } from '@/features/PasteImage/PasteImagePlugin'
-
 
 /** @type import('payload').ImportMap */
 export const importMap = {
-  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_s3,
-  "@/collections/components/ExportDeliveryButton#ExportDeliveryButton": ExportDeliveryButton_orders,
   "@/components/Admin/UserPermissionsNote.tsx#UserPermissionsNote": UserPermissionsNote_4784da27a43493924eba2534787a9e85,
   "@/components/Admin/MediaFolderFilter#default": default_e356d357aaf402fb839ceb5a13023ed8,
   "@/components/SlugField.tsx#SlugField": SlugField_d15d88479cc1fc005dbf907ac003f860,
@@ -75,17 +70,17 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@/collections/components/ExportDeliveryButton#ExportDeliveryButton": ExportDeliveryButton_054f327643ce69ba3bd2e4706646f0b3,
+  "@/features/PasteImage/feature.client#PasteImageFeatureClient": PasteImageFeatureClient_e152e514a6d6b277886753babb1ae35a,
   "@/components/Admin/SyncVideoButton#SyncVideoButton": SyncVideoButton_dba3e9ed6d4b815a0cfa3b2087e2f91a,
+  "@/app/(payload)/admin/components/LogoutButton.tsx#LogoutButtonCustom": LogoutButtonCustom_a2b34cc97c6c213b3812f7c3c5921beb,
   "@/app/(payload)/admin/components/AdminIcon.tsx#AdminIcon": AdminIcon_9f5eba8ffdadf3d52561f60d1de9fa24,
   "@/app/(payload)/admin/components/AdminLogo.tsx#AdminLogo": AdminLogo_0ec271e8bfb19d99b0e35d61da772365,
   "@/components/Admin/GuideNavLink.tsx#default": default_dba050a67c75dfc8bf48ee1410f2a2d2,
   "@/components/Admin/BulkUploadLink.tsx#default": default_459aafd36f902eafa44c6f9d2a340370,
-  "@/app/(payload)/admin/components/AuthorWelcome.tsx#AuthorWelcome": AuthorWelcome_59589bfc5409bc24cf137e45629d787e,
-  "@/components/Admin/QuickAccessDashboard.tsx#QuickAccessDashboard": QuickAccessDashboard_custom,
-  "@/app/(payload)/admin/components/LogoutButton.tsx#LogoutButtonCustom": LogoutButtonCustom_custom,
+  "@/components/Admin/QuickAccessDashboard.tsx#QuickAccessDashboard": QuickAccessDashboard_82ea591b83648fb783ba3d0d3c59caf3,
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@/components/Admin/UserGuideView.tsx#default": default_1aa2999a49364743565bf91f3348acdc,
   "@/components/Admin/BulkUploadView.tsx#default": default_11bea0dfd321d7b114d61c03fc2ce164,
-  "@/features/PasteImage/feature.client#PasteImageFeatureClient": PasteImageFeatureClient_custom,
-  "@/features/PasteImage/PasteImagePlugin#PasteImagePlugin": PasteImagePlugin_custom,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

@@ -13,9 +13,9 @@ export const Banners: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: () => true,
-    update: () => true,
-    delete: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user && ['admin', 'moderator'].includes(user.role)),
   },
   fields: [
     {

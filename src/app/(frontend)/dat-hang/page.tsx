@@ -44,10 +44,10 @@ const getSiteSettings = unstable_cache(
       const s = (await payload.findGlobal({ slug: 'site-settings', depth: 0 })) as any;
       return {
         phone: s?.header?.hotline?.phone || '0905 546 207',
-        bankName: s?.payment?.bankName || '',
-        bankAccount: s?.payment?.bankAccount || '',
-        bankOwner: s?.payment?.bankOwner || '',
-        qrImageUrl: s?.payment?.qrImageUrl || '',
+        bankName: s?.payment?.bankName || s?.payment?.payment?.bankName || '',
+        bankAccount: s?.payment?.bankAccount || s?.payment?.payment?.bankAccount || '',
+        bankOwner: s?.payment?.bankOwner || s?.payment?.payment?.bankOwner || '',
+        qrImageUrl: s?.payment?.qrImageUrl || s?.payment?.payment?.qrImageUrl || '',
       };
     } catch (e) {
       console.warn('Failed to fetch site-settings for order page, using default fallback.');

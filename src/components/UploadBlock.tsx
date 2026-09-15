@@ -1,10 +1,10 @@
 import React from 'react';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 export function UploadBlock({ node, fallbackAlt }: { node: any; fallbackAlt?: string }) {
   if (!node?.value) return null;
 
-  // If node.value is an object with url
-  const imgUrl = typeof node.value === 'object' ? node.value.url : (typeof node.value === 'string' && (node.value.startsWith('http') || node.value.startsWith('/')) ? node.value : null);
+  const imgUrl = getMediaUrl(node.value, '');
   const altText = (typeof node.value === 'object' ? (node.value.alt || fallbackAlt) : fallbackAlt) || "Hình ảnh minh họa";
 
   if (imgUrl) {

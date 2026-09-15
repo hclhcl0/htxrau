@@ -9,8 +9,13 @@ export default function VideoBlock({ data }: { data: any }) {
 
   // Lấy ID Youtube từ URL (Ví dụ: https://www.youtube.com/watch?v=dQw4w9WgXcQ -> dQw4w9WgXcQ)
   const getYoutubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+      return trimmed;
+    }
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|shorts\/|live\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = trimmed.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
@@ -40,6 +45,7 @@ export default function VideoBlock({ data }: { data: any }) {
               width={640}
               height={360}
               loading="lazy"
+              unoptimized
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="bg-white/90 text-gov-primary rounded-full p-4 shadow-lg transform group-hover:scale-110 transition-transform duration-300">

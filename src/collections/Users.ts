@@ -24,11 +24,15 @@ export const Users: CollectionConfig = {
     tokenExpiration: 28800, // 8 tiếng
   },
   access: {
-    admin: () => true,
-    read: () => true,
-    create: () => true,
-    update: () => true,
-    delete: () => true,
+    admin: ({ req: { user } }) => Boolean(user),
+    read: ({ req: { user } }) => Boolean(user),
+    create: ({ req: { user } }) => user?.role === 'admin',
+    update: ({ req: { user }, id }) => {
+      if (!user) return false;
+      if (user.role === 'admin') return true;
+      return user.id === id;
+    },
+    delete: ({ req: { user } }) => user?.role === 'admin',
   },
   fields: [
     {
@@ -45,7 +49,7 @@ export const Users: CollectionConfig = {
         { label: 'Người dùng (User)', value: 'user' },
       ],
       access: {
-        update: () => true,
+        update: ({ req: { user } }) => user?.role === 'admin',
       },
       admin: {
         position: 'sidebar',

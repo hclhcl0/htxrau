@@ -16,6 +16,33 @@ export async function GET(req: NextRequest) {
 
   const payload = await getPayload({ config: configPromise });
 
+  // Kiểm tra xác thực quyền quản trị / nhân viên
+  let user = null;
+  try {
+    const authRes = await payload.auth({ headers: req.headers });
+    if (authRes?.user) user = authRes.user;
+  } catch (_) {}
+
+  if (!user) {
+    const token = req.cookies.get('payload-token')?.value || req.cookies.get('users-token')?.value;
+    if (token) {
+      try {
+        const authHeaders = new Headers();
+        authHeaders.set('cookie', `payload-token=${token}`);
+        authHeaders.set('authorization', `JWT ${token}`);
+        const authRes = await payload.auth({ headers: authHeaders });
+        if (authRes?.user) user = authRes.user;
+      } catch (_) {}
+    }
+  }
+
+  if (!user) {
+    return new NextResponse('<h1>401 Unauthorized</h1><p>Bạn cần đăng nhập hệ thống quản trị để in phiếu giao hàng.</p>', {
+      status: 401,
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    });
+  }
+
   // Build where clause
   const where: Record<string, any> = {};
   if (idsParam) {

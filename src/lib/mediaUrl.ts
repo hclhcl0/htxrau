@@ -15,11 +15,20 @@ export function getMediaUrl(image: any, fallback = '/placeholder-vegetable.svg')
 
   if (!url) return fallback;
 
-  // Convert full localhost/127.0.0.1 (any port) to relative URL
-  if (url.includes('localhost') || url.includes('127.0.0.1')) {
+  // Convert full localhost/127.0.0.1, obsolete domains (vercel.app, htxrau), or any host serving /api/media/file/ or /media/ to relative URL
+  if (url.startsWith('http://') || url.startsWith('https://')) {
     try {
       const parsed = new URL(url);
-      url = parsed.pathname + parsed.search;
+      if (
+        parsed.hostname === 'localhost' ||
+        parsed.hostname === '127.0.0.1' ||
+        parsed.hostname.includes('vercel.app') ||
+        parsed.hostname.includes('htxrau') ||
+        parsed.pathname.startsWith('/api/media/file/') ||
+        parsed.pathname.startsWith('/media/')
+      ) {
+        url = parsed.pathname + parsed.search;
+      }
     } catch {
       url = url.replace(/^https?:\/\/[^\/]+/, '');
     }

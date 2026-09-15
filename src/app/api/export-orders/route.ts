@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import * as XLSX from 'xlsx';
@@ -47,9 +47,34 @@ export async function GET(req: NextRequest) {
     const statusParam = params.get('status');
     const fromParam   = params.get('from');
     const toParam     = params.get('to');
-    const allParam    = params.get('all');
-
     const payload = await getPayload({ config: configPromise });
+
+    // Kiểm tra xác thực quyền quản trị / nhân viên
+    let user = null;
+    try {
+      const authRes = await payload.auth({ headers: req.headers });
+      if (authRes?.user) user = authRes.user;
+    } catch (_) {}
+
+    if (!user) {
+      const token = req.cookies.get('payload-token')?.value || req.cookies.get('users-token')?.value;
+      if (token) {
+        try {
+          const authHeaders = new Headers();
+          authHeaders.set('cookie', `payload-token=${token}`);
+          authHeaders.set('authorization', `JWT ${token}`);
+          const authRes = await payload.auth({ headers: authHeaders });
+          if (authRes?.user) user = authRes.user;
+        } catch (_) {}
+      }
+    }
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Bạn cần đăng nhập để xuất dữ liệu đơn hàng' },
+        { status: 401 }
+      );
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: Record<string, any> = {};

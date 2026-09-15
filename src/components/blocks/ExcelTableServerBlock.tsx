@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import * as XLSX from 'xlsx';
 import { ExcelTableClient } from './ExcelTableClient';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 export async function ExcelTableServerBlock({
   title,
@@ -19,7 +20,19 @@ export async function ExcelTableServerBlock({
 
   try {
     const filePath = path.join(process.cwd(), 'media', file.filename);
-    const buffer = await fs.promises.readFile(filePath);
+    let buffer: Buffer;
+
+    if (fs.existsSync(filePath)) {
+      buffer = await fs.promises.readFile(filePath);
+    } else if (file.url) {
+      const downloadUrl = file.url.startsWith('http') ? file.url : `http://127.0.0.1:${process.env.PORT || 3000}${file.url}`;
+      const res = await fetch(downloadUrl);
+      const arrayBuf = await res.arrayBuffer();
+      buffer = Buffer.from(arrayBuf);
+    } else {
+      return null;
+    }
+
     const workbook = XLSX.read(buffer, { type: 'buffer' });
 
     const sheetToRead =
@@ -61,7 +74,7 @@ export async function ExcelTableServerBlock({
         headers={headers}
         rows={rows}
         displayStyle={displayStyle}
-        fileUrl={showDownload && file.url ? file.url : undefined}
+        fileUrl={showDownload ? getMediaUrl(file, '') : undefined}
         fileName={file.filename}
       />
     </div>

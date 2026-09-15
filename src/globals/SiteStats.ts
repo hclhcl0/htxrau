@@ -9,7 +9,7 @@ export const SiteStats: GlobalConfig = {
   },
   access: {
     read: () => true,
-    update: () => true, // API tự update qua overrideAccess
+    update: ({ req: { user } }) => Boolean(user && user.role === 'admin'),
   },
   fields: [
     {

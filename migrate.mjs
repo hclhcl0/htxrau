@@ -1,6 +1,8 @@
 // migrate.mjs — Chạy tự động khi build trên Vercel/Coolify: node migrate.mjs && next build
 // Chạy thủ công: node migrate.mjs
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+if (process.env.NODE_ENV === 'development') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 
 import pg from 'pg';
 const { Pool } = pg;

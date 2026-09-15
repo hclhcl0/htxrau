@@ -1,18 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
+import { getMediaUrl } from '@/lib/mediaUrl';
 
 export function InfographicClientBlock({ image, caption }: { image: any; caption?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  if (!image || !image.url) return null;
+  const imgUrl = getMediaUrl(image, '');
+  if (!imgUrl) return null;
 
   return (
     <>
-      <div className="my-8 max-w-3xl mx-auto border border-gray-200 rounded-2xl overflow-hidden shadow-sm relative group bg-white">
+      <div className="my-8 max-w-3xl mx-auto border border-gray-200 rounded-2xl overflow-hidden shadow-sm relative group bg-white not-prose">
         {/* Preview Container with fixed height and fade out */}
         <div className="relative h-[600px] overflow-hidden w-full cursor-pointer" onClick={() => setIsOpen(true)}>
-          <img src={image.url} alt={caption || 'Infographic'} className="w-full h-auto object-top" />
+          <img src={imgUrl} alt={caption || (typeof image === 'object' ? image.alt : '') || 'Infographic'} className="w-full h-auto object-top" />
           
           {/* Fade effect at the bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
@@ -33,7 +35,7 @@ export function InfographicClientBlock({ image, caption }: { image: any; caption
         >
           <div className="absolute top-4 right-4 z-10 flex gap-4">
              <a 
-               href={image.url} 
+               href={imgUrl} 
                download 
                target="_blank"
                onClick={(e) => e.stopPropagation()}
@@ -51,7 +53,7 @@ export function InfographicClientBlock({ image, caption }: { image: any; caption
           
           <div className="flex-1 overflow-y-auto p-4 md:p-8 flex justify-center">
             <div className="max-w-4xl w-full mx-auto" onClick={(e) => e.stopPropagation()}>
-               <img src={image.url} alt={caption || 'Infographic'} className="w-full h-auto rounded-lg" />
+               <img src={imgUrl} alt={caption || (typeof image === 'object' ? image.alt : '') || 'Infographic'} className="w-full h-auto rounded-lg" />
             </div>
           </div>
         </div>

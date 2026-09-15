@@ -29,16 +29,7 @@ export const seedAccounts = async (payload: Payload) => {
         });
         payload.logger.info(`[Seed] Created ${u.role} account: ${u.email}`);
       } else {
-        // Luôn đảm bảo tài khoản admin được hash đúng secret trên môi trường chạy
-        await payload.update({
-          collection: 'users',
-          id: existing.docs[0].id,
-          data: {
-            password: u.password,
-            role: u.role,
-          },
-        });
-        payload.logger.info(`[Seed] Updated ${u.role} account password: ${u.email}`);
+        payload.logger.info(`[Seed] Account ${u.email} already exists, skipping.`);
       }
     } catch (error: any) {
       payload.logger.error(`[Seed] Error managing ${u.email}: ${error.message}`);

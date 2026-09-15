@@ -36,11 +36,17 @@ export function QuickPriceButton({
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Load saved admin password from localStorage if available
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  // Kiểm tra quyền: chỉ hiển thị nút sửa giá nếu phát hiện cookie đăng nhập admin hoặc key đã lưu
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('htx_admin_quick_key');
-      if (saved) setAdminPass(saved);
+      const hasCookie = document.cookie.includes('payload-token') || document.cookie.includes('users-token');
+      const savedKey = localStorage.getItem('htx_admin_quick_key');
+      if (hasCookie || (savedKey && savedKey.trim().length > 0)) {
+        setIsAdminLoggedIn(true);
+      }
+      if (savedKey) setAdminPass(savedKey);
     } catch (e) {
       // ignore
     }
@@ -130,6 +136,10 @@ export function QuickPriceButton({
   };
 
   const commonUnits = ['Kg', 'Túi 500g', 'Túi 1Kg', 'Bó 300g', 'Bó 500g', 'Hộp 250g', 'Quả / Trái'];
+
+  if (!isAdminLoggedIn) {
+    return null;
+  }
 
   return (
     <>
@@ -305,7 +315,7 @@ export function QuickPriceButton({
                   type="password"
                   value={adminPass}
                   onChange={(e) => setAdminPass(e.target.value)}
-                  placeholder="Nhập mật khẩu Admin (mặc định: admin123 hoặc mật khẩu tài khoản Admin)"
+                  placeholder="Nhập mật khẩu tài khoản Quản trị viên"
                   className="w-full px-3 py-1.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs"
                 />
               </div>

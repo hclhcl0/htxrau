@@ -1,6 +1,6 @@
-# Hướng Dẫn Sử Dụng Hệ Thống Quản Trị Nội Dung (CMS)
+# Hướng Dẫn Sử Dụng Hệ Thống Quản Trị Nội Dung (CMS) — HTX Rau Túy Loan
 
-Tài liệu này giới thiệu tổng quan và hướng dẫn chi tiết cách sử dụng các chức năng trong hệ thống quản trị nội dung của website. Hệ thống được xây dựng trên nền tảng Payload CMS, giúp quản lý toàn bộ nội dung, giao diện và các dịch vụ y tế/tiêm chủng một cách linh hoạt.
+Tài liệu này giới thiệu tổng quan và hướng dẫn chi tiết cách sử dụng các chức năng trong hệ thống quản trị nội dung của website **HTX Rau An Toàn Túy Loan**. Hệ thống được xây dựng trên nền tảng Payload CMS v3, giúp quản lý toàn bộ nội dung, danh mục nông sản VietGAP, đơn đặt hàng trực tuyến, chứng nhận và giao diện một cách linh hoạt.
 
 ---
 
@@ -8,23 +8,24 @@ Tài liệu này giới thiệu tổng quan và hướng dẫn chi tiết cách 
 1. [Đăng nhập & Bảng điều khiển (Dashboard)](#1-đăng-nhập--bảng-điều-khiển)
 2. [Quản lý Bài viết & Tin tức (Articles)](#2-quản-lý-bài-viết--tin-tức)
 3. [Quản lý Trang & Page Builder (Pages)](#3-quản-lý-trang--page-builder)
-4. [Quản lý Dịch vụ & Gói Tiêm Chủng (Vaccines & Packages)](#4-quản-lý-dịch-vụ--gói-tiêm-chủng)
-5. [Quản lý Tài liệu & Văn bản (Documents)](#5-quản-lý-tài-liệu--văn-bản)
-6. [Cấu hình Giao diện & Cài đặt chung (Settings)](#6-cấu-hình-giao-diện--cài-đặt-chung)
-7. [Quản lý Media (Hình ảnh, Video, File)](#7-quản-lý-media)
-8. [Các Block trong Bài viết & Trang](#8-các-block-thành-phần-trong-bài-viết--trang)
-9. [Phân quyền & Vai trò Người dùng](#9-phân-quyền--vai-trò-người-dùng)
+4. [Quản lý Nông Sản & Rau An Toàn (Products)](#4-quản-lý-nông-sản--rau-an-toàn)
+5. [Quản lý Đơn Hàng & Xuất Phiếu (Orders)](#5-quản-lý-đơn-hàng--xuất-phiếu)
+6. [Quản lý Chứng Nhận & Kiểm Định (Certificates)](#6-quản-lý-chứng-nhận--kiểm-định)
+7. [Cấu hình Giao diện & Cài đặt chung (Settings)](#7-cấu-hình-giao-diện--cài-đặt-chung)
+8. [Quản lý Media (Hình ảnh, Video, File)](#8-quản-lý-media)
+9. [Các Block trong Bài viết & Trang](#9-các-block-thành-phần-trong-bài-viết--trang)
+10. [Phân quyền & Vai trò Người dùng](#10-phân-quyền--vai-trò-người-dùng)
 
 ---
 
 ## 1. Đăng nhập & Bảng điều khiển
-- **Đăng nhập:** Truy cập vào đường dẫn quản trị (thường là `/admin`). Nhập Email và Mật khẩu được cấp.
+- **Đăng nhập:** Truy cập vào đường dẫn quản trị `/admin`. Nhập Email và Mật khẩu được cấp.
 - **Bảng điều khiển (Dashboard):** Ngay sau khi đăng nhập, hệ thống hiển thị danh sách các mục quản lý ở thanh bên trái (Sidebar). Từ đây bạn có thể điều hướng đến bất kỳ module nào.
 
 ---
 
 ## 2. Quản lý Bài viết & Tin tức
-Module này giúp bạn đăng tải các tin tức, bài viết chuyên môn, thông báo.
+Module này giúp bạn đăng tải các tin tức, bài viết kỹ thuật nông nghiệp, thông báo, quy trình chăm sóc rau.
 
 ### 2.1. Quản lý Chuyên mục (Categories)
 - Vào mục **Chuyên mục** (Categories).
@@ -35,46 +36,39 @@ Module này giúp bạn đăng tải các tin tức, bài viết chuyên môn, t
 - Vào mục **Bài viết** (Articles) -> **Tạo mới**.
 - **Tiêu đề & URL:** Nhập tiêu đề bài viết. Hệ thống tự động tạo đường dẫn (Slug).
 - **Ảnh đại diện:** Tải lên hoặc chọn ảnh bìa từ thư viện.
-- **Nội dung (RichText Editor):** Sử dụng trình soạn thảo để nhập nội dung. Bạn có thể chèn các **Block** đặc biệt vào giữa bài viết (xem mục 8).
+- **Nội dung (RichText Editor):** Sử dụng trình soạn thảo để nhập nội dung. Bạn có thể chèn các **Block** đặc biệt vào giữa bài viết (xem mục 9).
 - **Cấu hình SEO:** Kéo xuống dưới cùng để điền Meta Title, Meta Description phục vụ tối ưu hóa công cụ tìm kiếm.
 - Nhấn **Save / Publish** để lưu hoặc xuất bản bài viết.
 
 ---
 
 ## 3. Quản lý Trang & Page Builder
-Đây là tính năng mạnh mẽ nhất giúp bạn tạo ra các trang (Ví dụ: Trang chủ, Giới thiệu, Liên hệ) bằng cách ghép các khối (Blocks) lại với nhau.
-
-### Hướng dẫn tạo trang mới:
-1. Vào **Trang** (Pages) -> **Tạo mới**.
-2. Nhập tiêu đề trang.
-3. Trong phần **Nội dung trang (Page Builder)**, nhấn **Add Block**.
-4. Chọn các khối bạn muốn hiển thị trên trang, ví dụ:
-   - **Banner:** Để hiển thị ảnh lớn đầu trang.
-   - **Rich Text:** Để viết chữ, giới thiệu.
-   - **Card Grid:** Lưới danh sách các thẻ thông tin.
-   - **Slider / Gallery:** Trình chiếu ảnh.
-5. Sắp xếp lại thứ tự bằng cách kéo thả các block.
-6. Lưu và xuất bản trang.
+Tính năng mạnh mẽ giúp bạn tạo ra các trang giới thiệu, chính sách hoặc trang chủ bằng cách ghép các khối (Blocks) lại với nhau:
+- Banner, Rich Text, Card Grid, Slider / Gallery...
+- Sắp xếp thứ tự bằng cách kéo thả block.
 
 ---
 
-## 4. Quản lý Dịch vụ & Gói Tiêm Chủng
-Dành riêng cho việc quản lý danh mục vắc-xin và các gói khám.
-
-### 4.1. Danh mục Vắc-xin (Vaccines)
-- Lưu trữ thông tin chi tiết từng loại vắc-xin (Phòng bệnh gì, hãng sản xuất, số mũi tiêm chuẩn, giá cả, tình trạng còn/hết hàng).
-
-### 4.2. Gói Tiêm Chủng (Vaccine Packages)
-- Tạo các gói tiêm (Ví dụ: Gói trẻ em 0-2 tuổi, Gói phụ nữ mang thai).
-- Trong mỗi gói, bạn có thể **thêm các loại vắc-xin** đã tạo ở mục 4.1 vào gói. 
-- Hệ thống sẽ tự động tính toán tổng giá tiền của gói dựa trên giá của từng vắc-xin thành phần.
+## 4. Quản lý Nông Sản & Rau An Toàn
+Dành riêng cho việc quản lý danh mục rau củ quả an toàn hiển thị tại `/san-pham`.
+- **Thông tin sản phẩm:** Tên rau củ, tiêu chuẩn (VietGAP, Hữu cơ, OCOP), đơn vị tính (Kg, Bó, Túi...), giá bán, giá gốc (khuyến mãi).
+- **Trạng thái:** Có sẵn (thu hoạch trong ngày), Đặt trước, Tạm hết hàng.
+- **Hình ảnh & Mô tả:** Tải lên nhiều ảnh minh họa và bài viết giới thiệu nguồn gốc rau.
 
 ---
 
-## 5. Quản lý Tài liệu & Văn bản
-- Phục vụ việc lưu trữ, tra cứu các quy định, văn bản pháp luật, hướng dẫn chuyên môn.
-- Cho phép upload file PDF, Word, Excel.
-- Bạn có thể cấu hình **Người ký (Document Signers)**, Cơ quan ban hành, Số/Ký hiệu văn bản.
+## 5. Quản lý Đơn Hàng & Xuất Phiếu
+Quản lý các đơn đặt hàng từ website `/dat-hang`, điện thoại, Zalo:
+- **Theo dõi trạng thái:** Mới -> Đã xác nhận -> Đang chuẩn bị -> Đang giao hàng -> Hoàn thành -> Đã hủy.
+- **Xuất báo cáo Excel:** Xuất danh sách đơn hàng ra file Excel đầy đủ chi tiết.
+- **In phiếu giao hàng:** In phiếu đóng gói và giao hàng nhanh chóng cho bộ phận shipper.
+- **Thông báo tự động:** Tích hợp gửi thông báo đơn hàng trực tiếp qua Telegram Bot và Email quản trị.
+
+---
+
+## 6. Quản lý Chứng Nhận & Kiểm Định
+- Lưu trữ chứng nhận VietGAP, OCOP, kết quả xét nghiệm mẫu đất, mẫu nước, dư lượng thuốc BVTV hiển thị tại `/chung-nhan`.
+- Tải lên ảnh giấy chứng nhận hoặc file PDF để khách hàng tra cứu nguồn gốc minh bạch.
 
 ---
 

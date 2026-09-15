@@ -13,7 +13,7 @@ export const SiteSettings: GlobalConfig = {
   },
   access: {
     read: () => true,
-    update: () => true,
+    update: ({ req: { user } }) => Boolean(user && user.role === 'admin'),
   },
   hooks: {
     afterChange: [

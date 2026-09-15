@@ -14,6 +14,11 @@ import { EmbedBlock } from '../blocks/EmbedBlock.ts';
 import { FileDownloadsBlock } from '../blocks/FileDownloadsBlock.ts';
 import { SliderBlock } from '../blocks/SliderBlock.ts';
 import { CardBlock } from '../blocks/CardBlock.ts';
+import { ExcelTableBlock } from '../blocks/ExcelTableBlock.ts';
+import { AudioBlock } from '../blocks/AudioBlock.ts';
+import { InfographicBlock } from '../blocks/InfographicBlock.ts';
+import { LivestreamBlock } from '../blocks/LivestreamBlock.ts';
+import { DividerBlock } from '../blocks/DividerBlock.ts';
 
 /**
  * Trích xuất danh sách ID chuyên mục được phân công của user.
@@ -66,10 +71,10 @@ export const Articles: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: () => true,
-    update: () => true,
-    delete: () => true,
-    readVersions: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user && ['admin', 'moderator'].includes(user.role)),
+    readVersions: ({ req: { user } }) => Boolean(user),
   },
   versions: {
     drafts: true,
@@ -217,6 +222,7 @@ export const Articles: CollectionConfig = {
             VideoBlock, TikTokBlock, PDFBlock, GalleryBlock, CalloutBlock, ButtonBlock, ImageLinkBlock, RelatedArticlesBlock, ColumnsBlock,
             EmbedBlock, CardBlock,
             FileDownloadsBlock, SliderBlock,
+            ExcelTableBlock, AudioBlock, InfographicBlock, LivestreamBlock, DividerBlock,
           ] }),
         ]
       }),
