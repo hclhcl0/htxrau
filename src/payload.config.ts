@@ -72,24 +72,32 @@ function buildAllowedOrigins(): string[] {
   origins.add('http://localhost:3000');
   origins.add('http://127.0.0.1:3000');
 
-  // Tự động thêm domain chính từ NEXT_PUBLIC_SERVER_URL
-  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
-  if (serverURL) {
-    origins.add(serverURL.replace(/\/$/, '')); // bỏ trailing slash
+  // Helper: thêm cả www và non-www
+  const addWithVariants = (urlStr: string) => {
     try {
-      const url = new URL(serverURL);
-      const { protocol, hostname } = url;
-      // Thêm cả subdomain cms. tương ứng
-      if (!hostname.startsWith('cms.')) {
-        origins.add(`${protocol}//cms.${hostname}`);
+      const url = new URL(urlStr.replace(/\/$/, ''));
+      const { protocol, hostname, port } = url;
+      const base = port ? `${protocol}//${hostname}:${port}` : `${protocol}//${hostname}`;
+      origins.add(base);
+      // Thêm cả www. và non-www.
+      if (hostname.startsWith('www.')) {
+        origins.add(`${protocol}//${hostname.slice(4)}${port ? ':' + port : ''}`);
+      } else {
+        origins.add(`${protocol}//www.${hostname}${port ? ':' + port : ''}`);
       }
-      // Nếu có port thì thêm cả URL không có port
-      if (url.port) {
-        origins.add(`${protocol}//${hostname}`);
+      // Thêm subdomain cms.
+      if (!hostname.startsWith('cms.')) {
+        origins.add(`${protocol}//cms.${hostname.replace(/^www\./, '')}${port ? ':' + port : ''}`);
       }
     } catch {
       // URL không hợp lệ → bỏ qua
     }
+  };
+
+  // Tự động thêm domain chính từ NEXT_PUBLIC_SERVER_URL
+  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
+  if (serverURL) {
+    addWithVariants(serverURL);
   }
 
   // Thêm Vercel deployment URLs (tự động inject bởi Vercel)
