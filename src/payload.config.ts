@@ -92,6 +92,16 @@ function buildAllowedOrigins(): string[] {
     }
   }
 
+  // Thêm Vercel deployment URLs (tự động inject bởi Vercel)
+  const vercelProductionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercelProductionUrl) {
+    origins.add(`https://${vercelProductionUrl}`);
+  }
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    origins.add(`https://${vercelUrl}`);
+  }
+
   // Thêm các domain phụ từ EXTRA_ALLOWED_ORIGINS
   const extra = process.env.EXTRA_ALLOWED_ORIGINS || '';
   extra.split(',')
