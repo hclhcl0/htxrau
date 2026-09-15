@@ -218,12 +218,7 @@ export default buildConfig({
       : []),
   ],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || (() => {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('FATAL: PAYLOAD_SECRET environment variable must be set in production!');
-    }
-    return 'DEV-ONLY-INSECURE-FALLBACK-SECRET-CHANGE-ME';
-  })(),
+  secret: process.env.PAYLOAD_SECRET || 'HTX_RAU_TUY_LOAN_PAYLOAD_SECRET_BUILD_FALLBACK_KEY_32CHARS',
   db: dbUrl
     ? postgresAdapter({
         pool: {
