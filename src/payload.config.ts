@@ -13,14 +13,26 @@ import { s3Storage } from '@payloadcms/storage-s3';
 import { vi } from '@payloadcms/translations/languages/vi';
 import { withRBAC, globalsWithRBAC } from './lib/rbac.ts';
 
-// DATABASE_URI = custom Postgres URL
-// POSTGRES_URL_NON_POOLING = Supabase session pooler (port 5432) — compatible với Payload CMS
-// POSTGRES_URL = Supabase pgbouncer transaction pooler (port 6543) — KHÔNG tương thích với prepared statements
-// Luôn ưu tiên non-pooling (port 5432) để tránh lỗi prepared statement của pgbouncer transaction mode
-const dbUrl = process.env.DATABASE_URI
-  || process.env.POSTGRES_URL_NON_POOLING
+// DATABASE_URI = custom Postgres URL (ưu tiên cao nhất)
+// POSTGRES_PRISMA_URL = Supabase pgbouncer (port 6543, pgbouncer=true) — tối ưu cho serverless
+// POSTGRES_URL_NON_POOLING = direct (port 5432) — giới hạn 15 kết nối, KHÔNG dùng cho serverless
+// Vercel serverless cần pgbouncer để tránh "max clients reached"
+const rawDbUrl = process.env.DATABASE_URI
+  || process.env.POSTGRES_PRISMA_URL
   || process.env.POSTGRES_URL
+  || process.env.POSTGRES_URL_NON_POOLING
   || process.env.DATABASE_URL;
+
+// Dọn sạch URL: bỏ sslmode và pgbouncer param (pg driver xử lý SSL riêng)
+const dbUrl = rawDbUrl
+  ? rawDbUrl
+    .replace(/[?&]sslmode=[^&]+/g, '')
+    .replace(/[?&]pgbouncer=[^&]+/g, '')
+    .replace(/[?&]supa=[^&]+/g, '')
+    .replace(/[?&]uselibpqcompat=[^&]+/g, '')
+    .replace(/\?&/, '?')
+    .replace(/\?$/, '')
+  : null;
 
 import { Users } from './collections/Users.ts';
 import { Media } from './collections/Media.ts';
@@ -225,17 +237,15 @@ export default buildConfig({
   db: dbUrl
     ? postgresAdapter({
         pool: {
-          connectionString: dbUrl
-            .replace(/[?&]sslmode=[^&]+/g, '')
-            .replace(/[?&]pgbouncer=[^&]+/g, '')
-            .replace(/[?&]supa=[^&]+/g, '')
-            .replace(/[?&]uselibpqcompat=[^&]+/g, '')
-            .replace(/\?&/, '?')
-            .replace(/\?$/, ''),
+          connectionString: dbUrl,
           ssl: (() => {
-            if (dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1')) return false;
+            if ((rawDbUrl || '').includes('localhost') || (rawDbUrl || '').includes('127.0.0.1')) return false;
             return { rejectUnauthorized: false };
           })(),
+          // Serverless-safe: giới hạn pool nhỏ, đóng kết nối nhàn rỗi nhanh
+          max: 2,
+          idleTimeoutMillis: 10000,
+          connectionTimeoutMillis: 5000,
         },
         push: false,
       })
